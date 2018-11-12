@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <TextView
+        android:id="@+id/songListTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textScaleX="1.0"
+        android:textColor="#ff0000ff"
+        android:background="#ff00ff00"
+        android:text="@string/songListString" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:background="#ff90e5c4"
+        android:layout_weight="1"
+        android:scrollbarStyle="outsideOverlay" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+    <Button
+        android:id="@+id/FirstPageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="首頁\n1st Page"
+        android:textStyle="bold"
+        android:background="@android:drawable/btn_default"
+        android:textColor="#ffff0000"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/PrevPageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="上頁\nPrev Page"
+        android:textStyle="bold"
+        android:background="@android:drawable/btn_default"
+        android:textColor="#ffff0000"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/NextPageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="下頁\nNext Page"
+        android:textStyle="bold"
+        android:background="@android:drawable/btn_default"
+        android:textColor="#ffff0000"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/LastPageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="末頁\nLast Page"
+        android:textStyle="bold"
+        android:background="@android:drawable/btn_default"
+        android:textColor="#ffff0000"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/CancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="返回\nEnd Func"
+        android:textStyle="bold"
+        android:background="@android:drawable/btn_default"
+        android:textColor="#ff000000"
+        android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

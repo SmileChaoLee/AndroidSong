@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">安卓點歌</string>
+    <string name="action_settings">設定</string>
+    <string name="mainMenuTitle">請選擇以下其中一個功能</string>
+    <string name="title_activity_song_query">歌曲查詢</string>
+    <string name="mainSingerArea">請選擇以下其中一個功能</string>
+    <string name="title_activity_singer_query">歌星查詢</string>
+    <string name="title_activity_singer_type_query">歌星地區</string>
+    <string name="title_activity_order_one_song">點一首歌曲</string>
+    <string name="title_activity_language_query">歌曲語言查詢</string>
+    <string name="mainLanguage">請選擇以下其中一個功能</string>
+    <string name="orderOneSongString">請輸入包廂內的電腦編號</string>
+    <string name="inputMessageString">電腦編號:</string>
+
+    <string name="singerOrder">歌星點歌</string>
+    <string name="newSongOrder">新歌點歌</string>
+    <string name="hotSongOrder">排行榜點歌</string>
+    <string name="songLanguageOrder">語言分類點歌</string>
+    <string name="songNameOrder">歌名順序點歌</string>
+    <string name="songNoOrder">歌號順序點歌</string>
+    <string name="exitProgram">結束程式</string>
+
+    <string name="maleSinger">男性歌手</string>
+    <string name="femaleSinger">女性歌手</string>
+    <string name="groupSinger">團體歌手</string>
+    <string name="returnToPrevious">回上一個功能</string>
+
+    <string name="songListString">歌曲列表</string>
+    <string name="singerListString">歌星列表</string>
+
+    <string name="firstPage">首頁</string>
+    <string name="previousPage">上頁</string>
+    <string name="nextPage">下頁</string>
+    <string name="lastPage">末頁</string>
+    <string name="returnTo">返回</string>
+
+    <string name="areaNo">區域編號</string>
+    <string name="areaNa">區域名稱</string>
+    <string name="sex">性別</string>
+
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/darkYellow"
+    android:weightSum="12">
+
+    <TextView android:id="@+id/singerAreaNoTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:layout_weight="1">
+    </TextView>
+
+    <TextView android:id="@+id/singerAreaNaTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        android:layout_weight="7">
+    </TextView>
+
+    <TextView android:id="@+id/singerSexTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/darkGreen"
+        android:layout_weight="4">
+    </TextView>
+
+</LinearLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkYellow"
+    android:orientation="vertical"
+    tools:context=".SingerTypesListActivity">
+
+    <TextView
+        android:id="@+id/singerTypesListMenuTextView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textStyle="bold"
+        android:textColor="@color/darkOrange"
+        android:layout_gravity="center_horizontal|top"
+        android:text="@string/mainSingerArea"
+        android:gravity="center"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintTop_toTopOf="parent" >
+    </TextView>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.8"
+        app:layout_constraintTop_toBottomOf="@+id/singerTypesListMenuTextView" >
+
+        <ListView android:id="@+id/singerTypesListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawSelectorOnTop="false" >
+        </ListView>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/returnToPreviousButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/returnToPrevious"
+        android:background="@android:drawable/btn_default"
+        android:textColor="@color/red"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintBottom_toBottomOf="parent" >
+    </Button>
+
+</android.support.constraint.ConstraintLayout>

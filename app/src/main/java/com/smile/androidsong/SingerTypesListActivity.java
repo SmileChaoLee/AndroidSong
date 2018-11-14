@@ -1,10 +1,12 @@
 package com.smile.androidsong;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,7 +36,15 @@ public class SingerTypesListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_singer_types_list);
 
         TextView optionTitle = (TextView) findViewById(R.id.singerTypesListMenuTextView);
+
         singerTypesListView = findViewById(R.id.singerTypesListView);
+        singerTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(SingerTypesListActivity.this, singerTypesList.get(i).toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
         Button returnToPreviousButton = findViewById(R.id.returnToPreviousButton);
         returnToPreviousButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,21 +53,12 @@ public class SingerTypesListActivity extends AppCompatActivity {
             }
         });
 
-        singerTypesList = GetDataByRestApi.getSingerTypes();
-
-        mMyListAdapter = new MyListAdapter(this, R.layout.singer_types_list_item ,singerTypesList);
-        singerTypesListView.setAdapter(mMyListAdapter);
-        singerTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(), singerTypesList.get(i).toString(), Toast.LENGTH_LONG);
-            }
-        });
+        AccessSingerTypesAsyncTask accessAsyncTask = new AccessSingerTypesAsyncTask();
+        accessAsyncTask.execute();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         returnToPrevious();
     }
 
@@ -68,7 +69,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
     private class MyListAdapter extends ArrayAdapter {
 
         int layoutId;
-        TextView singerAreaNoTextView;
+        TextView positionNoTextView;
         TextView singerAreaNaTextView;
         TextView singerSexTextView;
         ArrayList<SingerType> singerTypes;
@@ -96,30 +97,68 @@ public class SingerTypesListActivity extends AppCompatActivity {
 
             View view = getLayoutInflater().inflate(layoutId, parent, false);
 
-            singerAreaNoTextView = view.findViewById(R.id.singerAreaNoTextView);
-            singerAreaNoTextView.setText(singerTypes.get(position).getAreaNo());
+            positionNoTextView = view.findViewById(R.id.positionNoTextView);
+            positionNoTextView.setText(String.valueOf(position));
 
             singerAreaNaTextView = view.findViewById(R.id.singerAreaNaTextView);
             singerAreaNaTextView.setText(singerTypes.get(position).getAreaNa());
 
             singerSexTextView = view.findViewById(R.id.singerSexTextView);
-            int sex = singerTypes.get(position).getSex();
+            String sex = singerTypes.get(position).getSex();
             String sexString;
             switch (sex) {
-                case 1:
+                case "1":
                     sexString = "Male";
                     break;
-                case 2:
+                case "2":
                     sexString = "Female";
                     break;
                 default:
-                    // 0
+                    // "0"
                     sexString = "";
                     break;
             }
             singerSexTextView.setText(sexString);
 
             return view;
+        }
+    }
+
+    private class AccessSingerTypesAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private final String TAG = new String("AccessSingerTypesAsyncTask");
+        private final String errorMessage = getApplicationContext().getString(R.string.failedMessage);
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.i(TAG, "doInBackground() started.");
+            singerTypesList = GetDataByRestApi.getSingerTypes();
+            if (singerTypesList == null) {
+                singerTypesList = new ArrayList<>();
+                SingerType singerType = new SingerType(0, "0", errorMessage, "", "0");
+                singerTypesList.add(singerType);
+            }
+            Log.i(TAG, "doInBackground() finished.");
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            Log.i(TAG, "onPostExecute() started.");
+            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singer_types_list_item ,singerTypesList);
+            singerTypesListView.setAdapter(mMyListAdapter);
         }
     }
 }

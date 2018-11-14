@@ -9,11 +9,11 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="AppThemeTextSize30" parent="AppTheme">
-        <item name="android:textSize">30sp</item>
+    <style name="AppThemeTextSizeSmall" parent="AppTheme">
+        <item name="android:textSize">24sp</item>
     </style>
-    <style name="AppThemeTextSize50" parent="AppTheme">
-        <item name="android:textSize">50sp</item>
+    <style name="AppThemeTextSizeLarge" parent="AppTheme">
+        <item name="android:textSize">40sp</item>
     </style>
 
 </resources>

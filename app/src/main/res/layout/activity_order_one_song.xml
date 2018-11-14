@@ -32,7 +32,7 @@
              android:textScaleX="1.0"
              android:textColor="#fffff546"
              android:background="#ff000000"
-             android:text="@string/inputMessageString"
+             android:text="@string/computerIdString"
              android:layout_weight="1" />
 
          <EditText

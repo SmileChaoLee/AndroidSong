@@ -12,7 +12,9 @@
     <string name="title_activity_language_query">歌曲語言查詢</string>
     <string name="mainLanguage">請選擇以下其中一個功能</string>
     <string name="orderOneSongString">請輸入包廂內的電腦編號</string>
-    <string name="inputMessageString">電腦編號:</string>
+    <string name="computerIdString">電腦編號:</string>
+    <string name="failedMessage">失敗</string>
+    <string name="succeededMessage">成功</string>
 
     <string name="singerOrder">歌星點歌</string>
     <string name="newSongOrder">新歌點歌</string>

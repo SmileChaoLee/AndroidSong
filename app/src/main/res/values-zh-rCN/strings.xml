@@ -13,8 +13,10 @@
     <string name="mainLanguage">请选择以下其中一个功能</string>
     <string name="orderOneSongString">请输入包厢内的电脑编号</string>
     <string name="computerIdString">电脑编号:</string>
+
     <string name="failedMessage">失败</string>
     <string name="succeededMessage">成功</string>
+    <string name="loadingString">下载中 ...</string>
 
     <string name="singerOrder">歌星点歌</string>
     <string name="newSongOrder">新歌点歌</string>

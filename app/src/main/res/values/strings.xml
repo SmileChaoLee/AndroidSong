@@ -13,8 +13,10 @@
     <string name="mainLanguage">Please Select One Option</string>
     <string name="orderOneSongString">Please Input the Computer ID</string>
     <string name="computerIdString">Computer ID:</string>
+
     <string name="failedMessage">Failed.</string>
     <string name="succeededMessage">Succeeded.</string>
+    <string name="loadingString">Loading ...</string>
 
     <string name="singerOrder">Select Songs By Singer</string>
     <string name="newSongOrder">Select Songs By New Announcement</string>

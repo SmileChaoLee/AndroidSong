@@ -131,9 +131,9 @@ public class GetDataByRestApi {
             return null;
         }
 
-        // [HttpGet("{areaId}/{sex}/{pageSize}/{pageNo}")]
+        // [HttpGet("{areaId}/{sex}/{pageSize}/{pageNo}/orderBy")]
         // GET api/values/5/"1"/10/1
-        final String param = "/" + singerType.getId() + "/" + singerType.getSex() + "/" + pageSize[0] + "/" + pageNo[0];
+        final String param = "/" + singerType.getId() + "/" + singerType.getSex() + "/" + pageSize[0] + "/" + pageNo[0] +"/" + "SingNa";
         final String webUrl = Home_Website + "/api/Singer" + param;
         Log.i(TAG, "WebUrl = " + webUrl);
 

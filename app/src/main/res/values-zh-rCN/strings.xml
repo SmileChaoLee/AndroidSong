@@ -5,7 +5,7 @@
     <string name="action_settings">设定</string>
     <string name="mainMenuTitle">请选择以下其中一个功能</string>
     <string name="title_activity_song_query">歌曲查询</string>
-    <string name="mainSingerArea">请选择以下其中一个功能</string>
+    <string name="singerTypesListString">歌星类别清单</string>
     <string name="title_activity_singer_query">歌星查询</string>
     <string name="title_activity_singer_type_query">歌星地区</string>
     <string name="title_activity_order_one_song">点一首歌曲</string>
@@ -32,7 +32,7 @@
     <string name="returnToPrevious">回上一个功能</string>
 
     <string name="songListString">歌曲列表</string>
-    <string name="singerListString">歌星列表</string>
+    <string name="singersListString">歌星列表</string>
 
     <string name="firstPage">首页</string>
     <string name="previousPage">上页</string>

@@ -88,6 +88,7 @@
             android:layout_height="wrap_content"
             android:text="@string/exitProgram"
             android:background="@android:drawable/btn_default"
+            android:textStyle="bold"
             android:textColor="@color/red"
             android:layout_weight="1">
         </Button>

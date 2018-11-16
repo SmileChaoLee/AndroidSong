@@ -1,12 +1,12 @@
 package com.smile.model;
 
-public class LanguData {
+public class Language {
 
 		private String  lang_no = new String("");
 		private String  lang_na = new String("");
         private String  lang_en = new String("");
 
-		public LanguData() {
+		public Language() {
 			initiateLangurecord();
 		}
 		

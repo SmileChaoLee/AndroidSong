@@ -2,7 +2,7 @@ package com.smile.model;
 
 import java.sql.Date;
 
-public class SongData {
+public class Song {
 	
 		private String  song_no = new String("");
 		private String  song_na = new String("");
@@ -27,7 +27,7 @@ public class SongData {
 		private Integer ord_old_n=0;
 		private Date    in_date= new Date(new java.util.Date().getTime());
 		
-		public SongData() {
+		public Song() {
 			initiateSong2record();
 		}
 		

@@ -1,6 +1,9 @@
 package com.smile.model;
 
-public class SingerType {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class SingerType implements Parcelable {
 
 	private int id;
 	private String  areaNo;
@@ -21,6 +24,13 @@ public class SingerType {
 		setAreaNa(areaNa);
 		setAreaEn(areaEn);
 		setSex(sex);
+	}
+	public SingerType(Parcel in) {
+		this.id = in.readInt();
+		this.areaNo = in.readString();
+		this.areaNa = in.readString();
+		this.areaEn = in.readString();
+		this.sex = in.readString();
 	}
 
 	public int getId() {
@@ -55,8 +65,38 @@ public class SingerType {
 	}
 
 	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel out, int i) {
+		out.writeInt(this.id);
+		out.writeString(this.areaNo);
+		out.writeString(this.areaNa);
+		out.writeString(this.areaEn);
+		out.writeString(this.sex);
+	}
+
+	public static final Parcelable.Creator<SingerType> CREATOR = new Parcelable.Creator<SingerType>() {
+		@Override
+		public SingerType createFromParcel(Parcel in) {
+			return new SingerType(in);
+		}
+		@Override
+		public SingerType[] newArray(int size) {
+			return new SingerType[size];
+		}
+	};
+
+	@Override
 	public String toString() {
-		String str = areaNo + " " + areaNa + " " + areaEn + " " + sex;
-		return str;
+		return "SingerType{" +
+				"id=" + id +
+				", areaNo='" + areaNo + '\'' +
+				", areaNa='" + areaNa + '\'' +
+				", areaEn='" + areaEn + '\'' +
+				", sex='" + sex + '\'' +
+				'}';
 	}
 }

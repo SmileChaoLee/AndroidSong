@@ -1,6 +1,7 @@
 package com.smile.androidsong;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,11 +31,11 @@ import java.util.List;
 
 public class SingerTypesListActivity extends AppCompatActivity {
 
+    private float textFontSize;
     private ListView singerTypesListView;
     private MyListAdapter mMyListAdapter;
     private ArrayList<SingerType> singerTypesList;
     private final int failedItemNo = -1;
-    private float textFontSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +46,19 @@ public class SingerTypesListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_singer_types_list);
 
-        TextView optionTitle = (TextView) findViewById(R.id.singerTypesListMenuTextView);
+        TextView menuTextView = (TextView) findViewById(R.id.singerTypesListMenuTextView);
 
         singerTypesListView = findViewById(R.id.singerTypesListView);
         singerTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (singerTypesList.get(i).getId() != failedItemNo) {
+                SingerType singerType = singerTypesList.get(i);
+                if (singerType.getId() != failedItemNo) {
                     // not the failed item
-                    Toast.makeText(SingerTypesListActivity.this, singerTypesList.get(i).toString(), Toast.LENGTH_LONG).show();
+                    Intent singerTypeIntent = new Intent(getApplicationContext(), SingersListActivity.class);
+                    singerTypeIntent.putExtra("SingerTypeParcelable", singerType);
+                    startActivity(singerTypeIntent);
+                    // Toast.makeText(SingerTypesListActivity.this, singerType.toString(), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -87,6 +92,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
         TextView singerSexTextView;
         ArrayList<SingerType> singerTypes;
 
+        @SuppressWarnings("unchecked")
         public MyListAdapter(@NonNull Context context, int resource, @NonNull List objects) {
             super(context, resource, objects);
             layoutId = resource;
@@ -99,6 +105,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
             return super.getItem(position);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public int getPosition(@Nullable Object item) {
             return super.getPosition(item);
@@ -110,7 +117,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
 
             View view = getLayoutInflater().inflate(layoutId, parent, false);
 
-            positionNoTextView = view.findViewById(R.id.positionNoTextView);
+            positionNoTextView = view.findViewById(R.id.singerTypeItem_Layout_positionNoTextView);
             positionNoTextView.setText(String.valueOf(position));
 
             singerAreaNaTextView = view.findViewById(R.id.singerAreaNaTextView);

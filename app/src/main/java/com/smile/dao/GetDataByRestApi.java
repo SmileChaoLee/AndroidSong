@@ -1,8 +1,8 @@
 package com.smile.dao;
 
-import android.net.UrlQuerySanitizer;
 import android.util.Log;
 
+import com.smile.model.Singer;
 import com.smile.model.SingerType;
 
 import org.json.JSONArray;
@@ -15,7 +15,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class GetDataByRestApi {
-    private static final String Home_Website = new String("http://192.168.0.10:5000");
+    private static final String Home_Website = new String("http://192.168.0.16:5000");
+    // private static final String Home_Website = new String("http://10.0.9.191:5000");
     // private static final String Home_Website = "http://ec2-13-59-195-3.us-east-2.compute.amazonaws.com";
 
     public static ArrayList<SingerType> getSingerTypes() {
@@ -116,5 +117,97 @@ public class GetDataByRestApi {
         }
 
         return singerTypes;
+    }
+
+    public static ArrayList<Singer> getSingersBySingerType(SingerType singerType, int pageSize, int pageNo) {
+
+        final String TAG = new String("GetDataByRestApi.getSingersBySingerType()");
+
+        if (singerType == null) {
+            // singerType cannot be null
+            Log.d(TAG, "singerType is null.");
+            return null;
+        }
+
+        // [HttpGet("{areaId}/{sex}/{pageSize}/{pageNo}")]
+        // GET api/values/5/"1"/10/1
+        final String param = "/" + singerType.getId() + "/" + singerType.getSex() + "/" + pageSize + "/" + pageNo;
+        final String webUrl = Home_Website + "/api/Singer" + param;
+        Log.i(TAG, "WebUrl = " + webUrl);
+
+        ArrayList<Singer> singers = null;
+
+        URL url = null;
+        HttpURLConnection myConnection = null;
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        try {
+            url = new URL(webUrl);
+            myConnection = (HttpURLConnection)url.openConnection();
+            myConnection.setConnectTimeout(15000);
+            myConnection.setReadTimeout(15000);
+            myConnection.setRequestMethod("GET");
+            myConnection.setDoInput(true);
+            int responseCode = myConnection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                Log.i(TAG, "REST Web Service -> Succeeded to connect.");
+                inputStream = myConnection.getInputStream();
+                inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                StringBuilder sb = new StringBuilder();
+                int readBuff = -1;
+                while ( (readBuff=inputStreamReader.read()) != -1) {
+                    sb.append((char)readBuff);
+                }
+                String result = sb.toString();  // the result
+                Log.i(TAG, "Web output -> " + result);
+
+                singers = new ArrayList<>();
+                Singer singer;
+                JSONArray jsonArray = new JSONArray(result);
+                JSONObject jsonObject;
+                int id;
+                String singNo;
+                String singNa;
+                for (int i=0; i<jsonArray.length(); i++) {
+
+                    jsonObject = jsonArray.getJSONObject(i);
+                    id = jsonObject.getInt("Id");
+                    singNo = jsonObject.getString("SingNo");
+                    singNa = jsonObject.getString("SingNa");
+
+                    singer = new Singer();
+                    singer.setId(id);
+                    singer.setSingerNo(singNo);
+                    singer.setSingerNa(singNa);
+                    singers.add(singer);
+                }
+            } else {
+                Log.i(TAG, "REST Web Service -> Failed to connect.");
+                // singerTypes is null
+                singers = null;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Log.i(TAG, "REST Web Service -> Failed due to exception.");
+            // singerTypes is null
+            singers = null;
+        }
+        finally {
+            try {
+                if (inputStreamReader != null) {
+                    inputStreamReader.close();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (myConnection != null) {
+                    myConnection.disconnect();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return singers;
     }
 }

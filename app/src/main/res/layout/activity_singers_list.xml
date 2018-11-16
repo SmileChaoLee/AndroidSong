@@ -1,93 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff00ff00"
-    android:weightSum="10">
+    android:background="@color/green"
+    android:orientation="vertical"
+    tools:context=".SingersListActivity">
 
     <TextView
-        android:id="@+id/singerListTextView"
+        android:id="@+id/singersListMenuTextView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:textSize="24sp"
-        android:textScaleX="1.0"
-        android:textColor="#ff0000ff"
-        android:text="@string/singerListString"
-        android:layout_weight="1"/>
+        android:textStyle="bold"
+        android:textColor="@color/darkOrange"
+        android:text="@string/singersListString"
+        android:gravity="center"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintTop_toTopOf="parent">
+    </TextView>
 
-    <ListView
-        android:id="@android:id/list"
+    <LinearLayout
+        android:id="@+id/singersListView_Layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:background="#ff90e5c4"
-        android:scrollbarStyle="outsideOverlay"
-        android:layout_weight="8" />
+        android:background="@color/darkYellow"
+        app:layout_constraintHeight_percent="0.7"
+        app:layout_constraintTop_toBottomOf="@+id/singersListMenuTextView" >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <ListView android:id="@+id/singersListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideOverlay"
+            android:drawSelectorOnTop="false" >
+        </ListView>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:weightSum="5">
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintBottom_toTopOf="@id/returnToPreviousButton"
+        android:weightSum="4">
 
         <Button
             android:id="@+id/firstPageButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/firstPage"
-            android:textStyle="bold"
             android:background="@android:drawable/btn_default"
-            android:textColor="#ffff0000"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_weight="1" >
+        </Button>
 
         <Button
             android:id="@+id/previousPageButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/previousPage"
-            android:textStyle="bold"
             android:background="@android:drawable/btn_default"
-            android:textColor="#ffff0000"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_weight="1" >
+        </Button>
 
         <Button
             android:id="@+id/nextPageButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/nextPage"
-            android:textStyle="bold"
             android:background="@android:drawable/btn_default"
-            android:textColor="#ffff0000"
-            android:layout_gravity="center"
-            android:layout_weight="1" />
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_weight="1" >
+        </Button>
 
         <Button
             android:id="@+id/lastPageButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/lastPage"
-            android:textStyle="bold"
             android:background="@android:drawable/btn_default"
-            android:textColor="#ffff0000"
-            android:layout_gravity="center"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/returnToPreviousButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/returnTo"
             android:textStyle="bold"
-            android:background="@android:drawable/btn_default"
-            android:textColor="#ff000000"
-            android:layout_gravity="center"
-            android:layout_weight="1" />
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_weight="1" >
+        </Button>
 
     </LinearLayout>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/returnToPreviousButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/returnToPrevious"
+        android:background="@android:drawable/btn_default"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintBottom_toBottomOf="parent" >
+    </Button>
+
+</android.support.constraint.ConstraintLayout>

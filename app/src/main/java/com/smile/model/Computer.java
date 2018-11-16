@@ -3,13 +3,13 @@ package com.smile.model;
 /**
  * Created by lee on 9/3/2014.
  */
-public class ComputerData {
+public class Computer {
     private String computer_id = new String("");
     private String branch_id = new String("");
     private String room_no = new String("");
     private String song_no  = new String("");
 
-    public ComputerData() {
+    public Computer() {
         initiateRecordData();
     }
 

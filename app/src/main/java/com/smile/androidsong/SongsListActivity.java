@@ -17,8 +17,8 @@ import java.util.List;
 
 public class SongsListActivity extends ListActivity {
 
-    private SongData song2data = null;
-    private List<SongData> songs = null;
+    private Song song2data = null;
+    private List<Song> songs = null;
     private String queryCondition = new String("");
     private String message = new String("");
 

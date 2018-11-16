@@ -10,15 +10,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.smile.model.LanguData;
+import com.smile.model.Language;
 
 import java.util.List;
 
 public class LanguagesListActivity extends Activity {
 
-    private LanguData langudata = null;
+    private Language langudata = null;
     // private LanguTable langutable = null;
-    private List<LanguData> langus = null;
+    private List<Language> langus = null;
     private String queryCondition = new String("");
     private String message = new String("");
 

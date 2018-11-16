@@ -2,22 +2,20 @@ package com.smile.androidsong;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.smile.model.ComputerData;
+import com.smile.model.Computer;
 
 import java.util.List;
 
 
 public class OrderOneSong extends Activity {
 
-    private ComputerData computerData=null;
-    private List<ComputerData> computers=null;
+    private Computer computerData=null;
+    private List<Computer> computers=null;
 
     private String song_no = new String("");
     private String song_na = new String("");

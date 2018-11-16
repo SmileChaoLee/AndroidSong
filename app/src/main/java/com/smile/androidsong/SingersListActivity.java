@@ -1,42 +1,84 @@
 package com.smile.androidsong;
 
-import android.app.ListActivity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.smile.model.SingerData;
+import com.smile.Utility.FontSizeAndTheme;
+import com.smile.dao.GetDataByRestApi;
+import com.smile.model.Singer;
+import com.smile.model.SingerType;
+import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class SingersListActivity extends ListActivity {
+public class SingersListActivity extends AppCompatActivity {
 
-    private List<SingerData> singers = null;
+    private float textFontSize;
+    private ListView singersListView;
+    private MyListAdapter mMyListAdapter;
+    private ArrayList<Singer> singersList = null;
+    private SingerType singerType;
+    private final int failedItemNo = -1;
+
     private int pageNo = 1;
     private int pageSize = 10;
-    private int pages = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_singers_list);
 
-        String option = "M";    // default is male singers
-
-        TextView textview = (TextView) findViewById(R.id.singerListTextView);
-
+        textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);
         Bundle extras = getIntent().getExtras();
-        if (extras!=null)
+        if (extras != null )
         {
-            option = extras.getString("option").trim();
+            singerType = extras.getParcelable("SingerTypeParcelable");
+            if (singerType != null) {
+                Toast.makeText(SingersListActivity.this, singerType.toString(), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(SingersListActivity.this, "singerType is null.", Toast.LENGTH_LONG).show();
+            }
         }
 
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_singers_list);
+
+        TextView menuTextView = (TextView) findViewById(R.id.singersListMenuTextView);
+
+        singersListView = findViewById(R.id.singersListView);
+        singersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Singer singer = singersList.get(i);
+                if (singer.getId() != failedItemNo) {
+                    // not the failed item
+                    Toast.makeText(SingersListActivity.this, singer.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        float smallButtonFontSize = textFontSize * 0.7f;
         Button firstPageButton = (Button) findViewById(R.id.firstPageButton);
+        firstPageButton.setTextSize(smallButtonFontSize);
         firstPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,6 +87,7 @@ public class SingersListActivity extends ListActivity {
         });
 
         Button previousPageButton = (Button) findViewById(R.id.previousPageButton);
+        previousPageButton.setTextSize(smallButtonFontSize);
         previousPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,6 +96,7 @@ public class SingersListActivity extends ListActivity {
         });
 
         Button nextPageButton = (Button) findViewById(R.id.nextPageButton);
+        nextPageButton.setTextSize(smallButtonFontSize);
         nextPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +105,7 @@ public class SingersListActivity extends ListActivity {
         });
 
         Button lastPageButton = (Button) findViewById(R.id.lastPageButton);
+        lastPageButton.setTextSize(smallButtonFontSize);
         lastPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,11 +120,34 @@ public class SingersListActivity extends ListActivity {
                 returnToPrevious();
             }
         });
+
+        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
+        accessSingersAsyncTask.execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        returnToPrevious();
     }
 
     private void firstPage() {
         pageNo = 1;
-        displayListView();
+        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
+        accessSingersAsyncTask.execute();
     }
 
     private void previousPage() {
@@ -87,101 +155,159 @@ public class SingersListActivity extends ListActivity {
         if (pageNo < 1) {
             pageNo = 1;
         }
-        displayListView();
+        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
+        accessSingersAsyncTask.execute();
     }
 
     private void nextPage() {
         pageNo++;
-        if (pageNo > pages) {
-            pageNo = pages;
-        }
-        displayListView();
+        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
+        accessSingersAsyncTask.execute();
     }
 
     private void lastPage() {
-        pageNo = pages;
-        displayListView();
+        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
+        accessSingersAsyncTask.execute();
     }
 
     private void returnToPrevious() {
         finish();
     }
 
-    private void queryOnePageOfData() {
-        // access data from backend
-    }
+    private class MyListAdapter extends ArrayAdapter {
 
-    private void displayListView() {
+        int layoutId;
+        TextView positionNoTextView;
+        TextView singerNoTextView;
+        TextView singerNaTextView;
+        ArrayList<Singer> singers;
 
-    }
-
-    private class mListAdapter extends BaseAdapter {
-
-        private String text1[] , text2[];  // or private String[] text1,text2;
-
-        public mListAdapter() {
-            this.text1 = new String[] {"No initialization"};
-            this.text2 = new String[] {"No initialization"};
+        @SuppressWarnings("unchecked")
+        public MyListAdapter(@NonNull Context context, int resource, @NonNull List objects) {
+            super(context, resource, objects);
+            layoutId = resource;
+            singers = (ArrayList<Singer>)objects;
         }
 
-        public mListAdapter(String[] text1, String[] text2) {
-            this.text1 = text1;
-            this.text2 = text2;
-        }
-
-        @Override
-        public int getCount() {
-            return this.text1.length;
-        }
-
+        @Nullable
         @Override
         public Object getItem(int position) {
+            return super.getItem(position);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public int getPosition(@Nullable Object item) {
+            return super.getPosition(item);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+            View view = getLayoutInflater().inflate(layoutId, parent, false);
+
+            positionNoTextView = view.findViewById(R.id.singerItem_Layout_positionNoTextView);
+            positionNoTextView.setText(String.valueOf(position));
+
+            singerNoTextView = view.findViewById(R.id.singerNoTextView);
+            singerNoTextView.setText(singers.get(position).getSingerNo());
+
+            singerNaTextView = view.findViewById(R.id.singerNaTextView);
+            singerNaTextView.setText(singers.get(position).getSingerNa());
+
+            return view;
+        }
+    }
+
+    private class AccessSingersAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private final String TAG = new String("AccessSingersAsyncTask");
+        private final String errorMessage = getApplicationContext().getString(R.string.failedMessage);
+        private final String loadingString = getApplicationContext().getString(R.string.loadingString);
+        private Animation animationText;
+        private TextView loadingTextView = null;
+        private AlertDialogFragment loadingDialog;
+
+        private SingerType singerTypeAsyncTask;
+        private int pageSizeAsyncTask;
+        private int pageNoAsyncTask;
+
+        public AccessSingersAsyncTask(SingerType singerTypeAsyncTask, int pageSizeAsyncTask, int pageNoAsyncTask) {
+            this.singerTypeAsyncTask = singerTypeAsyncTask;
+            this.pageSizeAsyncTask = pageSizeAsyncTask;
+            this.pageNoAsyncTask = pageNoAsyncTask;
+            animationText = new AlphaAnimation(0.0f,1.0f);
+            animationText.setDuration(300);
+            animationText.setStartOffset(0);
+            animationText.setRepeatMode(Animation.REVERSE);
+            animationText.setRepeatCount(Animation.INFINITE);
+
+            loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.i(TAG, "doInBackground() started.");
+
+            final int timeDelay = 300;
+
+            // wait for a little bit
+            try { Thread.sleep(timeDelay); } catch (InterruptedException ex) { ex.printStackTrace(); }
+
+            while (loadingTextView == null) {
+                loadingTextView = loadingDialog.getText_shown();
+                SystemClock.sleep(timeDelay);
+            }
+
+            publishProgress();
+            // wait for a little bit
+            try { Thread.sleep(timeDelay); } catch (InterruptedException ex) { ex.printStackTrace(); }
+
+            singersList = GetDataByRestApi.getSingersBySingerType(singerTypeAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
+            if (singersList == null) {
+                singersList = new ArrayList<>();
+                Singer singer = new Singer(failedItemNo,"", errorMessage);
+                singersList.add(singer);
+            }
+
+            Log.i(TAG, "doInBackground() finished.");
+
             return null;
         }
 
         @Override
-        public long getItemId(int position) {
-            return position;
+        protected void onProgressUpdate(Void... values) {
+            try {
+                if ( (animationText != null) && (loadingTextView != null) ) {
+                    loadingTextView.startAnimation(animationText);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup container) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.singers_list_item, container, false);
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            Log.i(TAG, "onPostExecute() started.");
+            if (animationText != null) {
+                if (loadingTextView != null) {
+                    loadingTextView.clearAnimation();
+                    loadingTextView.setText("");
+                }
+                animationText = null;
             }
+            loadingDialog.dismissAllowingStateLoss();
 
-            TextView vText1, vText2;
-            vText1 = (TextView) convertView.findViewById(R.id.text1);
-            vText1.setText(this.text1[position]);
-            vText2 = (TextView) convertView.findViewById(R.id.text2);
-            vText2.setText(this.text2[position]);
-
-            // Because the list item contains multiple touch targets, you should not override
-            // onListItemClick. Instead, set a click listener for each target individually.
-
-            convertView.findViewById(R.id.primary_target).setOnClickListener(
-
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Toast.makeText(SingersListActivity.this,
-                                    text1[position],
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-            );
-
-            return convertView;
+            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item ,singersList);
+            singersListView.setAdapter(mMyListAdapter);
         }
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        returnToPrevious();
     }
 }

@@ -15,24 +15,25 @@
         android:textStyle="bold"
         android:textColor="@color/darkOrange"
         android:layout_gravity="center_horizontal|top"
-        android:text="@string/mainSingerArea"
+        android:text="@string/singerTypesListString"
         android:gravity="center"
         app:layout_constraintHeight_percent="0.1"
         app:layout_constraintTop_toTopOf="parent" >
     </TextView>
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/singerTypesListView_Layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/darkYellow"
         app:layout_constraintHeight_percent="0.8"
         app:layout_constraintTop_toBottomOf="@+id/singerTypesListMenuTextView" >
 
         <ListView android:id="@+id/singerTypesListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:scrollbarStyle="outsideOverlay"
             android:drawSelectorOnTop="false" >
         </ListView>
 
@@ -45,6 +46,8 @@
         android:text="@string/returnToPrevious"
         android:background="@android:drawable/btn_default"
         android:textColor="@color/red"
+        android:textStyle="bold"
+        android:gravity="center"
         app:layout_constraintHeight_percent="0.1"
         app:layout_constraintBottom_toBottomOf="parent" >
     </Button>

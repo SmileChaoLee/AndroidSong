@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/primary_target"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:background="@color/darkYellow"
+    android:weightSum="20">
 
-    <TextView android:id="@+id/text1"
-        android:textSize="24sp"
-        android:textScaleX="1.0"
-        android:typeface="normal"
-        android:layout_width="match_parent"
+    <TextView android:id="@+id/singerItem_Layout_positionNoTextView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="#ffff0e1d" />
+        android:textColor="@color/red"
+        android:layout_weight="1">
+    </TextView>
 
-    <TextView android:id="@+id/text2"
-        android:textSize="16sp"
-        android:textScaleX="1.0"
-        android:typeface="normal"
-        android:layout_width="match_parent"
+    <TextView android:id="@+id/singerNoTextView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="#ff000000" />
+        android:textColor="@android:color/black"
+        android:layout_weight="4">
+    </TextView>
+
+    <TextView android:id="@+id/singerNaTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        android:layout_weight="15">
+    </TextView>
 
 </LinearLayout>

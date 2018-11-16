@@ -1,7 +1,6 @@
 package com.smile.androidsong;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,11 +50,6 @@ public class SingersListActivity extends AppCompatActivity {
         if (extras != null )
         {
             singerType = extras.getParcelable("SingerTypeParcelable");
-            if (singerType != null) {
-                Toast.makeText(SingersListActivity.this, singerType.toString(), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(SingersListActivity.this, "singerType is null.", Toast.LENGTH_LONG).show();
-            }
         }
 
         super.onCreate(savedInstanceState);
@@ -166,6 +160,7 @@ public class SingersListActivity extends AppCompatActivity {
     }
 
     private void lastPage() {
+        pageNo = -1;    // represent last page
         AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
         accessSingersAsyncTask.execute();
     }
@@ -230,13 +225,13 @@ public class SingersListActivity extends AppCompatActivity {
         private AlertDialogFragment loadingDialog;
 
         private SingerType singerTypeAsyncTask;
-        private int pageSizeAsyncTask;
-        private int pageNoAsyncTask;
+        private int[] pageSizeAsyncTask = new int[1]; // in order to get the value back from called function
+        private int[] pageNoAsyncTask = new int[1];  // in order to get the value back from called function
 
         public AccessSingersAsyncTask(SingerType singerTypeAsyncTask, int pageSizeAsyncTask, int pageNoAsyncTask) {
             this.singerTypeAsyncTask = singerTypeAsyncTask;
-            this.pageSizeAsyncTask = pageSizeAsyncTask;
-            this.pageNoAsyncTask = pageNoAsyncTask;
+            this.pageSizeAsyncTask[0] = pageSizeAsyncTask;
+            this.pageNoAsyncTask[0] = pageNoAsyncTask;
             animationText = new AlphaAnimation(0.0f,1.0f);
             animationText.setDuration(300);
             animationText.setStartOffset(0);
@@ -274,6 +269,11 @@ public class SingersListActivity extends AppCompatActivity {
                 singersList = new ArrayList<>();
                 Singer singer = new Singer(failedItemNo,"", errorMessage);
                 singersList.add(singer);
+            } else {
+                pageNo = pageNoAsyncTask[0];      // get the back value from called function
+                pageSize = pageSizeAsyncTask[0];    // get the back value from called function
+                Log.i(TAG, "SingerListActivity-->pageNo = " + pageNo);
+                Log.i(TAG, "SingerListActivity-->pageSize = " + pageSize);
             }
 
             Log.i(TAG, "doInBackground() finished.");

@@ -119,7 +119,9 @@ public class GetDataByRestApi {
         return singerTypes;
     }
 
-    public static ArrayList<Singer> getSingersBySingerType(SingerType singerType, int pageSize, int pageNo) {
+    public static ArrayList<Singer> getSingersBySingerType(SingerType singerType, int[] pageSize, int[] pageNo) {
+        // using int[] pageSize to return the result of pageSize
+        // using int[] pageNo to return the result of pageNo
 
         final String TAG = new String("GetDataByRestApi.getSingersBySingerType()");
 
@@ -131,7 +133,7 @@ public class GetDataByRestApi {
 
         // [HttpGet("{areaId}/{sex}/{pageSize}/{pageNo}")]
         // GET api/values/5/"1"/10/1
-        final String param = "/" + singerType.getId() + "/" + singerType.getSex() + "/" + pageSize + "/" + pageNo;
+        final String param = "/" + singerType.getId() + "/" + singerType.getSex() + "/" + pageSize[0] + "/" + pageNo[0];
         final String webUrl = Home_Website + "/api/Singer" + param;
         Log.i(TAG, "WebUrl = " + webUrl);
 
@@ -161,9 +163,13 @@ public class GetDataByRestApi {
                 String result = sb.toString();  // the result
                 Log.i(TAG, "Web output -> " + result);
 
+                JSONObject json = new JSONObject(result);
+                pageNo[0] = json.getInt("PageNo");  // return to calling function
+                pageSize[0] = json.getInt("PageSize"); // return to calling function
                 singers = new ArrayList<>();
                 Singer singer;
-                JSONArray jsonArray = new JSONArray(result);
+                // JSONArray jsonArray = new JSONArray(result);
+                JSONArray jsonArray = new JSONArray(json.getString("Singers"));
                 JSONObject jsonObject;
                 int id;
                 String singNo;

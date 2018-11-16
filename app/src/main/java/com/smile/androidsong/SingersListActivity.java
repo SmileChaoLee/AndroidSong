@@ -45,7 +45,7 @@ public class SingersListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);
+        textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);    // smaller than MyActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null )
         {

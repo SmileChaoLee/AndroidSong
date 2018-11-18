@@ -206,10 +206,10 @@ public class SingersListActivity extends AppCompatActivity {
             positionNoTextView.setText(String.valueOf(position));
 
             singerNoTextView = view.findViewById(R.id.singerNoTextView);
-            singerNoTextView.setText(singers.get(position).getSingerNo());
+            singerNoTextView.setText(singers.get(position).getSingNo());
 
             singerNaTextView = view.findViewById(R.id.singerNaTextView);
-            singerNaTextView.setText(singers.get(position).getSingerNa());
+            singerNaTextView.setText(singers.get(position).getSingNa());
 
             return view;
         }
@@ -267,7 +267,8 @@ public class SingersListActivity extends AppCompatActivity {
             singersList = GetDataByRestApi.getSingersBySingerType(singerTypeAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
             if (singersList == null) {
                 singersList = new ArrayList<>();
-                Singer singer = new Singer(failedItemNo,"", errorMessage);
+                Singer singer = new Singer();
+                singer.setId(failedItemNo);
                 singersList.add(singer);
             } else {
                 pageNo = pageNoAsyncTask[0];      // get the back value from called function

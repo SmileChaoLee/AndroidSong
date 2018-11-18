@@ -176,27 +176,29 @@ public class GetDataByRestApi {
                 Log.i(TAG, "Web output -> " + result);
 
                 JSONObject json = new JSONObject(result);
-                pageNo[0] = json.getInt("PageNo");  // return to calling function
-                pageSize[0] = json.getInt("PageSize"); // return to calling function
+                pageNo[0] = json.getInt("pageNo");  // return to calling function
+                pageSize[0] = json.getInt("pageSize"); // return to calling function
                 singers = new ArrayList<>();
                 Singer singer;
                 // JSONArray jsonArray = new JSONArray(result);
-                JSONArray jsonArray = new JSONArray(json.getString("Singers"));
+                JSONArray jsonArray = new JSONArray(json.getString("singers"));
                 JSONObject jsonObject;
-                int id;
-                String singNo;
-                String singNa;
+
                 for (int i=0; i<jsonArray.length(); i++) {
 
                     jsonObject = jsonArray.getJSONObject(i);
-                    id = jsonObject.getInt("Id");
-                    singNo = jsonObject.getString("SingNo");
-                    singNa = jsonObject.getString("SingNa");
 
                     singer = new Singer();
-                    singer.setId(id);
-                    singer.setSingerNo(singNo);
-                    singer.setSingerNa(singNa);
+                    singer.setId(jsonObject.getInt("id"));
+                    singer.setSingNo(jsonObject.getString("singNo"));
+                    singer.setSingNa(jsonObject.getString("singNa"));
+                    singer.setSex(jsonObject.getString("sex"));
+                    singer.setChor(jsonObject.getString("chor"));
+                    singer.setHot(jsonObject.getString("hot"));
+                    singer.setNumFw(jsonObject.getInt("numFw"));
+                    singer.setNumPw(jsonObject.getString("numPw"));
+                    singer.setPicFile(jsonObject.getString("picFile"));
+
                     singers.add(singer);
                 }
             } else {

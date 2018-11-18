@@ -3,12 +3,19 @@ package com.smile.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SingerType implements Parcelable {
 
+	@SerializedName("id")
 	private int id;
+	@SerializedName("areaNo")
 	private String  areaNo;
+	@SerializedName("areaNa")
 	private String  areaNa;
+	@SerializedName("areaEn")
 	private String  areaEn;
+	@SerializedName("sex")
 	private String sex;	// 0-> not specified, 1->male, 2->female
 
 	public SingerType() {

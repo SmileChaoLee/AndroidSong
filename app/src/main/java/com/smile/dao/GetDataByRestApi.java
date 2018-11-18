@@ -14,14 +14,35 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class GetDataByRestApi {
-    private static final String Home_Website = new String("http://192.168.0.16:5000");
-    // private static final String Home_Website = new String("http://10.0.9.191:5000");
-    // private static final String Home_Website = "http://ec2-13-59-195-3.us-east-2.compute.amazonaws.com";
+    private static final String BASE_URL = new String("http://192.168.0.17:5000/");
+    // private static final String BASE_URL = new String("http://10.0.9.191:5000/");
+    // private static final String BASE_URL = "http://ec2-13-59-195-3.us-east-2.compute.amazonaws.com/";
+
+    private static Retrofit retrofit;
+
+    public static Retrofit getRetrofitInstance() {
+        if (retrofit == null) {
+            retrofit = new retrofit2.Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit;
+    }
+
+    public static ArrayList<SingerType> getAllSingerTypes() {
+        Retrofit localRetrofit = GetDataByRestApi.getRetrofitInstance();
+        ArrayList<SingerType> singerTypes = new ArrayList<>();
+        return singerTypes;
+    }
 
     public static ArrayList<SingerType> getSingerTypes() {
         final String TAG = new String("GetDataByRestApi.getSingerTypes()");
-        final String webUrl = Home_Website + "/api/SingArea";
+        final String webUrl = BASE_URL + "api/SingerType";
         Log.i(TAG, "WebUrl = " + webUrl);
 
         ArrayList<SingerType> singerTypes = null;
@@ -50,43 +71,34 @@ public class GetDataByRestApi {
                 String result = sb.toString();  // the result
                 Log.i(TAG, "Web output -> " + result);
 
+                JSONObject jsonObject = new JSONObject(result);
+                JSONArray jsonArray = new JSONArray(jsonObject.getString("singerTypes"));
+
                 singerTypes = new ArrayList<>();
-                JSONArray jsonArray = new JSONArray(result);
-                JSONObject jsonObject;
                 SingerType singerType;
+
                 int id;
                 String areaNo;
                 String areaNa;
                 String areaEn;
+                String sex;
+
                 for (int i=0; i<jsonArray.length(); i++) {
+
                     jsonObject = jsonArray.getJSONObject(i);
-                    id = jsonObject.getInt("Id");
-                    areaNo = jsonObject.getString("AreaNo");
-                    areaNa = jsonObject.getString("AreaNa");
-                    areaEn = jsonObject.getString("AreaEn");
+                    id = jsonObject.getInt("id");
+                    areaNo = jsonObject.getString("areaNo");
+                    areaNa = jsonObject.getString("areaNa");
+                    areaEn = jsonObject.getString("areaEn");
+                    sex = jsonObject.getString("sex");
 
                     singerType = new SingerType();
                     singerType.setId(id);
                     singerType.setAreaNo(areaNo);
                     singerType.setAreaNa(areaNa);
                     singerType.setAreaEn(areaEn);
-                    singerType.setSex("0");
-                    singerTypes.add(singerType);
+                    singerType.setSex(sex);
 
-                    singerType = new SingerType();
-                    singerType.setId(id);
-                    singerType.setAreaNo(areaNo);
-                    singerType.setAreaNa(areaNa);
-                    singerType.setAreaEn(areaEn);
-                    singerType.setSex("1");
-                    singerTypes.add(singerType);
-
-                    singerType = new SingerType();
-                    singerType.setId(id);
-                    singerType.setAreaNo(areaNo);
-                    singerType.setAreaNa(areaNa);
-                    singerType.setAreaEn(areaEn);
-                    singerType.setSex("2");
                     singerTypes.add(singerType);
                 }
             } else {
@@ -134,7 +146,7 @@ public class GetDataByRestApi {
         // [HttpGet("{areaId}/{sex}/{pageSize}/{pageNo}/orderBy")]
         // GET api/values/5/"1"/10/1/SingNa
         final String param = "/" + singerType.getId() + "/" + singerType.getSex() + "/" + pageSize[0] + "/" + pageNo[0] +"/" + "SingNa";
-        final String webUrl = Home_Website + "/api/Singer" + param;
+        final String webUrl = BASE_URL + "api/Singer" + param;
         Log.i(TAG, "WebUrl = " + webUrl);
 
         ArrayList<Singer> singers = null;

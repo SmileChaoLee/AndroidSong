@@ -24,6 +24,7 @@ import com.smile.Utility.FontSizeAndTheme;
 import com.smile.dao.GetDataByRestApi;
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
+import com.smile.model.SingersList;
 import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class SingersListActivity extends AppCompatActivity {
     private float textFontSize;
     private ListView singersListView;
     private MyListAdapter mMyListAdapter;
-    private ArrayList<Singer> singersList = null;
+    private SingersList singersList = null;
     private SingerType singerType;
     private final int failedItemNo = -1;
 
@@ -62,7 +63,7 @@ public class SingersListActivity extends AppCompatActivity {
         singersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Singer singer = singersList.get(i);
+                Singer singer = singersList.getSingers().get(i);
                 if (singer.getId() != failedItemNo) {
                     // not the failed item
                     Toast.makeText(SingersListActivity.this, singer.toString(), Toast.LENGTH_LONG).show();
@@ -225,13 +226,13 @@ public class SingersListActivity extends AppCompatActivity {
         private AlertDialogFragment loadingDialog;
 
         private SingerType singerTypeAsyncTask;
-        private int[] pageSizeAsyncTask = new int[1]; // in order to get the value back from called function
-        private int[] pageNoAsyncTask = new int[1];  // in order to get the value back from called function
+        private int pageSizeAsyncTask;
+        private int pageNoAsyncTask;
 
         public AccessSingersAsyncTask(SingerType singerTypeAsyncTask, int pageSizeAsyncTask, int pageNoAsyncTask) {
             this.singerTypeAsyncTask = singerTypeAsyncTask;
-            this.pageSizeAsyncTask[0] = pageSizeAsyncTask;
-            this.pageNoAsyncTask[0] = pageNoAsyncTask;
+            this.pageSizeAsyncTask = pageSizeAsyncTask;
+            this.pageNoAsyncTask = pageNoAsyncTask;
             animationText = new AlphaAnimation(0.0f,1.0f);
             animationText.setDuration(300);
             animationText.setStartOffset(0);
@@ -266,13 +267,18 @@ public class SingersListActivity extends AppCompatActivity {
 
             singersList = GetDataByRestApi.getSingersBySingerType(singerTypeAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
             if (singersList == null) {
-                singersList = new ArrayList<>();
+                singersList = new SingersList();
+                singersList.setPageNo(pageNoAsyncTask);
+                singersList.setPageSize(pageSizeAsyncTask);
+                singersList.setTotalRecords(0); // temporary
+                singersList.setTotalPages(0);   // temporary
                 Singer singer = new Singer();
                 singer.setId(failedItemNo);
-                singersList.add(singer);
+                singer.setSingNa(errorMessage);
+                singersList.getSingers().add(singer);
             } else {
-                pageNo = pageNoAsyncTask[0];      // get the back value from called function
-                pageSize = pageSizeAsyncTask[0];    // get the back value from called function
+                pageNo = singersList.getPageNo();      // get the back value from called function
+                pageSize = singersList.getPageSize();    // get the back value from called function
                 Log.i(TAG, "SingerListActivity-->pageNo = " + pageNo);
                 Log.i(TAG, "SingerListActivity-->pageSize = " + pageSize);
             }
@@ -307,7 +313,7 @@ public class SingersListActivity extends AppCompatActivity {
             }
             loadingDialog.dismissAllowingStateLoss();
 
-            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item ,singersList);
+            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item ,singersList.getSingers());
             singersListView.setAdapter(mMyListAdapter);
         }
     }

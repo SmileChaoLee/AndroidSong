@@ -161,4 +161,19 @@ public class Singer implements Parcelable {
     public void setPicFile(String picFile) {
         this.picFile = picFile;
     }
+
+    @Override
+    public String toString() {
+        return "Singer{" +
+                "id=" + id +
+                ", singNo='" + singNo + '\'' +
+                ", singNa='" + singNa + '\'' +
+                ", sex='" + sex + '\'' +
+                ", chor='" + chor + '\'' +
+                ", hot='" + hot + '\'' +
+                ", numFw=" + numFw +
+                ", numPw='" + numPw + '\'' +
+                ", picFile='" + picFile + '\'' +
+                '}';
+    }
 }

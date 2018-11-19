@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
+import com.smile.model.SingerTypeList;
+import com.smile.model.SingersList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,12 +42,12 @@ public class GetDataByRestApi {
         return singerTypes;
     }
 
-    public static ArrayList<SingerType> getSingerTypes() {
+    public static SingerTypeList getSingerTypes() {
         final String TAG = new String("GetDataByRestApi.getSingerTypes()");
         final String webUrl = BASE_URL + "api/SingerType";
         Log.i(TAG, "WebUrl = " + webUrl);
 
-        ArrayList<SingerType> singerTypes = null;
+        SingerTypeList singerTypesList = null;
 
         URL url = null;
         HttpURLConnection myConnection = null;
@@ -69,14 +71,20 @@ public class GetDataByRestApi {
                     sb.append((char)readBuff);
                 }
                 String result = sb.toString();  // the result
-                Log.i(TAG, "Web output -> " + result);
+                // Log.i(TAG, "Web output -> " + result);
 
-                JSONObject jsonObject = new JSONObject(result);
-                JSONArray jsonArray = new JSONArray(jsonObject.getString("singerTypes"));
+                JSONObject json = new JSONObject(result);
 
-                singerTypes = new ArrayList<>();
+                singerTypesList = new SingerTypeList();
+
+                singerTypesList.setPageNo(json.getInt("pageNo"));
+                singerTypesList.setPageSize(json.getInt("pageSize"));
+                singerTypesList.setTotalRecords(0); // temporary
+                singerTypesList.setTotalPages(0);   // temporary
+                JSONArray jsonArray = new JSONArray(json.getString("singerTypes"));
+
+                ArrayList<SingerType> singerTypes = new ArrayList<>();
                 SingerType singerType;
-
                 int id;
                 String areaNo;
                 String areaNa;
@@ -84,13 +92,12 @@ public class GetDataByRestApi {
                 String sex;
 
                 for (int i=0; i<jsonArray.length(); i++) {
-
-                    jsonObject = jsonArray.getJSONObject(i);
-                    id = jsonObject.getInt("id");
-                    areaNo = jsonObject.getString("areaNo");
-                    areaNa = jsonObject.getString("areaNa");
-                    areaEn = jsonObject.getString("areaEn");
-                    sex = jsonObject.getString("sex");
+                    json = jsonArray.getJSONObject(i);
+                    id = json.getInt("id");
+                    areaNo = json.getString("areaNo");
+                    areaNa = json.getString("areaNa");
+                    areaEn = json.getString("areaEn");
+                    sex = json.getString("sex");
 
                     singerType = new SingerType();
                     singerType.setId(id);
@@ -101,16 +108,17 @@ public class GetDataByRestApi {
 
                     singerTypes.add(singerType);
                 }
+                singerTypesList.setSingerTypes(singerTypes);
             } else {
                 Log.i(TAG, "REST Web Service -> Failed to connect.");
                 // singerTypes is null
-                singerTypes = null;
+                singerTypesList = null;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.i(TAG, "REST Web Service -> Failed due to exception.");
             // singerTypes is null
-            singerTypes = null;
+            singerTypesList = null;
         }
         finally {
             try {
@@ -128,10 +136,10 @@ public class GetDataByRestApi {
             }
         }
 
-        return singerTypes;
+        return singerTypesList;
     }
 
-    public static ArrayList<Singer> getSingersBySingerType(SingerType singerType, int[] pageSize, int[] pageNo) {
+    public static SingersList getSingersBySingerType(SingerType singerType, int pageSize, int pageNo) {
         // using int[] pageSize to return the result of pageSize
         // using int[] pageNo to return the result of pageNo
 
@@ -145,11 +153,11 @@ public class GetDataByRestApi {
 
         // [HttpGet("{areaId}/{sex}/{pageSize}/{pageNo}/orderBy")]
         // GET api/values/5/"1"/10/1/SingNa
-        final String param = "/" + singerType.getId() + "/" + singerType.getSex() + "/" + pageSize[0] + "/" + pageNo[0] +"/" + "SingNa";
+        final String param = "/" + singerType.getId() + "/" + singerType.getSex() + "/" + pageSize + "/" + pageNo +"/" + "SingNa";
         final String webUrl = BASE_URL + "api/Singer" + param;
         Log.i(TAG, "WebUrl = " + webUrl);
 
-        ArrayList<Singer> singers = null;
+        SingersList singersList = null;
 
         URL url = null;
         HttpURLConnection myConnection = null;
@@ -173,19 +181,25 @@ public class GetDataByRestApi {
                     sb.append((char)readBuff);
                 }
                 String result = sb.toString();  // the result
-                Log.i(TAG, "Web output -> " + result);
+                // Log.i(TAG, "Web output -> " + result);
 
                 JSONObject json = new JSONObject(result);
-                pageNo[0] = json.getInt("pageNo");  // return to calling function
-                pageSize[0] = json.getInt("pageSize"); // return to calling function
-                singers = new ArrayList<>();
-                Singer singer;
-                // JSONArray jsonArray = new JSONArray(result);
+
+                singersList = new SingersList();
+
+                singersList.setPageNo(json.getInt("pageNo"));
+                singersList.setPageSize(json.getInt("pageSize"));
+                singersList.setTotalRecords(0); // temporary
+                singersList.setTotalPages(0);   // temporary
+
                 JSONArray jsonArray = new JSONArray(json.getString("singers"));
+                // or
+                // JSONArray jsonArray = (JSONArray) json.opt("singers");
+
+                ArrayList<Singer> singers = new ArrayList<>();
+                Singer singer;
                 JSONObject jsonObject;
-
                 for (int i=0; i<jsonArray.length(); i++) {
-
                     jsonObject = jsonArray.getJSONObject(i);
 
                     singer = new Singer();
@@ -201,16 +215,17 @@ public class GetDataByRestApi {
 
                     singers.add(singer);
                 }
+                singersList.setSingers(singers);
             } else {
                 Log.i(TAG, "REST Web Service -> Failed to connect.");
                 // singerTypes is null
-                singers = null;
+                singersList = null;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.i(TAG, "REST Web Service -> Failed due to exception.");
             // singerTypes is null
-            singers = null;
+            singersList = null;
         }
         finally {
             try {
@@ -228,6 +243,6 @@ public class GetDataByRestApi {
             }
         }
 
-        return singers;
+        return singersList;
     }
 }

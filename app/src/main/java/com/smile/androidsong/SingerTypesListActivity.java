@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.smile.Utility.FontSizeAndTheme;
 import com.smile.dao.GetDataByRestApi;
 import com.smile.model.SingerType;
+import com.smile.model.SingerTypeList;
 import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
     private float textFontSize;
     private ListView singerTypesListView;
     private MyListAdapter mMyListAdapter;
-    private ArrayList<SingerType> singerTypesList;
+    private SingerTypeList singerTypesList;
     private final int failedItemNo = -1;
 
     @Override
@@ -52,7 +53,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
         singerTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SingerType singerType = singerTypesList.get(i);
+                SingerType singerType = singerTypesList.getSingerTypes().get(i);
                 if (singerType.getId() != failedItemNo) {
                     // not the failed item
                     Intent singerTypeIntent = new Intent(getApplicationContext(), SingersListActivity.class);
@@ -188,9 +189,9 @@ public class SingerTypesListActivity extends AppCompatActivity {
 
             singerTypesList = GetDataByRestApi.getSingerTypes();
             if (singerTypesList == null) {
-                singerTypesList = new ArrayList<>();
+                singerTypesList = new SingerTypeList();
                 SingerType singerType = new SingerType(failedItemNo, "0", errorMessage, "", "0");
-                singerTypesList.add(singerType);
+                singerTypesList.getSingerTypes().add(singerType);
             }
 
             Log.i(TAG, "doInBackground() finished.");
@@ -223,7 +224,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
             }
             loadingDialog.dismissAllowingStateLoss();
 
-            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singer_types_list_item ,singerTypesList);
+            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singer_types_list_item ,singerTypesList.getSingerTypes());
             singerTypesListView.setAdapter(mMyListAdapter);
         }
     }

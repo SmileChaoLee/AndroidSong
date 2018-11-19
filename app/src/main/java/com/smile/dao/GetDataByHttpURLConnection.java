@@ -23,7 +23,7 @@ public class GetDataByHttpURLConnection {
     // private static final String BASE_URL = "http://ec2-13-59-195-3.us-east-2.compute.amazonaws.com/";
 
     public static SingerTypesList getAllSingerTypes() {
-        final String TAG = new String("GetDataByRestApi.getSingerTypes()");
+        final String TAG = new String("GetDataByHttpURLConnection.getSingerTypes()");
         final String webUrl = BASE_URL + "api/SingerType";
         Log.i(TAG, "WebUrl = " + webUrl);
 
@@ -59,8 +59,8 @@ public class GetDataByHttpURLConnection {
 
                 singerTypesList.setPageNo(json.getInt("pageNo"));
                 singerTypesList.setPageSize(json.getInt("pageSize"));
-                singerTypesList.setTotalRecords(0); // temporary
-                singerTypesList.setTotalPages(0);   // temporary
+                singerTypesList.setTotalRecords(json.getInt("totalRecords"));
+                singerTypesList.setTotalPages(json.getInt("totalPages"));
                 JSONArray jsonArray = new JSONArray(json.getString("singerTypes"));
 
                 ArrayList<SingerType> singerTypes = new ArrayList<>();
@@ -123,7 +123,7 @@ public class GetDataByHttpURLConnection {
         // using int[] pageSize to return the result of pageSize
         // using int[] pageNo to return the result of pageNo
 
-        final String TAG = new String("GetDataByRestApi.getSingersBySingerType()");
+        final String TAG = new String("GetDataByHttpURLConnection.getSingersBySingerType()");
 
         if (singerType == null) {
             // singerType cannot be null
@@ -169,8 +169,8 @@ public class GetDataByHttpURLConnection {
 
                 singersList.setPageNo(json.getInt("pageNo"));
                 singersList.setPageSize(json.getInt("pageSize"));
-                singersList.setTotalRecords(0); // temporary
-                singersList.setTotalPages(0);   // temporary
+                singersList.setTotalRecords(json.getInt("totalRecords"));
+                singersList.setTotalPages(json.getInt("totalPages"));
 
                 JSONArray jsonArray = new JSONArray(json.getString("singers"));
                 // or

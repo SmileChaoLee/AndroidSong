@@ -22,6 +22,7 @@ import com.smile.dao.GetDataByHttpURLConnection;
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
 import com.smile.model.SingersList;
+import com.smile.retrofit_package.GetDataByRetrofitRestApi;
 import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
 
 import java.util.ArrayList;
@@ -246,7 +247,7 @@ public class SingersListActivity extends AppCompatActivity {
             final int timeDelay = 300;
 
             // implement Retrofit to get results synchronously
-            singersList = GetDataByHttpURLConnection.getSingersBySingerType(singerTypeAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
+            singersList = GetDataByRetrofitRestApi.getSingersBySingerType(singerTypeAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
 
             Log.i(TAG, "doInBackground() finished.");
 
@@ -281,6 +282,8 @@ public class SingersListActivity extends AppCompatActivity {
                 pageSize = singersList.getPageSize();    // get the back value from called function
                 Log.i(TAG, "SingerListActivity-->pageNo = " + pageNo);
                 Log.i(TAG, "SingerListActivity-->pageSize = " + pageSize);
+                Log.i(TAG, "SingerListActivity-->totalRecords = " + singersList.getTotalRecords());
+                Log.i(TAG, "SingerListActivity-->totalPages = " + singersList.getTotalPages());
 
                 if (singersList.getSingers().size() == 0) {
                     singersListEmptyTextView.setText(noResultString);

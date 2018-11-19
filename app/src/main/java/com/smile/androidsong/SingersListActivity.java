@@ -221,8 +221,6 @@ public class SingersListActivity extends AppCompatActivity {
         private final String TAG = new String("AccessSingersAsyncTask");
         private final String errorMessage = getApplicationContext().getString(R.string.failedMessage);
         private final String loadingString = getApplicationContext().getString(R.string.loadingString);
-        private Animation animationText;
-        private TextView loadingTextView = null;
         private AlertDialogFragment loadingDialog;
 
         private SingerType singerTypeAsyncTask;
@@ -233,13 +231,8 @@ public class SingersListActivity extends AppCompatActivity {
             this.singerTypeAsyncTask = singerTypeAsyncTask;
             this.pageSizeAsyncTask = pageSizeAsyncTask;
             this.pageNoAsyncTask = pageNoAsyncTask;
-            animationText = new AlphaAnimation(0.0f,1.0f);
-            animationText.setDuration(300);
-            animationText.setStartOffset(0);
-            animationText.setRepeatMode(Animation.REVERSE);
-            animationText.setRepeatCount(Animation.INFINITE);
 
-            loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0);
+            loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0, true);
         }
 
         @Override
@@ -255,11 +248,6 @@ public class SingersListActivity extends AppCompatActivity {
 
             // wait for a little bit
             try { Thread.sleep(timeDelay); } catch (InterruptedException ex) { ex.printStackTrace(); }
-
-            while (loadingTextView == null) {
-                loadingTextView = loadingDialog.getText_shown();
-                SystemClock.sleep(timeDelay);
-            }
 
             publishProgress();
             // wait for a little bit
@@ -290,13 +278,7 @@ public class SingersListActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            try {
-                if ( (animationText != null) && (loadingTextView != null) ) {
-                    loadingTextView.startAnimation(animationText);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+
         }
 
         @Override
@@ -304,13 +286,7 @@ public class SingersListActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
 
             Log.i(TAG, "onPostExecute() started.");
-            if (animationText != null) {
-                if (loadingTextView != null) {
-                    loadingTextView.clearAnimation();
-                    loadingTextView.setText("");
-                }
-                animationText = null;
-            }
+
             loadingDialog.dismissAllowingStateLoss();
 
             mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item ,singersList.getSingers());

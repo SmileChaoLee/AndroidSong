@@ -197,19 +197,12 @@ public class SingerTypesListActivity extends AppCompatActivity {
     private class RetrofitRetrieveSingerType implements Callback<SingerTypesList> {
 
         private final String TAG = new String("RetrofitRetrieveSingerType.class");
-        private Animation animationText;
-        private TextView loadingTextView = null;
         private AlertDialogFragment loadingDialog;
 
         private Retrofit retrofit;
 
         public RetrofitRetrieveSingerType() {
-            animationText = new AlphaAnimation(0.0f,1.0f);
-            animationText.setDuration(300);
-            animationText.setStartOffset(0);
-            animationText.setRepeatMode(Animation.REVERSE);
-            animationText.setRepeatCount(Animation.INFINITE);
-            loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0);
+            loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0, true);
         }
 
         public void startRetrieve() {

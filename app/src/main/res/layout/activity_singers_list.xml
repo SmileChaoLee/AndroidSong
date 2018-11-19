@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
     </TextView>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/singersListView_Layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -36,7 +36,16 @@
             android:drawSelectorOnTop="false" >
         </ListView>
 
-    </LinearLayout>
+        <TextView android:id="@+id/singersListEmptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:visibility="gone" >
+        </TextView>
+
+    </FrameLayout>
 
     <LinearLayout
         android:orientation="horizontal"

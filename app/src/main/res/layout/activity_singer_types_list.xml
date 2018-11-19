@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/green"
     android:orientation="vertical"
-    tools:context=".SingerTypesListActivity_OLD">
+    tools:context=".SingerTypesListActivity">
 
     <TextView
         android:id="@+id/singerTypesListMenuTextView"
@@ -37,7 +37,7 @@
             android:drawSelectorOnTop="false" >
         </ListView>
 
-        <TextView android:id="@+id/listEmptyTextView"
+        <TextView android:id="@+id/singerTypesListEmptyTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textStyle="bold"

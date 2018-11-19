@@ -10,39 +10,19 @@ import com.smile.model.SingersList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class GetDataByRestApi {
-    // private static final String BASE_URL = new String("http://192.168.0.17:5000/");
-    private static final String BASE_URL = new String("http://10.0.9.191:5000/");
+public class GetDataByHttpURLConnection {
+    private static final String BASE_URL = new String("http://192.168.0.35:5000/");
+    // private static final String BASE_URL = new String("http://10.0.9.191:5000/");
     // private static final String BASE_URL = "http://ec2-13-59-195-3.us-east-2.compute.amazonaws.com/";
 
-    private static Retrofit retrofit;
-
-    public static Retrofit getRetrofitInstance() {
-        if (retrofit == null) {
-            retrofit = new retrofit2.Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-        }
-        return retrofit;
-    }
-
-    public static ArrayList<SingerType> getAllSingerTypes() {
-        Retrofit localRetrofit = GetDataByRestApi.getRetrofitInstance();
-        ArrayList<SingerType> singerTypes = new ArrayList<>();
-        return singerTypes;
-    }
-
-    public static SingerTypesList getSingerTypes() {
+    public static SingerTypesList getAllSingerTypes() {
         final String TAG = new String("GetDataByRestApi.getSingerTypes()");
         final String webUrl = BASE_URL + "api/SingerType";
         Log.i(TAG, "WebUrl = " + webUrl);
@@ -147,7 +127,7 @@ public class GetDataByRestApi {
 
         if (singerType == null) {
             // singerType cannot be null
-            Log.d(TAG, "singerType is null.");
+            Log.d(TAG, "singersList is null.");
             return null;
         }
 

@@ -3,10 +3,13 @@ package com.smile.androidsong;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -16,11 +19,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.smile.Utility.FontSizeAndTheme;
 import com.smile.dao.GetDataByRestApi;
-import com.smile.interfaces.RetrofitApiInterface;
 import com.smile.model.SingerType;
 import com.smile.model.SingerTypesList;
 import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
@@ -28,25 +29,17 @@ import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragme
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
-public class SingerTypesListActivity extends AppCompatActivity {
+public class SingerTypesListActivity_OLD extends AppCompatActivity {
 
     private float textFontSize;
     private ListView singerTypesListView;
-    private TextView listEmptyTextView;
     private MyListAdapter mMyListAdapter;
     private SingerTypesList singerTypesList;
-    private final String noResultString = AndroidSongApp.AppResources.getString(R.string.noResultString);
-    private final String failedMessage = AndroidSongApp.AppResources.getString(R.string.failedMessage);
-    private final String loadingString = AndroidSongApp.AppResources.getString(R.string.loadingString);
     private final int failedItemNo = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);
 
         super.onCreate(savedInstanceState);
@@ -65,13 +58,10 @@ public class SingerTypesListActivity extends AppCompatActivity {
                     Intent singerTypeIntent = new Intent(getApplicationContext(), SingersListActivity.class);
                     singerTypeIntent.putExtra("SingerTypeParcelable", singerType);
                     startActivity(singerTypeIntent);
-                    Toast.makeText(SingerTypesListActivity.this, singerType.toString(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(SingerTypesListActivity.this, singerType.toString(), Toast.LENGTH_LONG).show();
                 }
             }
         });
-
-        listEmptyTextView = findViewById(R.id.listEmptyTextView);
-        listEmptyTextView.setVisibility(View.GONE);
 
         Button returnToPreviousButton = findViewById(R.id.returnToPreviousButton);
         returnToPreviousButton.setOnClickListener(new View.OnClickListener() {
@@ -81,47 +71,9 @@ public class SingerTypesListActivity extends AppCompatActivity {
             }
         });
 
-        RetrofitRetrieveSingerType retrofitRetrieveSingerType = new RetrofitRetrieveSingerType();
-        retrofitRetrieveSingerType.startRetrieve();
-
-        /*  this following works
-        // for testing
-        // implement the RetrofitApiInterface using anonymous Callback<List<SingerType>> class
-        // Retrofit execute asynchronously
-        Retrofit retrofit = GetDataByRestApi.getRetrofitInstance();     // get Retrofit client
-        RetrofitApiInterface retrofitApiInterface = retrofit.create(RetrofitApiInterface.class);
-        Call<SingerTypesList> call = retrofitApiInterface.getAllSingerTypes();
-        call.enqueue(new Callback<SingerTypesList>() {
-            @Override
-            public void onResponse(Call<SingerTypesList> call, Response<SingerTypesList> response) {
-                Toast.makeText(RetrofitSingerTypesActivity.this,"Succeeded to retrieved data from remore server."
-                        , Toast.LENGTH_LONG).show();
-
-                singerTypesList = response.body();
-                if (singerTypesList.getSingerTypes().size() == 0) {
-                    listEmptyTextView.setText(noResultString);
-                    listEmptyTextView.setVisibility(View.VISIBLE);
-                } else {
-                    listEmptyTextView.setVisibility(View.GONE);
-                }
-                mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singer_types_list_item ,singerTypesList.getSingerTypes());
-                singerTypesListView.setAdapter(mMyListAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<SingerTypesList> call, Throwable t) {
-                System.out.println("RetrofitSingerTypesActivity --> " + t.toString());
-                Toast.makeText(RetrofitSingerTypesActivity.this,"Failed to retrieved data from remote server."
-                , Toast.LENGTH_LONG).show();
-                singerTypesList = new SingerTypesList();
-                listEmptyTextView.setText(failedMessage);
-                listEmptyTextView.setVisibility(View.VISIBLE);
-            }
-        });
-        */
-
+        AccessSingerTypesAsyncTask accessAsyncTask = new AccessSingerTypesAsyncTask();
+        accessAsyncTask.execute();
     }
-
 
     @Override
     public void onBackPressed() {
@@ -192,65 +144,87 @@ public class SingerTypesListActivity extends AppCompatActivity {
         }
     }
 
-    // implement Callback<List<SingerType>> of RetrofitApiInterface
-    // Retrofit execute asynchronously
-    private class RetrofitRetrieveSingerType implements Callback<SingerTypesList> {
+    private class AccessSingerTypesAsyncTask extends AsyncTask<Void, Void, Void> {
 
-        private final String TAG = new String("RetrofitRetrieveSingerType.class");
+        private final String TAG = new String("AccessSingerTypesAsyncTask");
+        private final String errorMessage = getApplicationContext().getString(R.string.failedMessage);
+        private final String loadingString = getApplicationContext().getString(R.string.loadingString);
         private Animation animationText;
         private TextView loadingTextView = null;
         private AlertDialogFragment loadingDialog;
 
-        private Retrofit retrofit;
-
-        public RetrofitRetrieveSingerType() {
+        public AccessSingerTypesAsyncTask() {
             animationText = new AlphaAnimation(0.0f,1.0f);
             animationText.setDuration(300);
             animationText.setStartOffset(0);
             animationText.setRepeatMode(Animation.REVERSE);
             animationText.setRepeatCount(Animation.INFINITE);
+
             loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0);
         }
 
-        public void startRetrieve() {
+        @Override
+        protected void onPreExecute() {
             loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
-
-            Retrofit retrofit = GetDataByRestApi.getRetrofitInstance();     // get Retrofit client
-            RetrofitApiInterface retrofitApiInterface = retrofit.create(RetrofitApiInterface.class);
-            Call<SingerTypesList> call = retrofitApiInterface.getAllSingerTypes();
-            call.enqueue(this);
         }
 
         @Override
-        public void onResponse(Call<SingerTypesList> call, Response<SingerTypesList> response) {
+        protected Void doInBackground(Void... voids) {
+            Log.i(TAG, "doInBackground() started.");
+
+            final int timeDelay = 300;
+
+            // wait for a little bit
+            try { Thread.sleep(timeDelay); } catch (InterruptedException ex) { ex.printStackTrace(); }
+
+            while (loadingTextView == null) {
+                loadingTextView = loadingDialog.getText_shown();
+                SystemClock.sleep(timeDelay);
+            }
+
+            publishProgress();
+            // wait for a little bit
+            try { Thread.sleep(timeDelay); } catch (InterruptedException ex) { ex.printStackTrace(); }
+
+            singerTypesList = GetDataByRestApi.getSingerTypes();
+            if (singerTypesList == null) {
+                singerTypesList = new SingerTypesList();
+                SingerType singerType = new SingerType(failedItemNo, "0", errorMessage, "", "0");
+                singerTypesList.getSingerTypes().add(singerType);
+            }
+
+            Log.i(TAG, "doInBackground() finished.");
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            try {
+                if ( (animationText != null) && (loadingTextView != null) ) {
+                    loadingTextView.startAnimation(animationText);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            Log.i(TAG, "onPostExecute() started.");
+            if (animationText != null) {
+                if (loadingTextView != null) {
+                    loadingTextView.clearAnimation();
+                    loadingTextView.setText("");
+                }
+                animationText = null;
+            }
             loadingDialog.dismissAllowingStateLoss();
 
-            Toast.makeText(SingerTypesListActivity.this,"Succeeded to retrieved data from remore server."
-                    , Toast.LENGTH_LONG).show();
-
-            singerTypesList = response.body();
-            if (singerTypesList.getSingerTypes().size() == 0) {
-                listEmptyTextView.setText(noResultString);
-                listEmptyTextView.setVisibility(View.VISIBLE);
-            } else {
-                listEmptyTextView.setVisibility(View.GONE);
-            }
             mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singer_types_list_item ,singerTypesList.getSingerTypes());
             singerTypesListView.setAdapter(mMyListAdapter);
-        }
-
-        @Override
-        public void onFailure(Call<SingerTypesList> call, Throwable t) {
-            System.out.println("RetrofitRetrieveSingerType --> " + t.toString());
-
-            loadingDialog.dismissAllowingStateLoss();
-
-            Toast.makeText(SingerTypesListActivity.this,"Failed to retrieved data from remote server."
-                    , Toast.LENGTH_LONG).show();
-
-            singerTypesList = new SingerTypesList();
-            listEmptyTextView.setText(failedMessage);
-            listEmptyTextView.setVisibility(View.VISIBLE);
         }
     }
 }

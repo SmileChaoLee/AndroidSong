@@ -14,7 +14,11 @@ public class SingersList {
     @SerializedName("totalPages")
     private int totalPages;
     @SerializedName("singers")
-    private ArrayList<Singer> singers = new ArrayList<>();
+    private ArrayList<Singer> singers;
+
+    public SingersList() {
+        singers = new ArrayList<>();
+    }
 
     public int getPageNo() {
         return pageNo;

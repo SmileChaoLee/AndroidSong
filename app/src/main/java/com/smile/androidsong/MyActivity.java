@@ -27,8 +27,8 @@ public class MyActivity extends AppCompatActivity {
         singerOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_SingerTypeOrder = new Intent(MyActivity.this , SingerTypesListActivity.class);
-                startActivity(intent_SingerTypeOrder);
+                Intent intent_SingerTypes = new Intent(MyActivity.this, SingerTypesListActivity.class);
+                startActivity(intent_SingerTypes);
             }
         });
 

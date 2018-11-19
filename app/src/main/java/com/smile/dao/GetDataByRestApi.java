@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
-import com.smile.model.SingerTypeList;
+import com.smile.model.SingerTypesList;
 import com.smile.model.SingersList;
 
 import org.json.JSONArray;
@@ -20,8 +20,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GetDataByRestApi {
-    private static final String BASE_URL = new String("http://192.168.0.17:5000/");
-    // private static final String BASE_URL = new String("http://10.0.9.191:5000/");
+    // private static final String BASE_URL = new String("http://192.168.0.17:5000/");
+    private static final String BASE_URL = new String("http://10.0.9.191:5000/");
     // private static final String BASE_URL = "http://ec2-13-59-195-3.us-east-2.compute.amazonaws.com/";
 
     private static Retrofit retrofit;
@@ -42,12 +42,12 @@ public class GetDataByRestApi {
         return singerTypes;
     }
 
-    public static SingerTypeList getSingerTypes() {
+    public static SingerTypesList getSingerTypes() {
         final String TAG = new String("GetDataByRestApi.getSingerTypes()");
         final String webUrl = BASE_URL + "api/SingerType";
         Log.i(TAG, "WebUrl = " + webUrl);
 
-        SingerTypeList singerTypesList = null;
+        SingerTypesList singerTypesList = null;
 
         URL url = null;
         HttpURLConnection myConnection = null;
@@ -75,7 +75,7 @@ public class GetDataByRestApi {
 
                 JSONObject json = new JSONObject(result);
 
-                singerTypesList = new SingerTypeList();
+                singerTypesList = new SingerTypesList();
 
                 singerTypesList.setPageNo(json.getInt("pageNo"));
                 singerTypesList.setPageSize(json.getInt("pageSize"));

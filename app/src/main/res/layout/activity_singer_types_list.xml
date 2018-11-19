@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/green"
     android:orientation="vertical"
-    tools:context=".SingerTypesListActivity">
+    tools:context=".SingerTypesListActivity_OLD">
 
     <TextView
         android:id="@+id/singerTypesListMenuTextView"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" >
     </TextView>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/singerTypesListView_Layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -37,7 +37,16 @@
             android:drawSelectorOnTop="false" >
         </ListView>
 
-    </LinearLayout>
+        <TextView android:id="@+id/listEmptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:visibility="gone" >
+        </TextView>
+
+    </FrameLayout>
 
     <Button
         android:id="@+id/returnToPreviousButton"

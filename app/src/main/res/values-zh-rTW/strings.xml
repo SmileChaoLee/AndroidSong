@@ -14,6 +14,7 @@
     <string name="orderOneSongString">請輸入包廂內的電腦編號</string>
     <string name="computerIdString">電腦編號:</string>
 
+    <string name="noResultString">沒有結果</string>
     <string name="failedMessage">失敗</string>
     <string name="succeededMessage">成功</string>
     <string name="loadingString">下載中 ...</string>

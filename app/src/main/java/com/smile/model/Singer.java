@@ -61,34 +61,6 @@ public class Singer implements Parcelable {
         numPw = in.readString();
         picFile = in.readString();
     }
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel out, int i) {
-        out.writeInt(id);
-        out.writeString(singNo);
-        out.writeString(singNa);
-        out.writeString(sex);
-        out.writeString(chor);
-        out.writeString(hot);
-        out.writeInt(numFw);
-        out.writeString(numPw);
-        out.writeString(picFile);
-    }
-
-    public static final Parcelable.Creator<Singer> CREATOR = new Parcelable.Creator<Singer>() {
-        @Override
-        public Singer createFromParcel(Parcel in) {
-            return new Singer(in);
-        }
-        @Override
-        public Singer[] newArray(int size) {
-            return new Singer[size];
-        }
-    };
 
     public int getId() {
         return id;
@@ -161,6 +133,35 @@ public class Singer implements Parcelable {
     public void setPicFile(String picFile) {
         this.picFile = picFile;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int i) {
+        out.writeInt(id);
+        out.writeString(singNo);
+        out.writeString(singNa);
+        out.writeString(sex);
+        out.writeString(chor);
+        out.writeString(hot);
+        out.writeInt(numFw);
+        out.writeString(numPw);
+        out.writeString(picFile);
+    }
+
+    public static final Parcelable.Creator<Singer> CREATOR = new Parcelable.Creator<Singer>() {
+        @Override
+        public Singer createFromParcel(Parcel in) {
+            return new Singer(in);
+        }
+        @Override
+        public Singer[] newArray(int size) {
+            return new Singer[size];
+        }
+    };
 
     @Override
     public String toString() {

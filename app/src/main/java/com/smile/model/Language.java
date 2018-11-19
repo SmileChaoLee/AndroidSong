@@ -1,37 +1,105 @@
 package com.smile.model;
 
-public class Language {
+import android.os.Parcel;
+import android.os.Parcelable;
 
-		private String  lang_no = new String("");
-		private String  lang_na = new String("");
-        private String  lang_en = new String("");
+import com.google.gson.annotations.SerializedName;
 
-		public Language() {
-			initiateLangurecord();
-		}
-		
-		public void initiateLangurecord() {
-            setLang_no("");
-            setLang_na("");
-            setLang_en("");
-		}
-		
-		public void setLang_no(String lang_no) {
-			this.lang_no = lang_no;
-		}
-		public String getLang_no() {
-			return this.lang_no;
-		}
-		public void setLang_na(String lang_na) {
-			this.lang_na = lang_na;
-		}
-		public String getLang_na() {
-			return this.lang_na;
-		}
-        public void setLang_en(String lang_en) {
-            this.lang_en = lang_en;
-        }
-        public String getLang_en() {
-            return this.lang_en;
-        }
+public class Language implements Parcelable {
+
+	@SerializedName("id")
+	private int id;
+	@SerializedName("langNo")
+	private String  langNo;
+	@SerializedName("langNa")
+	private String  langNa;
+	@SerializedName("langEn")
+	private String  langEn;
+
+	public Language() {
+		setId(0);
+		setLangNo("");
+		setLangNa("");
+		setLangEn("");
 	}
+
+	public Language(int id, String langNo, String langNa, String langEn) {
+		setId(id);
+		setLangNo(langNo);
+		setLangNa(langNa);
+		setLangEn(langEn);
+	}
+
+	public Language(Parcel in) {
+		id = in.readInt();
+		langNo = in.readString();
+		langNa = in.readString();
+		langEn = in.readString();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getLangNo() {
+		return langNo;
+	}
+
+	public void setLangNo(String langNo) {
+		this.langNo = langNo;
+	}
+
+	public String getLangNa() {
+		return langNa;
+	}
+
+	public void setLangNa(String langNa) {
+		this.langNa = langNa;
+	}
+
+	public String getLangEn() {
+		return langEn;
+	}
+
+	public void setLangEn(String langEn) {
+		this.langEn = langEn;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel out, int i) {
+		out.writeInt(id);
+		out.writeString(langNo);
+		out.writeString(langNa);
+		out.writeString(langEn);
+	}
+
+	public static final Parcelable.Creator<Language> CREATOR = new Parcelable.Creator<Language>() {
+		@Override
+		public Language createFromParcel(Parcel in) {
+			return new Language(in);
+		}
+		@Override
+		public Language[] newArray(int size) {
+			return new Language[size];
+		}
+	};
+
+	@Override
+	public String toString() {
+		return "Language{" +
+				"id=" + id +
+				", langNo='" + langNo + '\'' +
+				", langNa='" + langNa + '\'' +
+				", langEn='" + langEn + '\'' +
+				'}';
+	}
+}

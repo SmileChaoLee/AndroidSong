@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smile.Utility.FontSizeAndTheme;
-import com.smile.dao.GetDataByHttpURLConnection;
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
 import com.smile.model.SingersList;
@@ -243,8 +242,6 @@ public class SingersListActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             Log.i(TAG, "doInBackground() started.");
-
-            final int timeDelay = 300;
 
             // implement Retrofit to get results synchronously
             singersList = GetDataByRetrofitRestApi.getSingersBySingerType(singerTypeAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);

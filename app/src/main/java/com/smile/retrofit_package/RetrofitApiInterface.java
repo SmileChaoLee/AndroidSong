@@ -8,9 +8,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface RetrofitApiInterface {
-    @GET("api/SingerType")
+    @GET("api/Singareas/SingerTypes")
     Call<SingerTypesList> getAllSingerTypes();
 
-    @GET("api/Singer/{areaId}/{sex}/{pageSize}/{pageNo}/{orderBy}")
-    Call<SingersList> getSingersBySingerType(@Path("areaId") int areaId, @Path("sex") String sex, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
+    @GET("api/Singareas/{id}/Singers/{sex}/{pageSize}/{pageNo}/{orderBy}")
+    Call<SingersList> getSingersBySingerType(@Path("id") int id, @Path("sex") String sex, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
 }

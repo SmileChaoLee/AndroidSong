@@ -40,6 +40,7 @@ public class SingersListActivity extends AppCompatActivity {
 
     private int pageNo = 1;
     private int pageSize = 10;
+    private int totalPages = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class SingersListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Singer singer = singersList.getSingers().get(i);
-                Toast.makeText(SingersListActivity.this, singer.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SingersListActivity.this, singer.getSingNa().toString(), Toast.LENGTH_SHORT).show();
                 Intent songsIntent = new Intent(SingersListActivity.this, SongsListActivity.class);
                 songsIntent.putExtra("SingerParcelable", singer);
                 startActivity(songsIntent);
@@ -161,6 +162,9 @@ public class SingersListActivity extends AppCompatActivity {
 
     private void nextPage() {
         pageNo++;
+        if (pageNo > totalPages) {
+            pageNo = totalPages;
+        }
         AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
         accessSingersAsyncTask.execute();
     }
@@ -273,6 +277,7 @@ public class SingersListActivity extends AppCompatActivity {
                 singersList.setPageSize(pageSizeAsyncTask);
                 singersList.setTotalRecords(0); // temporary
                 singersList.setTotalPages(0);   // temporary
+                totalPages = 0;
 
                 singersListEmptyTextView.setText(failedMessage);
                 singersListEmptyTextView.setVisibility(View.VISIBLE);
@@ -280,10 +285,7 @@ public class SingersListActivity extends AppCompatActivity {
                 // successfully
                 pageNo = singersList.getPageNo();      // get the back value from called function
                 pageSize = singersList.getPageSize();    // get the back value from called function
-                Log.i(TAG, "SingerListActivity-->pageNo = " + pageNo);
-                Log.i(TAG, "SingerListActivity-->pageSize = " + pageSize);
-                Log.i(TAG, "SingerListActivity-->totalRecords = " + singersList.getTotalRecords());
-                Log.i(TAG, "SingerListActivity-->totalPages = " + singersList.getTotalPages());
+                totalPages = singersList.getTotalPages();
 
                 if (singersList.getSingers().size() == 0) {
                     singersListEmptyTextView.setText(noResultString);

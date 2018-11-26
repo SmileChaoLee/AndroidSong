@@ -36,6 +36,7 @@ public class SongsListActivity extends AppCompatActivity {
 
     private int pageNo = 1;
     private int pageSize = 7;
+    private int totalPages = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class SongsListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Song song = songsList.getSongs().get(i);
-                Toast.makeText(SongsListActivity.this, song.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SongsListActivity.this, song.getSongNa().toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -144,6 +145,9 @@ public class SongsListActivity extends AppCompatActivity {
 
     private void nextPage() {
         pageNo++;
+        if (pageNo > totalPages) {
+            pageNo = totalPages;
+        }
         AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
@@ -273,13 +277,15 @@ public class SongsListActivity extends AppCompatActivity {
                 songsList.setPageSize(pageSizeAsyncTask);
                 songsList.setTotalRecords(0); // temporary
                 songsList.setTotalPages(0);   // temporary
+                totalPages = 0;
 
                 songsListEmptyTextView.setText(failedMessage);
                 songsListEmptyTextView.setVisibility(View.VISIBLE);
             } else {
                 // successfully
-                pageNo = songsList.getPageNo();      // get the back value from called function
-                pageSize = songsList.getPageSize();    // get the back value from called function
+                pageNo = songsList.getPageNo();         // get the back value from called function
+                pageSize = songsList.getPageSize();     // get the back value from called function
+                totalPages = songsList.getTotalPages(); // get the back value from called function
 
                 if (songsList.getSongs().size() == 0) {
                     songsListEmptyTextView.setText(noResultString);

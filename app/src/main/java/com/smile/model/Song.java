@@ -57,7 +57,8 @@ public class Song implements Parcelable {
 	@SerializedName("singer2Na")
     private String singer2Na;
 	@SerializedName("inDate")
-	private Date inDate;
+	// private Date inDate;
+	private java.util.Date inDate;
 
 	public Song() {
 		setId(0);
@@ -84,10 +85,10 @@ public class Song implements Parcelable {
 		setSinger2Id(0);
 		setSinger2No("");
 		setSinger2Na("");
-		setInDate(new Date(new java.util.Date().getTime()));
+		setInDate(new java.util.Date());
 	}
 
-	public Song(int id, String songNo, String songNa, int sNumWord, int numFw, String numPw, String chor, String nMpeg, String mMpeg, String vodYn, String vodNo, String pathname, int ordNo, int orderNum, int ordOldN, int languageId, String languageNo, String languageNa, int singer1Id, String singer1No, String singer1Na, int singer2Id, String singer2No, String singer2Na, Date inDate) {
+	public Song(int id, String songNo, String songNa, int sNumWord, int numFw, String numPw, String chor, String nMpeg, String mMpeg, String vodYn, String vodNo, String pathname, int ordNo, int orderNum, int ordOldN, int languageId, String languageNo, String languageNa, int singer1Id, String singer1No, String singer1Na, int singer2Id, String singer2No, String singer2Na, java.util.Date inDate) {
 		setId(id);
 		setSongNo(songNo);
 		setSongNa(songNa);
@@ -140,7 +141,7 @@ public class Song implements Parcelable {
 		singer2Id = in.readInt();
 		singer2No = in.readString();
 		singer2Na = in.readString();
-		inDate = (Date)in.readSerializable();
+		inDate = (java.util.Date)in.readSerializable();
 	}
 
 	public int getId() {
@@ -335,11 +336,13 @@ public class Song implements Parcelable {
 		this.singer2Na = singer2Na;
 	}
 
-	public Date getInDate() {
+	// public Date getInDate() {
+	public java.util.Date getInDate() {
 		return inDate;
 	}
 
-	public void setInDate(Date inDate) {
+	// public void setInDate(Date inDate)
+	public void setInDate(java.util.Date inDate) {
 		this.inDate = inDate;
 	}
 

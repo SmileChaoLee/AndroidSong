@@ -61,9 +61,9 @@ public class SingerTypesListActivity extends AppCompatActivity {
 
                 SingerType singerType = singerTypesList.getSingerTypes().get(i);
                 // Toast.makeText(SingerTypesListActivity.this, singerType.toString(), Toast.LENGTH_SHORT).show();
-                Intent singerTypeIntent = new Intent(getApplicationContext(), SingersListActivity.class);
-                singerTypeIntent.putExtra("SingerTypeParcelable", singerType);
-                startActivity(singerTypeIntent);
+                Intent singersIntent = new Intent(getApplicationContext(), SingersListActivity.class);
+                singersIntent.putExtra("SingerTypeParcelable", singerType);
+                startActivity(singersIntent);
             }
         });
 

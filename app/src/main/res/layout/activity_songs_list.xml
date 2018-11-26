@@ -1,82 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    <TextView
-        android:id="@+id/songListTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textScaleX="1.0"
-        android:textColor="#ff0000ff"
-        android:background="#ff00ff00"
-        android:text="@string/songListString" />
+    android:layout_height="match_parent"
+    android:background="@color/green"
+    android:orientation="vertical"
+    tools:context=".SongsListActivity">
 
-    <ListView
-        android:id="@android:id/list"
+    <TextView
+        android:id="@+id/songsListMenuTextView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:background="#ff90e5c4"
-        android:layout_weight="1"
-        android:scrollbarStyle="outsideOverlay" />
+        android:textStyle="bold"
+        android:textColor="@color/darkOrange"
+        android:text="@string/songsListString"
+        android:gravity="center"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintTop_toTopOf="parent">
+    </TextView>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
+        android:id="@+id/songsListView_Layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/darkYellow"
+        app:layout_constraintHeight_percent="0.7"
+        app:layout_constraintTop_toBottomOf="@+id/songsListMenuTextView" >
+
+        <ListView android:id="@+id/songsListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideOverlay"
+            android:drawSelectorOnTop="false" >
+        </ListView>
+
+        <TextView android:id="@+id/songsListEmptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:visibility="gone" >
+        </TextView>
+
+    </FrameLayout>
+
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintBottom_toTopOf="@id/returnToPreviousButton"
+        android:weightSum="4">
 
-    <Button
-        android:id="@+id/FirstPageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="首頁\n1st Page"
-        android:textStyle="bold"
-        android:background="@android:drawable/btn_default"
-        android:textColor="#ffff0000"
-        android:layout_weight="1"/>
+        <Button
+            android:id="@+id/firstPageButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/firstPage"
+            android:background="@android:drawable/btn_default"
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_weight="1" >
+        </Button>
 
-    <Button
-        android:id="@+id/PrevPageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="上頁\nPrev Page"
-        android:textStyle="bold"
-        android:background="@android:drawable/btn_default"
-        android:textColor="#ffff0000"
-        android:layout_weight="1"/>
+        <Button
+            android:id="@+id/previousPageButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/previousPage"
+            android:background="@android:drawable/btn_default"
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_weight="1" >
+        </Button>
 
-    <Button
-        android:id="@+id/NextPageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="下頁\nNext Page"
-        android:textStyle="bold"
-        android:background="@android:drawable/btn_default"
-        android:textColor="#ffff0000"
-        android:layout_weight="1" />
+        <Button
+            android:id="@+id/nextPageButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/nextPage"
+            android:background="@android:drawable/btn_default"
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_weight="1" >
+        </Button>
 
-    <Button
-        android:id="@+id/LastPageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="末頁\nLast Page"
-        android:textStyle="bold"
-        android:background="@android:drawable/btn_default"
-        android:textColor="#ffff0000"
-        android:layout_weight="1" />
+        <Button
+            android:id="@+id/lastPageButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/lastPage"
+            android:background="@android:drawable/btn_default"
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_weight="1" >
+        </Button>
 
-    <Button
-        android:id="@+id/CancelButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="返回\nEnd Func"
-        android:textStyle="bold"
-        android:background="@android:drawable/btn_default"
-        android:textColor="#ff000000"
-        android:layout_weight="1" />
     </LinearLayout>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/returnToPreviousButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/returnToPrevious"
+        android:background="@android:drawable/btn_default"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintBottom_toBottomOf="parent" >
+    </Button>
+
+</android.support.constraint.ConstraintLayout>

@@ -5,7 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="mainMenuTitle">Please Select One Option</string>
     <string name="title_activity_song_query">SongQuery</string>
-    <string name="singerTypesListString">Singer Types List</string>
     <string name="title_activity_singer_query">SingerQuery</string>
     <string name="title_activity_singer_type_query">SingerArea</string>
     <string name="title_activity_order_one_song">OrderOneSong</string>
@@ -13,7 +12,6 @@
     <string name="mainLanguage">Please Select One Option</string>
     <string name="orderOneSongString">Please Input the Computer ID</string>
     <string name="computerIdString">Computer ID:</string>
-
     <string name="noResultString">No result.</string>
     <string name="failedMessage">Failed.</string>
     <string name="succeededMessage">Succeeded.</string>
@@ -32,7 +30,8 @@
     <string name="groupSinger">Group Singers</string>
     <string name="returnToPrevious">Return</string>
 
-    <string name="songListString">Songs List</string>
+    <string name="singerTypesListString">Singer Types List</string>
+    <string name="songsListString">Songs List</string>
     <string name="singersListString">Singers List</string>
 
     <string name="firstPage">First Page</string>

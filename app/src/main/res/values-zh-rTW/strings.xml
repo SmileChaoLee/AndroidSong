@@ -5,7 +5,6 @@
     <string name="action_settings">設定</string>
     <string name="mainMenuTitle">請選擇以下其中一個功能</string>
     <string name="title_activity_song_query">歌曲查詢</string>
-    <string name="singerTypesListString">歌星類別清單</string>
     <string name="title_activity_singer_query">歌星查詢</string>
     <string name="title_activity_singer_type_query">歌星地區</string>
     <string name="title_activity_order_one_song">點一首歌曲</string>
@@ -13,7 +12,6 @@
     <string name="mainLanguage">請選擇以下其中一個功能</string>
     <string name="orderOneSongString">請輸入包廂內的電腦編號</string>
     <string name="computerIdString">電腦編號:</string>
-
     <string name="noResultString">沒有結果</string>
     <string name="failedMessage">失敗</string>
     <string name="succeededMessage">成功</string>
@@ -32,7 +30,8 @@
     <string name="groupSinger">團體歌手</string>
     <string name="returnToPrevious">回上一個功能</string>
 
-    <string name="songListString">歌曲列表</string>
+    <string name="singerTypesListString">歌星類別清單</string>
+    <string name="songsListString">歌曲列表</string>
     <string name="singersListString">歌星列表</string>
 
     <string name="firstPage">首頁</string>

@@ -1,279 +1,296 @@
 package com.smile.androidsong;
 
-import android.app.ListActivity;
-import android.content.Intent;
+import android.content.Context;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.smile.Utility.FontSizeAndTheme;
 import com.smile.model.*;
+import com.smile.retrofit_package.GetDataByRetrofitRestApi;
+import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SongsListActivity extends ListActivity {
+public class SongsListActivity extends AppCompatActivity {
 
-    private Song song2data = null;
-    private List<Song> songs = null;
-    private String queryCondition = new String("");
-    private String message = new String("");
+    private float textFontSize;
+    private ListView songsListView;
+    private TextView songsListEmptyTextView;
+    private MyListAdapter mMyListAdapter;
+    private SongsList songsList = null;
+    private Singer singer;
+
+    private int pageNo = 1;
+    private int pageSize = 7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);    // smaller than MyActivity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null )
+        {
+            singer = extras.getParcelable("SingerParcelable");
+        }
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_songs_list);
 
-        String option = new String("");
-        String suboption = new String("");
+        TextView menuTextView = (TextView) findViewById(R.id.songsListMenuTextView);
 
-        TextView textview = (TextView) findViewById(R.id.songListTextView);
-
-        /*
-        // the following is very important for JDBC connector
-        song2table = new Song2Table();
-        if (song2table.getConnectionYN() == -1) {
-            message = "Failed to connect to song2 table with JDBC !!";
-            setListAdapter(new mListAdapter(new String[]{message}, new String[]{message}));
-            return;
-        }
-        */
-
-        option = getIntent().getStringExtra("option").toString().trim();
-        // OR
-        Bundle extras = getIntent().getExtras();
-        if (extras!=null)
-        {
-            option = extras.getString("option").trim();
-        }
-
-        // queryCondition = " order by song_na";      // default order
-        queryCondition = "order by song_na";
-        if (option.equals("5")) {
-            queryCondition = "order by song_na";
-            textview.setText("歌名排序  Ordered By Song Title");
-        } else if (option.equals("6")) {
-            queryCondition = "order by song_no";
-            textview.setText("歌號排序  Ordered By Song No.");
-        } else if (option.equals("NewSong")) {
-            suboption = extras.getString("suboption").trim();
-            queryCondition = " where song2.lang_no=" +"'" + suboption+"' ";
-            queryCondition = queryCondition + " order by in_date DESC , song_no DESC ";
-            // song2table.setMaxPageOfQuery(false,5);  // has maxpage which is 5 pages
-        } else {
-            message = "No such function !!";
-            setListAdapter(new mListAdapter(new String[]{message}, new String[]{message}));
-            return;
-        }
-
-        // song2table.setQueryCondition(queryCondition);
-        NextPageOfSong2Table();
-
-        Button FirstPageButton = (Button) findViewById(R.id.FirstPageButton);
-        FirstPageButton.setOnClickListener(new View.OnClickListener() {
+        songsListView = findViewById(R.id.songsListView);
+        songsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                FirstPageOfSong2Table();
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Song song = songsList.getSongs().get(i);
+                Toast.makeText(SongsListActivity.this, song.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
-        Button PrevPageButton = (Button) findViewById(R.id.PrevPageButton);
-        PrevPageButton.setOnClickListener(new View.OnClickListener() {
+        songsListEmptyTextView = findViewById(R.id.songsListEmptyTextView);
+        songsListEmptyTextView.setVisibility(View.GONE);
+
+        float smallButtonFontSize = textFontSize * 0.7f;
+        Button firstPageButton = (Button) findViewById(R.id.firstPageButton);
+        firstPageButton.setTextSize(smallButtonFontSize);
+        firstPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PrevPageOfSong2Table();
+                firstPage();
             }
         });
 
-        Button NextPageButton = (Button) findViewById(R.id.NextPageButton);
-        NextPageButton.setOnClickListener(new View.OnClickListener() {
+        Button previousPageButton = (Button) findViewById(R.id.previousPageButton);
+        previousPageButton.setTextSize(smallButtonFontSize);
+        previousPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NextPageOfSong2Table();
+                previousPage();
             }
         });
 
-        Button LastPageButton = (Button) findViewById(R.id.LastPageButton);
-        LastPageButton.setOnClickListener(new View.OnClickListener() {
+        Button nextPageButton = (Button) findViewById(R.id.nextPageButton);
+        nextPageButton.setTextSize(smallButtonFontSize);
+        nextPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LastPageOfSong2Table();
+                nextPage();
             }
         });
 
-        Button CancelButton = (Button) findViewById(R.id.CancelButton);
-        CancelButton.setOnClickListener(new View.OnClickListener() {
+        Button lastPageButton = (Button) findViewById(R.id.lastPageButton);
+        lastPageButton.setTextSize(smallButtonFontSize);
+        lastPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                lastPage();
             }
         });
-    }
 
-    private void FirstPageOfSong2Table() {
-        // songs = song2table.getFirstPageOfSong2Table();
-        displayListViewOfSong2Table();
-    }
-
-    private void PrevPageOfSong2Table() {
-        // songs = song2table.getPreviousPageOfSong2Table();
-        displayListViewOfSong2Table();
-    }
-
-    private void NextPageOfSong2Table() {
-        // songs = song2table.getNextPageOfSong2Table();
-        displayListViewOfSong2Table();
-    }
-
-    private void LastPageOfSong2Table() {
-        // songs = song2table.getLastPageOfSong2Table();
-        displayListViewOfSong2Table();
-    }
-
-    private void displayListViewOfSong2Table() {
-
-        String queryResult1[] , queryResult2[];
-
-        queryResult1 = new String[songs.size()];
-        queryResult2 = new String[songs.size()];
-
-        int numChars = 0;
-        int numOfBytes = 0;
-        int numOfChineseWords = 0;
-        int numOfAlphabet = 0;
-        int requiredChars = 24;  // 12 chinese words, width of a chinese word is double of alphabet
-        String space20 = new String(new char[requiredChars]).replace('\0', ' ');
-        String ss = new String("");
-        String s1 = new String("");
-        String s2 = new String("");
-        for (int i = 0; i < songs.size(); i++) {
-            numOfChineseWords = 0;
-            numOfAlphabet = 0;
-            numChars = 0;
-            s2 = "";
-            ss = songs.get(i).getSong_na().trim();
-            // ss = "ABCDEFGHIJKLMNO";
-            for (int j = 0; ((j < ss.length()) && (numChars < requiredChars)); j++) {
-                // s1 = ss.substring(j,j+1);
-                s1 = String.valueOf(ss.charAt(j));
-                s2 = s2 + s1;
-                numOfBytes = s1.getBytes().length;
-                if (numOfBytes == 3) {
-                    // each chinese word has 3 bytes in UTF-8 encoding system
-                    numOfChineseWords++;
-                } else {
-                    // english character ( alphabet )
-                    numOfAlphabet++;
-                }
-                numChars = numOfAlphabet + numOfChineseWords * 2;
+        final Button returnToPreviousButton = (Button) findViewById(R.id.returnToPreviousButton);
+        returnToPreviousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToPrevious();
             }
-            // this.queryResult1[i] = String.format("%-"+requiredChars+"s",this.queryResult1[i])
-            queryResult1[i] = s2 + space20.substring(0, Math.max(0, requiredChars - numChars))
-                    +" "+songs.get(i).getLang_na();
-            queryResult2[i] = songs.get(i).getSong_no()+" "+songs.get(i).getSing_na1()+" "+songs.get(i).getSing_na2();
-        }
-        setListAdapter(new mListAdapter(queryResult1, queryResult2));
+        });
 
-        queryResult1 = null;
-        queryResult2 = null;
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
+        accessSongsAsyncTask.execute();
     }
 
-    private class mListAdapter extends BaseAdapter {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
-        private String text1[] , text2[];  // or private String[] text1,text2;
+    @Override
+    public void onBackPressed() {
+        returnToPrevious();
+    }
 
-        public mListAdapter() {
-            this.text1 = new String[] {"No initialization"};
-            this.text2 = new String[] {"No initialization"};
+    private void returnToPrevious() {
+        finish();
+    }
+
+    private void firstPage() {
+        pageNo = 1;
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
+        accessSongsAsyncTask.execute();
+    }
+
+    private void previousPage() {
+        pageNo--;
+        if (pageNo < 1) {
+            pageNo = 1;
+        }
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
+        accessSongsAsyncTask.execute();
+    }
+
+    private void nextPage() {
+        pageNo++;
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
+        accessSongsAsyncTask.execute();
+    }
+
+    private void lastPage() {
+        pageNo = -1;    // represent last page
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
+        accessSongsAsyncTask.execute();
+    }
+
+    private class MyListAdapter extends ArrayAdapter {
+
+        int layoutId;
+        TextView positionNoTextView;
+        TextView songNoTextView;
+        TextView songNaTextView;
+        TextView languageNameTextView;
+        TextView singer1NameTextView;
+        TextView singer2NameTextView;
+        ArrayList<Song> songs;
+        final float smallFontSize = textFontSize * 0.7f;
+
+        @SuppressWarnings("unchecked")
+        public MyListAdapter(@NonNull Context context, int resource, @NonNull List objects) {
+            super(context, resource, objects);
+            layoutId = resource;
+            songs = (ArrayList<Song>)objects;
         }
 
-        public mListAdapter(String[] text1, String[] text2) {
-            this.text1 = text1;
-            this.text2 = text2;
-        }
-
-        @Override
-        public int getCount() {
-            return this.text1.length;
-        }
-
+        @Nullable
         @Override
         public Object getItem(int position) {
+            return super.getItem(position);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public int getPosition(@Nullable Object item) {
+            return super.getPosition(item);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+            View view = getLayoutInflater().inflate(layoutId, parent, false);
+
+            positionNoTextView = view.findViewById(R.id.songItem_Layout_positionNoTextView);
+            positionNoTextView.setText(String.valueOf(position));
+
+            songNaTextView = view.findViewById(R.id.songNaTextView);
+            songNaTextView.setText(songs.get(position).getSongNa());
+
+            songNoTextView = view.findViewById(R.id.songNoTextView);
+            songNoTextView.setTextSize(smallFontSize);
+            songNoTextView.setText(songs.get(position).getSongNo());
+
+            languageNameTextView = view.findViewById(R.id.languageNameTextView);
+            languageNameTextView.setTextSize(smallFontSize);
+            languageNameTextView.setText(songs.get(position).getLanguageNa());
+
+            singer1NameTextView = view.findViewById(R.id.singer1NameTextView);
+            singer1NameTextView.setTextSize(smallFontSize);
+            singer1NameTextView.setText(songs.get(position).getSinger1Na());
+
+            singer2NameTextView = view.findViewById(R.id.singer2NameTextView);
+            singer2NameTextView.setTextSize(smallFontSize);
+            singer2NameTextView.setText(songs.get(position).getSinger2Na());
+
+            return view;
+        }
+    }
+
+    private class AccessSongsAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private final String TAG = new String("AccessSongsAsyncTask");
+        private final String failedMessage = getApplicationContext().getString(R.string.failedMessage);
+        private final String noResultString = getApplicationContext().getString(R.string.noResultString);
+        private final String loadingString = getApplicationContext().getString(R.string.loadingString);
+        private AlertDialogFragment loadingDialog;
+
+        private Singer singerAsyncTask;
+        private int pageSizeAsyncTask;
+        private int pageNoAsyncTask;
+
+        public AccessSongsAsyncTask(Singer singerAsyncTask, int pageSizeAsyncTask, int pageNoAsyncTask) {
+            this.singerAsyncTask = singerAsyncTask;
+            this.pageSizeAsyncTask = pageSizeAsyncTask;
+            this.pageNoAsyncTask = pageNoAsyncTask;
+
+            loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0, true);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.i(TAG, "doInBackground() started.");
+
+            // implement Retrofit to get results synchronously
+            songsList = GetDataByRetrofitRestApi.getSongsBySinger(singerAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
+
+            Log.i(TAG, "doInBackground() finished.");
+
             return null;
         }
 
         @Override
-        public long getItemId(int position) {
-            return position;
+        protected void onProgressUpdate(Void... values) {
+
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup container) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.songs_list_item, container, false);
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.i(TAG, "onPostExecute() started.");
+
+            loadingDialog.dismissAllowingStateLoss();
+
+            if (songsList == null) {
+                // failed
+                songsList = new SongsList();
+                songsList.setPageNo(pageNoAsyncTask);
+                songsList.setPageSize(pageSizeAsyncTask);
+                songsList.setTotalRecords(0); // temporary
+                songsList.setTotalPages(0);   // temporary
+
+                songsListEmptyTextView.setText(failedMessage);
+                songsListEmptyTextView.setVisibility(View.VISIBLE);
+            } else {
+                // successfully
+                pageNo = songsList.getPageNo();      // get the back value from called function
+                pageSize = songsList.getPageSize();    // get the back value from called function
+
+                if (songsList.getSongs().size() == 0) {
+                    songsListEmptyTextView.setText(noResultString);
+                    songsListEmptyTextView.setVisibility(View.VISIBLE);
+                } else {
+                    songsListEmptyTextView.setVisibility(View.GONE);
+                }
+
+                mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.songs_list_item ,songsList.getSongs());
+                songsListView.setAdapter(mMyListAdapter);
             }
-
-            TextView vText1, vText2;
-            vText1 = (TextView) convertView.findViewById(R.id.text1);
-            vText1.setText(this.text1[position]);
-            vText2 = (TextView) convertView.findViewById(R.id.text2);
-            vText2.setText(this.text2[position]);
-
-            // Because the list item contains multiple touch targets, you should not override
-            // onListItemClick. Instead, set a click listener for each target individually.
-
-            convertView.findViewById(R.id.primary_target).setOnClickListener(
-
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Toast.makeText(Song2Query.this,text1[position],Toast.LENGTH_SHORT).show();
-                            Intent OrderOneSong = new Intent(SongsListActivity.this,OrderOneSong.class);
-
-                            Bundle extras = new Bundle();
-                            extras.putString("song_no",songs.get(position).getSong_no());
-                            extras.putString("song_na",songs.get(position).getSong_na());
-                            extras.putString("sing_na",songs.get(position).getSing_na1()+" "+songs.get(position).getSing_na2());
-                            extras.putString("lang_na",songs.get(position).getLang_na());
-
-                            OrderOneSong.putExtras(extras);
-                            startActivity(OrderOneSong);
-                        }
-                    }
-            );
-
-            return convertView;
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-
-        song2data = null;
-        songs = null;
-        queryCondition = null;
-        message = null;
     }
 }

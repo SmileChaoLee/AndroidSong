@@ -1,6 +1,7 @@
 package com.smile.androidsong;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,7 +37,6 @@ public class SingersListActivity extends AppCompatActivity {
     private MyListAdapter mMyListAdapter;
     private SingersList singersList = null;
     private SingerType singerType;
-    private final int failedItemNo = -1;
 
     private int pageNo = 1;
     private int pageSize = 10;
@@ -63,6 +63,9 @@ public class SingersListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Singer singer = singersList.getSingers().get(i);
                 Toast.makeText(SingersListActivity.this, singer.toString(), Toast.LENGTH_SHORT).show();
+                Intent songsIntent = new Intent(SingersListActivity.this, SongsListActivity.class);
+                songsIntent.putExtra("SingerParcelable", singer);
+                startActivity(songsIntent);
             }
         });
 
@@ -137,6 +140,10 @@ public class SingersListActivity extends AppCompatActivity {
         returnToPrevious();
     }
 
+    private void returnToPrevious() {
+        finish();
+    }
+
     private void firstPage() {
         pageNo = 1;
         AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
@@ -162,10 +169,6 @@ public class SingersListActivity extends AppCompatActivity {
         pageNo = -1;    // represent last page
         AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
         accessSingersAsyncTask.execute();
-    }
-
-    private void returnToPrevious() {
-        finish();
     }
 
     private class MyListAdapter extends ArrayAdapter {

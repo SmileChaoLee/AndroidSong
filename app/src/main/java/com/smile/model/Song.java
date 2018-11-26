@@ -1,179 +1,423 @@
 package com.smile.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.sql.Date;
 
-public class Song {
-	
-		private String  song_no = new String("");
-		private String  song_na = new String("");
-		private String  lang_no = new String("");
-        private String  lang_na= new String("");
-		private Integer s_num_word=0;
-		private Integer num_fw=0;
-		private String  num_pw = new String("");
-		private String  sing_no1 = new String("");
-        private String  sing_na1 = new String("");
-		private String  sing_no2 = new String("");
-        private String  sing_na2 = new String("");
-		private String  sele_tf = new String("");
-		private String  chor = new String("");
-		private String  n_mpeg = new String("");
-		private String  m_mpeg = new String("");
-		private String  vod_yn = new String("");
-		private String  vod_no = new String("");
-		private String  pathname = new String("");
-		private Integer ord_no=0;
-		private Integer order_num=0;
-		private Integer ord_old_n=0;
-		private Date    in_date= new Date(new java.util.Date().getTime());
-		
-		public Song() {
-			initiateSong2record();
-		}
-		
-		public void initiateSong2record() {
-			setSong_no("");
-			setSong_na("");
-			setLang_no("");
-            setLang_na("");
-			setS_num_word(0);
-			setNum_fw(0);
-			setNum_pw("");
-			setSing_no1("");
-            setSing_na1("");
-			setSing_no2("");
-            setSing_na2("");
-			setSele_tf("");
-			setChor("");
-			setN_mpeg("");
-			setM_mpeg("");
-			setVod_yn("");
-			setVod_no("");
-			setPathname("");
-			setOrd_no(0);
-			setOrder_num(0);
-			setOrd_old_n(0);
-			setIn_date(new Date(new java.util.Date().getTime()));
-		}
-		
-		public void setSong_no(String song_no) {
-			this.song_no = song_no;	
-		}
-		public String getSong_no() {
-			return this.song_no;
-		}
-		public void setSong_na(String song_na) {
-			this.song_na = song_na;
-		}
-		public String getSong_na() {
-			return this.song_na;
-		}
-		public void setLang_no(String lang_no) {
-			this.lang_no = lang_no;
-		}
-		public String getLang_no() {
-			return this.lang_no;
-		}
-        public void setLang_na(String lang_na) { this.lang_na = lang_na; }
-        public String getLang_na() { return this.lang_na; }
-		public void setS_num_word(Integer s_num_word) {
-			this.s_num_word = s_num_word;
-		}
-		public Integer getS_num_word() {
-			return this.s_num_word;
-		}
-		public void setNum_fw(Integer num_fw) {
-			this.num_fw = num_fw;
-		}
-		public Integer getNum_fw() {
-			return this.num_fw;
-		}
-		public void setNum_pw(String num_pw) {
-			this.num_pw = num_pw;
-		}
-		public String getNum_pw() {
-			return this.num_pw;
-		}
-		public void setSing_no1(String sing_no1) {
-			this.sing_no1 = sing_no1;
-		}
-		public String getSing_no1() {
-			return this.sing_no1;
-		}
-        public void setSing_na1(String sing_na1) { this.sing_na1 = sing_na1; }
-        public String getSing_na1() { return this.sing_na1; }
-		public void setSing_no2(String sing_no2) {
-			this.sing_no2 = sing_no2;
-		}
-		public String getSing_no2() {
-			return this.sing_no2;
-		}
-        public void setSing_na2(String sing_na2) { this.sing_na2 = sing_na2; }
-        public String getSing_na2() { return this.sing_na2; }
-		public void setSele_tf(String sele_tf) {
-			this.sele_tf = sele_tf;
-		}
-		public String getSele_tf() {
-			return this.sele_tf;
-		}
-		public void setChor(String chor) {
-			this.chor = chor;
-		}
-		public String getChor() {
-			return this.chor;
-		}
-		public void setN_mpeg(String n_mpeg) {
-			this.n_mpeg = n_mpeg;
-		}
-		public String getN_mpeg() {
-			return this.n_mpeg;
-		}
-		public void setM_mpeg(String m_mpeg) {
-			this.m_mpeg = m_mpeg;
-		}
-		public String getM_mpeg() {
-			return this.m_mpeg;
-		}
-		public void setVod_yn(String vod_yn) {
-			this.vod_yn = vod_yn;
-		}
-		public String getVod_yn() {
-			return this.vod_yn;
-		}
-		public void setVod_no(String vod_no) {
-			this.vod_no = vod_no;
-		}
-		public String getVod_no() {
-			return this.vod_no;
-		}
-		public void setPathname(String pathname) {
-			this.pathname = pathname;
-		}
-		public String getPathname() {
-			return this.pathname;
-		}
-		public void setOrd_no(Integer ord_no) {
-			this.ord_no = ord_no;
-		}
-		public Integer getOrd_no() {
-			return this.ord_no;
-		}
-		public void setOrder_num(Integer order_num) {
-			this.order_num = order_num;
-		}
-		public Integer getOrder_num() {
-			return this.order_num;
-		}
-		public void setOrd_old_n(Integer ord_old_n) {
-			this.ord_old_n = ord_old_n;
-		}
-		public Integer getOrd_old_n() {
-			return this.ord_old_n;
-		}
-		public void setIn_date(Date in_date) {
-			this.in_date = in_date;
-		}
-		public Date getIn_date() {
-			return this.in_date;
-		}
+public class Song implements Parcelable {
+	@SerializedName("id")
+	private int id;
+	@SerializedName("songNo")
+    private String songNo;
+	@SerializedName("songNa")
+    private String songNa;
+	@SerializedName("sNumWord")
+    private int sNumWord;
+	@SerializedName("numFw")
+    private int numFw;
+	@SerializedName("numPw")
+    private String numPw;
+	@SerializedName("chor")
+    private String chor;
+	@SerializedName("nMpeg")
+    private String nMpeg;
+	@SerializedName("mMpeg")
+    private String mMpeg;
+	@SerializedName("vodYn")
+    private String vodYn;
+	@SerializedName("vodNo")
+    private String vodNo;
+	@SerializedName("pathname")
+    private String pathname;
+	@SerializedName("ordNo")
+    private int ordNo;
+	@SerializedName("orderNum")
+    private int orderNum;
+	@SerializedName("ordOldN")
+    private int ordOldN;
+	@SerializedName("languageId")
+    private int languageId;
+	@SerializedName("languageNo")
+	private String languageNo;
+	@SerializedName("languageNa")
+	private String languageNa;
+	@SerializedName("singer1Id")
+	private int singer1Id;
+	@SerializedName("singer1No")
+    private String singer1No;
+	@SerializedName("singer1Na")
+    private String singer1Na;
+	@SerializedName("singer2Id")
+    private int singer2Id;
+	@SerializedName("singer2No")
+    private String singer2No;
+	@SerializedName("singer2Na")
+    private String singer2Na;
+	@SerializedName("inDate")
+	private Date inDate;
+
+	public Song() {
+		setId(0);
+		setSongNo("");
+		setSongNa("");
+		setsNumWord(0);
+		setNumFw(0);
+		setNumPw("0");
+		setChor("N");
+		setnMpeg("11");
+		setmMpeg("12");
+		setVodYn("Y");
+		setVodNo("");
+		setPathname("");
+		setOrdNo(0);
+		setOrderNum(0);
+		setOrdOldN(0);
+		setLanguageId(0);
+		setLanguageNo("");
+		setLanguageNa("");
+		setSinger1Id(0);
+		setSinger1No("");
+		setSinger1Na("");
+		setSinger2Id(0);
+		setSinger2No("");
+		setSinger2Na("");
+		setInDate(new Date(new java.util.Date().getTime()));
 	}
+
+	public Song(int id, String songNo, String songNa, int sNumWord, int numFw, String numPw, String chor, String nMpeg, String mMpeg, String vodYn, String vodNo, String pathname, int ordNo, int orderNum, int ordOldN, int languageId, String languageNo, String languageNa, int singer1Id, String singer1No, String singer1Na, int singer2Id, String singer2No, String singer2Na, Date inDate) {
+		setId(id);
+		setSongNo(songNo);
+		setSongNa(songNa);
+		setsNumWord(sNumWord);
+		setNumFw(numFw);
+		setNumPw(numPw);
+		setChor(chor);
+		setnMpeg(nMpeg);
+		setmMpeg(mMpeg);
+		setVodYn(vodYn);
+		setVodNo(vodNo);
+		setPathname(pathname);
+		setOrdNo(ordNo);
+		setOrderNum(orderNum);
+		setOrdOldN(ordOldN);
+		setLanguageId(languageId);
+		setLanguageNo(languageNo);
+		setLanguageNa(languageNa);
+		setSinger1Id(singer1Id);
+		setSinger1No(singer1No);
+		setSinger1Na(singer1Na);
+		setSinger2Id(singer2Id);
+		setSinger2No(singer2No);
+		setSinger2Na(singer2Na);
+		setInDate(inDate);
+	}
+
+	public Song(Parcel in) {
+		id = in.readInt();
+		songNo = in.readString();
+		songNa = in.readString();
+		sNumWord = in.readInt();
+		numFw = in.readInt();
+		numPw = in.readString();
+		chor = in.readString();
+		nMpeg = in.readString();
+		mMpeg = in.readString();
+		vodYn = in.readString();
+		vodNo = in.readString();
+		pathname = in.readString();
+		ordNo = in.readInt();
+		orderNum = in.readInt();
+		ordOldN = in.readInt();
+		languageId = in.readInt();
+		languageNo = in.readString();
+		languageNa = in.readString();
+		singer1Id = in.readInt();
+		singer1No = in.readString();
+		singer1Na = in.readString();
+		singer2Id = in.readInt();
+		singer2No = in.readString();
+		singer2Na = in.readString();
+		inDate = (Date)in.readSerializable();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getSongNo() {
+		return songNo;
+	}
+
+	public void setSongNo(String songNo) {
+		this.songNo = songNo;
+	}
+
+	public String getSongNa() {
+		return songNa;
+	}
+
+	public void setSongNa(String songNa) {
+		this.songNa = songNa;
+	}
+
+	public int getsNumWord() {
+		return sNumWord;
+	}
+
+	public void setsNumWord(int sNumWord) {
+		this.sNumWord = sNumWord;
+	}
+
+	public int getNumFw() {
+		return numFw;
+	}
+
+	public void setNumFw(int numFw) {
+		this.numFw = numFw;
+	}
+
+	public String getNumPw() {
+		return numPw;
+	}
+
+	public void setNumPw(String numPw) {
+		this.numPw = numPw;
+	}
+
+	public String getChor() {
+		return chor;
+	}
+
+	public void setChor(String chor) {
+		this.chor = chor;
+	}
+
+	public String getnMpeg() {
+		return nMpeg;
+	}
+
+	public void setnMpeg(String nMpeg) {
+		this.nMpeg = nMpeg;
+	}
+
+	public String getmMpeg() {
+		return mMpeg;
+	}
+
+	public void setmMpeg(String mMpeg) {
+		this.mMpeg = mMpeg;
+	}
+
+	public String getVodYn() {
+		return vodYn;
+	}
+
+	public void setVodYn(String vodYn) {
+		this.vodYn = vodYn;
+	}
+
+	public String getVodNo() {
+		return vodNo;
+	}
+
+	public void setVodNo(String vodNo) {
+		this.vodNo = vodNo;
+	}
+
+	public String getPathname() {
+		return pathname;
+	}
+
+	public void setPathname(String pathname) {
+		this.pathname = pathname;
+	}
+
+	public int getOrdNo() {
+		return ordNo;
+	}
+
+	public void setOrdNo(int ordNo) {
+		this.ordNo = ordNo;
+	}
+
+	public int getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(int orderNum) {
+		this.orderNum = orderNum;
+	}
+
+	public int getOrdOldN() {
+		return ordOldN;
+	}
+
+	public void setOrdOldN(int ordOldN) {
+		this.ordOldN = ordOldN;
+	}
+
+	public int getLanguageId() {
+		return languageId;
+	}
+
+	public void setLanguageId(int languageId) {
+		this.languageId = languageId;
+	}
+
+	public String getLanguageNo() {
+		return languageNo;
+	}
+
+	public void setLanguageNo(String languageNo) {
+		this.languageNo = languageNo;
+	}
+
+	public String getLanguageNa() {
+		return languageNa;
+	}
+
+	public void setLanguageNa(String languageNa) {
+		this.languageNa = languageNa;
+	}
+
+	public int getSinger1Id() {
+		return singer1Id;
+	}
+
+	public void setSinger1Id(int singer1Id) {
+		this.singer1Id = singer1Id;
+	}
+
+	public String getSinger1No() {
+		return singer1No;
+	}
+
+	public void setSinger1No(String singer1No) {
+		this.singer1No = singer1No;
+	}
+
+	public String getSinger1Na() {
+		return singer1Na;
+	}
+
+	public void setSinger1Na(String singer1Na) {
+		this.singer1Na = singer1Na;
+	}
+
+	public int getSinger2Id() {
+		return singer2Id;
+	}
+
+	public void setSinger2Id(int singer2Id) {
+		this.singer2Id = singer2Id;
+	}
+
+	public String getSinger2No() {
+		return singer2No;
+	}
+
+	public void setSinger2No(String singer2No) {
+		this.singer2No = singer2No;
+	}
+
+	public String getSinger2Na() {
+		return singer2Na;
+	}
+
+	public void setSinger2Na(String singer2Na) {
+		this.singer2Na = singer2Na;
+	}
+
+	public Date getInDate() {
+		return inDate;
+	}
+
+	public void setInDate(Date inDate) {
+		this.inDate = inDate;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel out, int i) {
+		out.writeInt(id);
+		out.writeString(songNo);
+		out.writeString(songNa);
+		out.writeInt(sNumWord);
+		out.writeInt(numFw);
+		out.writeString(numPw);
+		out.writeString(chor);
+		out.writeString(nMpeg);
+		out.writeString(mMpeg);
+		out.writeString(vodYn);
+		out.writeString(vodNo);
+		out.writeString(pathname);
+		out.writeInt(ordNo);
+		out.writeInt(orderNum);
+		out.writeInt(ordOldN);
+		out.writeInt(languageId);
+		out.writeString(languageNo);
+		out.writeString(languageNa);
+		out.writeInt(singer1Id);
+		out.writeString(singer1No);
+		out.writeString(singer1Na);
+		out.writeInt(singer2Id);
+		out.writeString(singer2No);
+		out.writeString(singer2Na);
+		out.writeSerializable(inDate);
+	}
+
+	public static final Parcelable.Creator<Song> CREATOR = new Parcelable.Creator<Song>()
+	{
+		@Override
+		public Song createFromParcel(Parcel in) {
+			return new Song(in);
+		}
+
+		@Override
+		public Song[] newArray(int size) {
+			return new Song[size];
+		}
+	};
+
+	@Override
+	public String toString() {
+		return "Song{" +
+				"id=" + id +
+				", songNo='" + songNo + '\'' +
+				", songNa='" + songNa + '\'' +
+				", sNumWord=" + sNumWord +
+				", numFw=" + numFw +
+				", numPw='" + numPw + '\'' +
+				", chor='" + chor + '\'' +
+				", nMpeg='" + nMpeg + '\'' +
+				", mMpeg='" + mMpeg + '\'' +
+				", vodYn='" + vodYn + '\'' +
+				", vodNo='" + vodNo + '\'' +
+				", pathname='" + pathname + '\'' +
+				", ordNo=" + ordNo +
+				", orderNum=" + orderNum +
+				", ordOldN=" + ordOldN +
+				", languageId=" + languageId +
+				", languageNo='" + languageNo + '\'' +
+				", languageNa='" + languageNa + '\'' +
+				", singer1Id=" + singer1Id +
+				", singer1No='" + singer1No + '\'' +
+				", singer1Na='" + singer1Na + '\'' +
+				", singer2Id=" + singer2Id +
+				", singer2No='" + singer2No + '\'' +
+				", singer2Na='" + singer2Na + '\'' +
+				", inDate=" + inDate +
+				'}';
+	}
+}

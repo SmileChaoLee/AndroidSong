@@ -27,6 +27,7 @@ import java.util.List;
 
 public class SongsListActivity extends AppCompatActivity {
 
+    private static final String TAG = new String("SongsListActivity");
     private float textFontSize;
     private ListView songsListView;
     private TextView songsListEmptyTextView;
@@ -34,10 +35,11 @@ public class SongsListActivity extends AppCompatActivity {
     private SongsList songsList = null;
     private Singer singer;
     private Language language;
+    private Object objectPassed;
 
     private int orderedFrom = 0;
     private int pageNo = 1;
-    private int pageSize = 7;
+    private int pageSize = 8;
     private int totalPages = 0;
 
     @Override
@@ -51,15 +53,19 @@ public class SongsListActivity extends AppCompatActivity {
             switch (orderedFrom) {
                 case AndroidSongApp.SingerOrdered:
                     singer = extras.getParcelable("SingerParcelable");
+                    objectPassed = singer;
                     break;
                 case AndroidSongApp.NewSongOrdered:
                     language = extras.getParcelable("LanguageParcelable");
+                    objectPassed = language;
                     break;
                 case AndroidSongApp.HotSongOrdered:
                     language = extras.getParcelable("LanguageParcelable");
+                    objectPassed = language;
                     break;
                 case AndroidSongApp.LanguageOrdered:
                     language = extras.getParcelable("LanguageParcelable");
+                    objectPassed = language;
                     break;
             }
         }
@@ -127,7 +133,7 @@ public class SongsListActivity extends AppCompatActivity {
             }
         });
 
-        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
 
@@ -147,7 +153,7 @@ public class SongsListActivity extends AppCompatActivity {
 
     private void firstPage() {
         pageNo = 1;
-        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
 
@@ -156,7 +162,7 @@ public class SongsListActivity extends AppCompatActivity {
         if (pageNo < 1) {
             pageNo = 1;
         }
-        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
 
@@ -165,13 +171,13 @@ public class SongsListActivity extends AppCompatActivity {
         if (pageNo > totalPages) {
             pageNo = totalPages;
         }
-        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
 
     private void lastPage() {
         pageNo = -1;    // represent last page
-        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(singer, pageSize, pageNo);
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
 
@@ -185,7 +191,8 @@ public class SongsListActivity extends AppCompatActivity {
         TextView singer1NameTextView;
         TextView singer2NameTextView;
         ArrayList<Song> songs;
-        final float smallFontSize = textFontSize * 0.7f;
+        final float songNaFontSize = textFontSize * 0.8f;
+        final float smallFontSize = textFontSize * 0.6f;
 
         @SuppressWarnings("unchecked")
         public MyListAdapter(@NonNull Context context, int resource, @NonNull List objects) {
@@ -213,9 +220,11 @@ public class SongsListActivity extends AppCompatActivity {
             View view = getLayoutInflater().inflate(layoutId, parent, false);
 
             positionNoTextView = view.findViewById(R.id.songItem_Layout_positionNoTextView);
+            positionNoTextView.setTextSize(songNaFontSize);
             positionNoTextView.setText(String.valueOf(position));
 
             songNaTextView = view.findViewById(R.id.songNaTextView);
+            songNaTextView.setTextSize(songNaFontSize);
             songNaTextView.setText(songs.get(position).getSongNa());
 
             songNoTextView = view.findViewById(R.id.songNoTextView);
@@ -246,12 +255,12 @@ public class SongsListActivity extends AppCompatActivity {
         private final String loadingString = getApplicationContext().getString(R.string.loadingString);
         private AlertDialogFragment loadingDialog;
 
-        private Singer singerAsyncTask;
+        private Object objectAsyncTask;
         private int pageSizeAsyncTask;
         private int pageNoAsyncTask;
 
-        public AccessSongsAsyncTask(Singer singerAsyncTask, int pageSizeAsyncTask, int pageNoAsyncTask) {
-            this.singerAsyncTask = singerAsyncTask;
+        public AccessSongsAsyncTask(Object objectAsyncTask, int pageSizeAsyncTask, int pageNoAsyncTask) {
+            this.objectAsyncTask = objectAsyncTask;
             this.pageSizeAsyncTask = pageSizeAsyncTask;
             this.pageNoAsyncTask = pageNoAsyncTask;
 
@@ -270,14 +279,14 @@ public class SongsListActivity extends AppCompatActivity {
             // implement Retrofit to get results synchronously
             switch (orderedFrom) {
                 case AndroidSongApp.SingerOrdered:
-                    songsList = GetDataByRetrofitRestApi.getSongsBySinger(singerAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
+                    songsList = GetDataByRetrofitRestApi.getSongsBySinger((Singer)objectAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
                     break;
                 case AndroidSongApp.NewSongOrdered:
                     break;
                 case AndroidSongApp.HotSongOrdered:
                     break;
                 case AndroidSongApp.LanguageOrdered:
-                    // songsList = GetDataByRetrofitRestApi.getSongsByLanguage();
+                    songsList = GetDataByRetrofitRestApi.getSongsByLanguage((Language)objectAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);;
                     break;
             }
 

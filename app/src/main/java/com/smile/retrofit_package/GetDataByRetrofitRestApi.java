@@ -2,12 +2,7 @@ package com.smile.retrofit_package;
 
 import android.util.Log;
 
-import com.smile.model.LanguagesList;
-import com.smile.model.Singer;
-import com.smile.model.SingerType;
-import com.smile.model.SingerTypesList;
-import com.smile.model.SingersList;
-import com.smile.model.SongsList;
+import com.smile.model.*;
 
 import java.io.IOException;
 
@@ -32,6 +27,32 @@ public class GetDataByRetrofitRestApi {
         }
 
         return languagesList;
+    }
+
+    public static SongsList getSongsByLanguage(Language language, int pageSize, int pageNo) {
+        final String TAG = new String("GetDataByRestApi.getSongsByLanguage()");
+
+        if (language == null) {
+            // singer cannot be null
+            Log.d(TAG, "songsList is null.");
+            return null;
+        }
+
+        int languageId = language.getId();
+        String orderBy = "SongNa";  // order by song's name
+
+        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
+        Call<SongsList> call = retrofitApiInterface.getSongsByLanguageId(languageId, pageSize, pageNo, orderBy);
+
+        SongsList songsList = null;
+        try {
+            songsList = call.execute().body();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return songsList;
     }
 
     public static SingerTypesList getAllSingerTypes() {

@@ -21,5 +21,5 @@ public interface RetrofitApiInterface {
     Call<LanguagesList> getAllLanguages();
 
     @GET("api/Languages/{id}/Songs/{pageSize}/{pageNo}/{orderBy}")
-    Call<LanguagesList> getSongsByLanguageId(@Path("id") int id, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
+    Call<SongsList> getSongsByLanguageId(@Path("id") int id, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
 }

@@ -1,47 +1,203 @@
 package com.smile.androidsong;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.smile.model.Language;
+import com.smile.Utility.FontSizeAndTheme;
+import com.smile.model.*;
+import com.smile.retrofit_package.GetDataByRetrofitRestApi;
+import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class LanguagesListActivity extends Activity {
+public class LanguagesListActivity extends AppCompatActivity {
 
-    private Language langudata = null;
-    // private LanguTable langutable = null;
-    private List<Language> langus = null;
-    private String queryCondition = new String("");
-    private String message = new String("");
+    private float textFontSize;
+    private ListView languagesListView;
+    private TextView languagesListEmptyTextView;
+    private MyListAdapter mMyListAdapter;
+    private LanguagesList languagesList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);    // smaller than MyActivity
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_song_languages);
 
-        TextView textview = (TextView) findViewById(R.id.languMenuTextView);
+        setContentView(R.layout.activity_languages_list);
 
-        String option = new String("");
-        option = getIntent().getStringExtra("option").toString().trim();
-        // OR
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
-            return;
+        TextView menuTextView = (TextView) findViewById(R.id.languagesListMenuTextView);
+
+        languagesListView = findViewById(R.id.languagesListView);
+        languagesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Language language = languagesList.getLanguages().get(i);
+                Toast.makeText(LanguagesListActivity.this, language.getLangNa().toString(), Toast.LENGTH_SHORT).show();
+                Intent songsIntent = new Intent(LanguagesListActivity.this, SongsListActivity.class);
+                songsIntent.putExtra("LanguageParcelable", language);
+                startActivity(songsIntent);
+            }
+        });
+
+        languagesListEmptyTextView = findViewById(R.id.languagesListEmptyTextView);
+        languagesListEmptyTextView.setVisibility(View.GONE);
+
+        final Button returnToPreviousButton = (Button) findViewById(R.id.returnToPreviousButton);
+        returnToPreviousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToPrevious();
+            }
+        });
+
+        AccessLanguagesAsyncTask accessLanguagesAsyncTask = new AccessLanguagesAsyncTask();
+        accessLanguagesAsyncTask.execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        returnToPrevious();
+    }
+
+    private void returnToPrevious() {
+        finish();
+    }
+
+    private class MyListAdapter extends ArrayAdapter {
+
+        int layoutId;
+        TextView positionNoTextView;
+        TextView languageNaTextView;
+        ArrayList<Language> languages;
+
+        @SuppressWarnings("unchecked")
+        public MyListAdapter(@NonNull Context context, int resource, @NonNull List objects) {
+            super(context, resource, objects);
+            layoutId = resource;
+            languages = (ArrayList<Language>)objects;
         }
-        option = extras.getString("option").trim();
 
-        // Buttons added
+        @Nullable
+        @Override
+        public Object getItem(int position) {
+            return super.getItem(position);
+        }
 
-        if (option.equals("2")) {
-            // new song
+        @SuppressWarnings("unchecked")
+        @Override
+        public int getPosition(@Nullable Object item) {
+            return super.getPosition(item);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+            View view = getLayoutInflater().inflate(layoutId, parent, false);
+
+            positionNoTextView = view.findViewById(R.id.languageItem_Layout_positionNoTextView);
+            positionNoTextView.setText(String.valueOf(position));
+
+            languageNaTextView = view.findViewById(R.id.languageNaTextView);
+            languageNaTextView.setText(languages.get(position).getLangNa());
+
+            return view;
+        }
+    }
+
+    private class AccessLanguagesAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private final String TAG = new String("AccessLanguagesAsyncTask");
+        private final String failedMessage = getApplicationContext().getString(R.string.failedMessage);
+        private final String noResultString = getApplicationContext().getString(R.string.noResultString);
+        private final String loadingString = getApplicationContext().getString(R.string.loadingString);
+        private AlertDialogFragment loadingDialog;
+
+        public AccessLanguagesAsyncTask() {
+
+            loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0, true);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.i(TAG, "doInBackground() started.");
+
+            // implement Retrofit to get results synchronously
+            languagesList = GetDataByRetrofitRestApi.getAllLanguages();
+
+            Log.i(TAG, "doInBackground() finished.");
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.i(TAG, "onPostExecute() started.");
+
+            loadingDialog.dismissAllowingStateLoss();
+
+            if (languagesList == null) {
+                // failed
+                languagesList = new LanguagesList();
+
+                languagesListEmptyTextView.setText(failedMessage);
+                languagesListEmptyTextView.setVisibility(View.VISIBLE);
+            } else {
+                // successfully
+
+                if (languagesList.getLanguages().size() == 0) {
+                    languagesListEmptyTextView.setText(noResultString);
+                    languagesListEmptyTextView.setVisibility(View.VISIBLE);
+                } else {
+                    languagesListEmptyTextView.setVisibility(View.GONE);
+                }
+
+                mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.languages_list_item ,languagesList.getLanguages());
+                languagesListView.setAdapter(mMyListAdapter);
+            }
         }
     }
 }

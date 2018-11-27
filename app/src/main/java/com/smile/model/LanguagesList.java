@@ -13,7 +13,7 @@ public class LanguagesList {
     private int totalRecords;
     @SerializedName("totalPages")
     private int totalPages;
-    @SerializedName("singers")
+    @SerializedName("languages")
     private ArrayList<Language> languages;
 
     public LanguagesList() {

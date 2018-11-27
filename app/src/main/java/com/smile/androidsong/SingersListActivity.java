@@ -65,6 +65,7 @@ public class SingersListActivity extends AppCompatActivity {
                 Singer singer = singersList.getSingers().get(i);
                 Toast.makeText(SingersListActivity.this, singer.getSingNa().toString(), Toast.LENGTH_SHORT).show();
                 Intent songsIntent = new Intent(SingersListActivity.this, SongsListActivity.class);
+                songsIntent.putExtra("OrderedFrom", AndroidSongApp.SingerOrdered);
                 songsIntent.putExtra("SingerParcelable", singer);
                 startActivity(songsIntent);
             }

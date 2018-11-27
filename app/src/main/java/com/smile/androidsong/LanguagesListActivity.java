@@ -52,6 +52,7 @@ public class LanguagesListActivity extends AppCompatActivity {
                 Language language = languagesList.getLanguages().get(i);
                 Toast.makeText(LanguagesListActivity.this, language.getLangNa().toString(), Toast.LENGTH_SHORT).show();
                 Intent songsIntent = new Intent(LanguagesListActivity.this, SongsListActivity.class);
+                songsIntent.putExtra("OrderedFrom", AndroidSongApp.LanguageOrdered);
                 songsIntent.putExtra("LanguageParcelable", language);
                 startActivity(songsIntent);
             }

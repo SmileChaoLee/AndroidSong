@@ -11,12 +11,15 @@ public interface RetrofitApiInterface {
     Call<SingerTypesList> getAllSingerTypes();
 
     @GET("api/Singareas/{id}/Singers/{sex}/{pageSize}/{pageNo}/{orderBy}")
-    Call<SingersList> getSingersBySingerType(@Path("id") int id, @Path("sex") String sex, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
+    Call<SingersList> getSingersBySingerTypeId(@Path("id") int id, @Path("sex") String sex, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
 
     // [HttpGet("{id}/[Action]/{pageSize}/{pageNo}/{orderBy}")] from ASP.NET Core API
     @GET("api/Singers/{id}/Songs/{pageSize}/{pageNo}/{orderBy}")
-    Call<SongsList> getSongsBySinger(@Path("id") int id, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
+    Call<SongsList> getSongsBySingerId(@Path("id") int id, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
 
     @GET("api/Languages")
     Call<LanguagesList> getAllLanguages();
+
+    @GET("api/Languages/{id}/Songs/{pageSize}/{pageNo}/{orderBy}")
+    Call<LanguagesList> getSongsByLanguageId(@Path("id") int id, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
 }

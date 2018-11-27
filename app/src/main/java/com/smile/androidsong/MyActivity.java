@@ -50,8 +50,8 @@ public class MyActivity extends AppCompatActivity {
         songLanguageOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_SongLanguageOrder = new Intent(MyActivity.this , LanguagesListActivity.class);
-                startActivity(intent_SongLanguageOrder);
+                Intent intent_LanguageOrder = new Intent(MyActivity.this , LanguagesListActivity.class);
+                startActivity(intent_LanguageOrder);
             }
         });
 

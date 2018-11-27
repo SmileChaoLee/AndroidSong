@@ -66,7 +66,7 @@ public class GetDataByRetrofitRestApi {
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
-        Call<SingersList> call = retrofitApiInterface.getSingersBySingerType(areaId, sex, pageSize, pageNo, orderBy);
+        Call<SingersList> call = retrofitApiInterface.getSingersBySingerTypeId(areaId, sex, pageSize, pageNo, orderBy);
 
         SingersList singersList = null;
         try {
@@ -92,7 +92,7 @@ public class GetDataByRetrofitRestApi {
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
-        Call<SongsList> call = retrofitApiInterface.getSongsBySinger(singerId, pageSize, pageNo, orderBy);
+        Call<SongsList> call = retrofitApiInterface.getSongsBySingerId(singerId, pageSize, pageNo, orderBy);
 
         SongsList songsList = null;
         try {

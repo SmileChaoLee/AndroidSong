@@ -33,7 +33,9 @@ public class SongsListActivity extends AppCompatActivity {
     private MyListAdapter mMyListAdapter;
     private SongsList songsList = null;
     private Singer singer;
+    private Language language;
 
+    private int orderedFrom = 0;
     private int pageNo = 1;
     private int pageSize = 7;
     private int totalPages = 0;
@@ -41,10 +43,25 @@ public class SongsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);    // smaller than MyActivity
+        orderedFrom = 0;    // default value
         Bundle extras = getIntent().getExtras();
         if (extras != null )
         {
-            singer = extras.getParcelable("SingerParcelable");
+            orderedFrom = extras.getInt("OrderedFrom", 0);
+            switch (orderedFrom) {
+                case AndroidSongApp.SingerOrdered:
+                    singer = extras.getParcelable("SingerParcelable");
+                    break;
+                case AndroidSongApp.NewSongOrdered:
+                    language = extras.getParcelable("LanguageParcelable");
+                    break;
+                case AndroidSongApp.HotSongOrdered:
+                    language = extras.getParcelable("LanguageParcelable");
+                    break;
+                case AndroidSongApp.LanguageOrdered:
+                    language = extras.getParcelable("LanguageParcelable");
+                    break;
+            }
         }
 
         super.onCreate(savedInstanceState);
@@ -251,7 +268,18 @@ public class SongsListActivity extends AppCompatActivity {
             Log.i(TAG, "doInBackground() started.");
 
             // implement Retrofit to get results synchronously
-            songsList = GetDataByRetrofitRestApi.getSongsBySinger(singerAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
+            switch (orderedFrom) {
+                case AndroidSongApp.SingerOrdered:
+                    songsList = GetDataByRetrofitRestApi.getSongsBySinger(singerAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
+                    break;
+                case AndroidSongApp.NewSongOrdered:
+                    break;
+                case AndroidSongApp.HotSongOrdered:
+                    break;
+                case AndroidSongApp.LanguageOrdered:
+                    // songsList = GetDataByRetrofitRestApi.getSongsByLanguage();
+                    break;
+            }
 
             Log.i(TAG, "doInBackground() finished.");
 

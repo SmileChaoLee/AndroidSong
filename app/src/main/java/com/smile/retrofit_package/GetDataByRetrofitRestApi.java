@@ -2,6 +2,7 @@ package com.smile.retrofit_package;
 
 import android.util.Log;
 
+import com.smile.model.LanguagesList;
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
 import com.smile.model.SingerTypesList;
@@ -16,6 +17,23 @@ import retrofit2.Retrofit;
 public class GetDataByRetrofitRestApi {
 
     // implement Retrofit to get results synchronously
+    public static LanguagesList getAllLanguages() {
+        final String TAG = new String("GetDataByRestApi.getAllLanguages()");
+
+        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
+        Call<LanguagesList> call = retrofitApiInterface.getAllLanguages();
+
+        LanguagesList languagesList = null;
+        try {
+            languagesList = call.execute().body();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return languagesList;
+    }
+
     public static SingerTypesList getAllSingerTypes() {
         final String TAG = new String("GetDataByRestApi.getAllSingerTypes()");
 

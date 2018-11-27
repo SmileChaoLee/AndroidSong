@@ -26,7 +26,7 @@
         android:layout_height="0dp"
         app:layout_constraintHeight_percent="0.9"
         app:layout_constraintTop_toBottomOf="@+id/mainMenuTextView"
-        android:weightSum="7">
+        android:weightSum="5">
 
         <Button
             android:id="@+id/singerOrderButton"
@@ -60,24 +60,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/songLanguageOrder"
-            android:background="@android:drawable/btn_default"
-            android:textColor="@color/blue"
-            android:layout_weight="1">
-        </Button>
-        <Button
-            android:id="@+id/songNameOrderButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/songNameOrder"
-            android:background="@android:drawable/btn_default"
-            android:textColor="@color/blue"
-            android:layout_weight="1">
-        </Button>
-        <Button
-            android:id="@+id/songNoOrderButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/songNoOrder"
             android:background="@android:drawable/btn_default"
             android:textColor="@color/blue"
             android:layout_weight="1">

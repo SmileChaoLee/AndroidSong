@@ -55,24 +55,6 @@ public class MyActivity extends AppCompatActivity {
             }
         });
 
-        Button songNameOrderButton = (Button) findViewById(R.id.songNameOrderButton);
-        songNameOrderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent SongNameOrder = new Intent(MyActivity.this,SongsListActivity.class);
-                startActivity(SongNameOrder);
-            }
-        });
-
-        Button songNoOrderButton = (Button) findViewById(R.id.songNoOrderButton);
-        songNoOrderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent_SongNoOrder = new Intent(MyActivity.this,SongsListActivity.class);
-                startActivity(intent_SongNoOrder);
-            }
-        });
-
         Button exitProgramButton = (Button) findViewById(R.id.exitProgramButton);
         exitProgramButton.setOnClickListener(new View.OnClickListener() {
             @Override

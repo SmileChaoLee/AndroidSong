@@ -52,8 +52,6 @@ public class SingerTypesListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_singer_types_list);
 
-        TextView menuTextView = (TextView) findViewById(R.id.singerTypesListMenuTextView);
-
         singerTypesListView = findViewById(R.id.singerTypesListView);
         singerTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -70,8 +68,8 @@ public class SingerTypesListActivity extends AppCompatActivity {
         singerTypesListEmptyTextView = findViewById(R.id.singerTypesListEmptyTextView);
         singerTypesListEmptyTextView.setVisibility(View.GONE);
 
-        Button returnToPreviousButton = findViewById(R.id.returnToPreviousButton);
-        returnToPreviousButton.setOnClickListener(new View.OnClickListener() {
+        Button singerTypesListReturnButton = findViewById(R.id.singerTypesListReturnButton);
+        singerTypesListReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 returnToPrevious();

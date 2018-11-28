@@ -32,7 +32,7 @@
             android:id="@+id/singerOrderButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/singerOrder"
+            android:text="@string/singerOrderString"
             android:background="@android:drawable/btn_default"
             android:textColor="@color/blue"
             android:layout_weight="1">
@@ -41,7 +41,7 @@
             android:id="@+id/newSongOrderButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/newSongOrder"
+            android:text="@string/newSongOrderString"
             android:background="@android:drawable/btn_default"
             android:textColor="@color/blue"
             android:layout_weight="1">
@@ -50,7 +50,7 @@
             android:id="@+id/hotSongOrderButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/hotSongOrder"
+            android:text="@string/hotSongOrderString"
             android:background="@android:drawable/btn_default"
             android:textColor="@color/blue"
             android:layout_weight="1">
@@ -59,7 +59,7 @@
             android:id="@+id/songLanguageOrderButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/LanguageOrder"
+            android:text="@string/languageOrderString"
             android:background="@android:drawable/btn_default"
             android:textColor="@color/blue"
             android:layout_weight="1">

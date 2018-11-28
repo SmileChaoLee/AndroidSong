@@ -43,26 +43,24 @@ public class LanguagesListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_languages_list);
 
-        TextView menuTextView = (TextView) findViewById(R.id.languagesListMenuTextView);
-
         languagesListView = findViewById(R.id.languagesListView);
         languagesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Language language = languagesList.getLanguages().get(i);
                 Toast.makeText(LanguagesListActivity.this, language.getLangNa().toString(), Toast.LENGTH_SHORT).show();
-                Intent songsIntent = new Intent(LanguagesListActivity.this, SongsListActivity.class);
-                songsIntent.putExtra("OrderedFrom", AndroidSongApp.LanguageOrdered);
-                songsIntent.putExtra("LanguageParcelable", language);
-                startActivity(songsIntent);
+                Intent wordsIntent = new Intent(LanguagesListActivity.this, WordsListActivity.class);
+                wordsIntent.putExtra("OrderedFrom", AndroidSongApp.LanguageOrdered);
+                wordsIntent.putExtra("LanguageParcelable", language);
+                startActivity(wordsIntent);
             }
         });
 
         languagesListEmptyTextView = findViewById(R.id.languagesListEmptyTextView);
         languagesListEmptyTextView.setVisibility(View.GONE);
 
-        final Button returnToPreviousButton = (Button) findViewById(R.id.returnToPreviousButton);
-        returnToPreviousButton.setOnClickListener(new View.OnClickListener() {
+        final Button languagesListReturnButton = findViewById(R.id.languagesListReturnButton);
+        languagesListReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 returnToPrevious();

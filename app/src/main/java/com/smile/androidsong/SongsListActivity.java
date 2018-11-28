@@ -21,9 +21,12 @@ import com.smile.Utility.FontSizeAndTheme;
 import com.smile.model.*;
 import com.smile.retrofit_package.GetDataByRetrofitRestApi;
 import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
+import com.smile.smilepublicclasseslibrary.utilities.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.internal.Util;
 
 public class SongsListActivity extends AppCompatActivity {
 
@@ -38,6 +41,7 @@ public class SongsListActivity extends AppCompatActivity {
     private Object objectPassed;
 
     private int orderedFrom = 0;
+    private int numOfWords = 0;
     private int pageNo = 1;
     private int pageSize = 8;
     private int totalPages = 0;
@@ -45,7 +49,11 @@ public class SongsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);    // smaller than MyActivity
+        if (ScreenUtil.isTablet(this)) {
+            pageSize = 10;
+        }
         orderedFrom = 0;    // default value
+        numOfWords = 0;
         Bundle extras = getIntent().getExtras();
         if (extras != null )
         {
@@ -56,16 +64,26 @@ public class SongsListActivity extends AppCompatActivity {
                     objectPassed = singer;
                     break;
                 case AndroidSongApp.NewSongOrdered:
+                    objectPassed = language;
+                    break;
+                case AndroidSongApp.NewSongLanguageOrdered:
                     language = extras.getParcelable("LanguageParcelable");
                     objectPassed = language;
                     break;
                 case AndroidSongApp.HotSongOrdered:
+                    objectPassed = null;
+                    break;
+                case AndroidSongApp.HotSongLanguageOrdered:
                     language = extras.getParcelable("LanguageParcelable");
                     objectPassed = language;
                     break;
                 case AndroidSongApp.LanguageOrdered:
                     language = extras.getParcelable("LanguageParcelable");
                     objectPassed = language;
+                case AndroidSongApp.LanguageWordsOrdered:
+                    language = extras.getParcelable("LanguageParcelable");
+                    objectPassed = language;
+                    numOfWords = extras.getInt("NumOfWords");
                     break;
             }
         }
@@ -73,8 +91,6 @@ public class SongsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_songs_list);
-
-        TextView menuTextView = (TextView) findViewById(R.id.songsListMenuTextView);
 
         songsListView = findViewById(R.id.songsListView);
         songsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -98,7 +114,7 @@ public class SongsListActivity extends AppCompatActivity {
             }
         });
 
-        Button previousPageButton = (Button) findViewById(R.id.previousPageButton);
+        Button previousPageButton = findViewById(R.id.previousPageButton);
         previousPageButton.setTextSize(smallButtonFontSize);
         previousPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +123,7 @@ public class SongsListActivity extends AppCompatActivity {
             }
         });
 
-        Button nextPageButton = (Button) findViewById(R.id.nextPageButton);
+        Button nextPageButton = findViewById(R.id.nextPageButton);
         nextPageButton.setTextSize(smallButtonFontSize);
         nextPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +132,7 @@ public class SongsListActivity extends AppCompatActivity {
             }
         });
 
-        Button lastPageButton = (Button) findViewById(R.id.lastPageButton);
+        Button lastPageButton = findViewById(R.id.lastPageButton);
         lastPageButton.setTextSize(smallButtonFontSize);
         lastPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,15 +141,15 @@ public class SongsListActivity extends AppCompatActivity {
             }
         });
 
-        final Button returnToPreviousButton = (Button) findViewById(R.id.returnToPreviousButton);
-        returnToPreviousButton.setOnClickListener(new View.OnClickListener() {
+        final Button songsListReturnButton = findViewById(R.id.songsListReturnButton);
+        songsListReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 returnToPrevious();
             }
         });
 
-        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, pageSize, pageNo);
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, numOfWords, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
 
@@ -153,7 +169,7 @@ public class SongsListActivity extends AppCompatActivity {
 
     private void firstPage() {
         pageNo = 1;
-        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, pageSize, pageNo);
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, numOfWords, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
 
@@ -162,7 +178,7 @@ public class SongsListActivity extends AppCompatActivity {
         if (pageNo < 1) {
             pageNo = 1;
         }
-        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, pageSize, pageNo);
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, numOfWords, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
 
@@ -171,13 +187,13 @@ public class SongsListActivity extends AppCompatActivity {
         if (pageNo > totalPages) {
             pageNo = totalPages;
         }
-        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, pageSize, pageNo);
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, numOfWords, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
 
     private void lastPage() {
         pageNo = -1;    // represent last page
-        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, pageSize, pageNo);
+        AccessSongsAsyncTask accessSongsAsyncTask = new AccessSongsAsyncTask(objectPassed, numOfWords, pageSize, pageNo);
         accessSongsAsyncTask.execute();
     }
 
@@ -256,11 +272,13 @@ public class SongsListActivity extends AppCompatActivity {
         private AlertDialogFragment loadingDialog;
 
         private Object objectAsyncTask;
+        private int numOfWordsAsyncTask;
         private int pageSizeAsyncTask;
         private int pageNoAsyncTask;
 
-        public AccessSongsAsyncTask(Object objectAsyncTask, int pageSizeAsyncTask, int pageNoAsyncTask) {
+        public AccessSongsAsyncTask(Object objectAsyncTask, int numOfWordsAsyncTask, int pageSizeAsyncTask, int pageNoAsyncTask) {
             this.objectAsyncTask = objectAsyncTask;
+            this.numOfWordsAsyncTask = numOfWordsAsyncTask;
             this.pageSizeAsyncTask = pageSizeAsyncTask;
             this.pageNoAsyncTask = pageNoAsyncTask;
 
@@ -283,10 +301,17 @@ public class SongsListActivity extends AppCompatActivity {
                     break;
                 case AndroidSongApp.NewSongOrdered:
                     break;
+                case AndroidSongApp.NewSongLanguageOrdered:
+                    break;
                 case AndroidSongApp.HotSongOrdered:
                     break;
+                case AndroidSongApp.HotSongLanguageOrdered:
+                    break;
                 case AndroidSongApp.LanguageOrdered:
-                    songsList = GetDataByRetrofitRestApi.getSongsByLanguage((Language)objectAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);;
+                    songsList = GetDataByRetrofitRestApi.getSongsByLanguage((Language)objectAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
+                    break;
+                case AndroidSongApp.LanguageWordsOrdered:
+                    songsList = GetDataByRetrofitRestApi.getSongsByLanguageNumOfWords((Language)objectAsyncTask, numOfWordsAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
                     break;
             }
 

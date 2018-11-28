@@ -23,7 +23,7 @@ public class MyActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_my);
 
-        Button singerOrderButton = (Button) findViewById(R.id.singerOrderButton);
+        final Button singerOrderButton = findViewById(R.id.singerOrderButton);
         singerOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,21 +32,21 @@ public class MyActivity extends AppCompatActivity {
             }
         });
 
-        Button newSongOrderButton = (Button) findViewById(R.id.newSongOrderButton);
+        final Button newSongOrderButton = findViewById(R.id.newSongOrderButton);
         newSongOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             }
         });
 
-        Button hotSongOrderButton = (Button) findViewById(R.id.hotSongOrderButton);
+        final Button hotSongOrderButton = findViewById(R.id.hotSongOrderButton);
         newSongOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             }
         });
 
-        Button songLanguageOrderButton = (Button) findViewById(R.id.songLanguageOrderButton);
+        final Button songLanguageOrderButton = findViewById(R.id.songLanguageOrderButton);
         songLanguageOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,14 +55,13 @@ public class MyActivity extends AppCompatActivity {
             }
         });
 
-        Button exitProgramButton = (Button) findViewById(R.id.exitProgramButton);
+        final Button exitProgramButton = findViewById(R.id.exitProgramButton);
         exitProgramButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
     }
 
     @Override

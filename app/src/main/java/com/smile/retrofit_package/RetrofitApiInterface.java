@@ -22,4 +22,7 @@ public interface RetrofitApiInterface {
 
     @GET("api/Languages/{id}/Songs/{pageSize}/{pageNo}/{orderBy}")
     Call<SongsList> getSongsByLanguageId(@Path("id") int id, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
+
+    @GET("api/Languages/{id}/{numOfWords}/Songs/{pageSize}/{pageNo}/{orderBy}")
+    Call<SongsList> getSongsByLanguageIdNumOfWords(@Path("id") int id, @Path("numOfWords") int numOfWords, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
 }

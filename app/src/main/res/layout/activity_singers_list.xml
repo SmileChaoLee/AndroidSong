@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintHeight_percent="0.1"
-        app:layout_constraintBottom_toTopOf="@id/returnToPreviousButton"
+        app:layout_constraintBottom_toTopOf="@id/singersListReturnButton"
         android:weightSum="4">
 
         <Button
@@ -106,7 +106,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/returnToPreviousButton"
+        android:id="@+id/singersListReturnButton"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:text="@string/returnToPrevious"

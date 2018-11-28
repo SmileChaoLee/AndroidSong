@@ -8,8 +8,11 @@ public class AndroidSongApp extends Application {
 
     public static final int SingerOrdered = 1;
     public static final int NewSongOrdered = 2;
+    public static final int NewSongLanguageOrdered = 21;
     public static final int HotSongOrdered = 3;
+    public static final int HotSongLanguageOrdered = 31;
     public static final int LanguageOrdered = 4;
+    public static final int LanguageWordsOrdered = 41;
     public static Resources AppResources;
     public static Context AppContext;
 

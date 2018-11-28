@@ -6,50 +6,40 @@
     android:layout_height="match_parent"
     android:background="@color/green"
     android:orientation="vertical"
-    tools:context=".SingerTypesListActivity">
+    tools:context=".WordsListActivity">
 
     <TextView
-        android:id="@+id/singerTypesListMenuTextView"
+        android:id="@+id/wordsListMenuTextView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:textStyle="bold"
         android:textColor="@color/darkOrange"
-        android:layout_gravity="center_horizontal|top"
-        android:text="@string/singerTypesListString"
+        android:text="@string/wordsListMenuTitle"
         android:gravity="center"
         app:layout_constraintHeight_percent="0.1"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
     </TextView>
 
-    <FrameLayout
-        android:id="@+id/singerTypesListView_Layout"
+    <LinearLayout
+        android:id="@+id/wordsListView_Layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/darkYellow"
         app:layout_constraintHeight_percent="0.8"
-        app:layout_constraintTop_toBottomOf="@+id/singerTypesListMenuTextView" >
+        app:layout_constraintTop_toBottomOf="@+id/wordsListMenuTextView" >
 
-        <ListView android:id="@+id/singerTypesListView"
+        <ListView android:id="@+id/wordsListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbarStyle="outsideOverlay"
             android:drawSelectorOnTop="false" >
         </ListView>
 
-        <TextView android:id="@+id/singerTypesListEmptyTextView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textStyle="bold"
-            android:textColor="@color/blue"
-            android:gravity="center"
-            android:visibility="gone" >
-        </TextView>
-
-    </FrameLayout>
+    </LinearLayout>
 
     <Button
-        android:id="@+id/singerTypesListReturnButton"
+        android:id="@+id/wordsListReturnButton"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:text="@string/returnToPrevious"

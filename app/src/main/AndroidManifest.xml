@@ -26,28 +26,29 @@
             android:name=".SongsListActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_song_query"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SingersListActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_singer_query"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SingerTypesListActivity_OLD"
             android:configChanges="orientation"
             android:label="@string/title_activity_singer_type_query"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".OrderOneSong"
             android:configChanges="orientation"
             android:label="@string/title_activity_order_one_song"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LanguagesListActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_language_query"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".SingerTypesListActivity"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".SingerTypesListActivity" />
+        <activity android:name=".WordsListActivity"></activity>
     </application>
 
 </manifest>

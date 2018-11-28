@@ -3,7 +3,6 @@
 
     <string name="app_name">安卓點歌</string>
     <string name="action_settings">設定</string>
-    <string name="mainMenuTitle">請選擇以下其中一個功能</string>
     <string name="title_activity_song_query">歌曲查詢</string>
     <string name="title_activity_singer_query">歌星查詢</string>
     <string name="title_activity_singer_type_query">歌星地區</string>
@@ -16,10 +15,12 @@
     <string name="succeededMessage">成功</string>
     <string name="loadingString">下載中 ...</string>
 
-    <string name="singerOrder">歌星點歌</string>
-    <string name="newSongOrder">新歌點歌</string>
-    <string name="hotSongOrder">排行榜點歌</string>
-    <string name="LanguageOrder">語言分類點歌</string>
+    <string name="mainMenuTitle">請選擇以下其中一個功能</string>
+    <string name="singerOrderString">歌星點歌</string>
+    <string name="newSongOrderString">新歌點歌</string>
+    <string name="hotSongOrderString">排行榜點歌</string>
+    <string name="languageOrderString">語言分類點歌</string>
+    <string name="wordsListMenuTitle">請選擇以下其中一個功能</string>
     <string name="exitProgram">結束程式</string>
 
     <string name="maleSinger">男性歌手</string>
@@ -42,4 +43,14 @@
     <string name="areaNa">區域名稱</string>
     <string name="sex">性別</string>
 
+    <string name="oneWordOrderString">一字部</string>
+    <string name="twoWordsOrderString">二字部</string>
+    <string name="threeWordsOrderString">三字部</string>
+    <string name="fourWordsOrderString">四字部</string>
+    <string name="fiveWordsOrderString">五字部</string>
+    <string name="sixWordsOrderString">六字部</string>
+    <string name="sevenWordsOrderString">七字部</string>
+    <string name="eightWordsOrderString">八字部</string>
+    <string name="nineWordsOrderString">九字部</string>
+    <string name="tenWordsOrderString">十字部或以上</string>
 </resources>

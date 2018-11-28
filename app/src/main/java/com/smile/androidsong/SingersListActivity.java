@@ -56,8 +56,6 @@ public class SingersListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_singers_list);
 
-        TextView menuTextView = (TextView) findViewById(R.id.singersListMenuTextView);
-
         singersListView = findViewById(R.id.singersListView);
         singersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -75,7 +73,7 @@ public class SingersListActivity extends AppCompatActivity {
         singersListEmptyTextView.setVisibility(View.GONE);
 
         float smallButtonFontSize = textFontSize * 0.7f;
-        Button firstPageButton = (Button) findViewById(R.id.firstPageButton);
+        Button firstPageButton = findViewById(R.id.firstPageButton);
         firstPageButton.setTextSize(smallButtonFontSize);
         firstPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +82,7 @@ public class SingersListActivity extends AppCompatActivity {
             }
         });
 
-        Button previousPageButton = (Button) findViewById(R.id.previousPageButton);
+        Button previousPageButton = findViewById(R.id.previousPageButton);
         previousPageButton.setTextSize(smallButtonFontSize);
         previousPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +91,7 @@ public class SingersListActivity extends AppCompatActivity {
             }
         });
 
-        Button nextPageButton = (Button) findViewById(R.id.nextPageButton);
+        Button nextPageButton = findViewById(R.id.nextPageButton);
         nextPageButton.setTextSize(smallButtonFontSize);
         nextPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +100,7 @@ public class SingersListActivity extends AppCompatActivity {
             }
         });
 
-        Button lastPageButton = (Button) findViewById(R.id.lastPageButton);
+        Button lastPageButton = findViewById(R.id.lastPageButton);
         lastPageButton.setTextSize(smallButtonFontSize);
         lastPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,8 +109,8 @@ public class SingersListActivity extends AppCompatActivity {
             }
         });
 
-        final Button returnToPreviousButton = (Button) findViewById(R.id.returnToPreviousButton);
-        returnToPreviousButton.setOnClickListener(new View.OnClickListener() {
+        final Button singersListReturnButton = findViewById(R.id.singersListReturnButton);
+        singersListReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 returnToPrevious();

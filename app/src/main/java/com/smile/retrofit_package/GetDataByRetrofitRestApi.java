@@ -39,11 +39,37 @@ public class GetDataByRetrofitRestApi {
         }
 
         int languageId = language.getId();
-        String orderBy = "SongNa";  // order by song's name
+        String orderBy = "NumWordsSongNa";  // order by (number of words + song's name)
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<SongsList> call = retrofitApiInterface.getSongsByLanguageId(languageId, pageSize, pageNo, orderBy);
+
+        SongsList songsList = null;
+        try {
+            songsList = call.execute().body();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return songsList;
+    }
+
+    public static SongsList getSongsByLanguageNumOfWords(Language language, int numOfWords, int pageSize, int pageNo) {
+        final String TAG = new String("GetDataByRestApi.getSongsByLanguageNumOfWords()");
+
+        if (language == null) {
+            // singer cannot be null
+            Log.d(TAG, "songsList is null.");
+            return null;
+        }
+
+        int languageId = language.getId();
+        String orderBy = "NumWordsSongNa";  // order by (number of words + song's name)
+
+        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
+        Call<SongsList> call = retrofitApiInterface.getSongsByLanguageIdNumOfWords(languageId, numOfWords, pageSize, pageNo, orderBy);
 
         SongsList songsList = null;
         try {
@@ -109,7 +135,7 @@ public class GetDataByRetrofitRestApi {
         }
 
         int singerId = singer.getId();
-        String orderBy = "SongNa";  // song's name
+        String orderBy = "NumWordsSongNa";  // order by (number of words + song's name)
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);

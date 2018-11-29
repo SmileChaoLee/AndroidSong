@@ -27,8 +27,8 @@ public class MyActivity extends AppCompatActivity {
         singerOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_SingerTypes = new Intent(MyActivity.this, SingerTypesListActivity.class);
-                startActivity(intent_SingerTypes);
+                Intent singerTypesIntent = new Intent(MyActivity.this, SingerTypesListActivity.class);
+                startActivity(singerTypesIntent);
             }
         });
 
@@ -36,13 +36,19 @@ public class MyActivity extends AppCompatActivity {
         newSongOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent languagesIntent = new Intent(MyActivity.this, LanguagesListActivity.class);
+                languagesIntent.putExtra("OrderedFrom", AndroidSongApp.NewSongOrdered);
+                startActivity(languagesIntent);
             }
         });
 
         final Button hotSongOrderButton = findViewById(R.id.hotSongOrderButton);
-        newSongOrderButton.setOnClickListener(new View.OnClickListener() {
+        hotSongOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent languagesIntent = new Intent(MyActivity.this, LanguagesListActivity.class);
+                languagesIntent.putExtra("OrderedFrom", AndroidSongApp.HotSongOrdered);
+                startActivity(languagesIntent);
             }
         });
 

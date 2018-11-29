@@ -29,6 +29,8 @@
     <string name="returnToPrevious">Return</string>
 
     <string name="languagesListString">Languages List</string>
+    <string name="newSOngLanguagesListString">Languages List of New Songs</string>
+    <string name="hotSongLanguagesListString">Languages List of Hot Songs</string>
     <string name="singerTypesListString">Singer Types List</string>
     <string name="songsListString">Songs List</string>
     <string name="singersListString">Singers List</string>

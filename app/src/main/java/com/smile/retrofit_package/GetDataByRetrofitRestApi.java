@@ -81,6 +81,58 @@ public class GetDataByRetrofitRestApi {
         return songsList;
     }
 
+    public static SongsList getNewSongsByLanguage(Language language, int pageSize, int pageNo) {
+        final String TAG = new String("GetDataByRestApi.getNewSongsByLanguage()");
+
+        if (language == null) {
+            // singer cannot be null
+            Log.d(TAG, "songsList is null.");
+            return null;
+        }
+
+        int languageId = language.getId();
+        String orderBy = "";  // no order. Only the date that the song came in by descending order
+
+        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
+        Call<SongsList> call = retrofitApiInterface.getNewSongsByLanguageId(languageId, pageSize, pageNo);
+
+        SongsList songsList = null;
+        try {
+            songsList = call.execute().body();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return songsList;
+    }
+
+    public static SongsList getHotSongsByLanguage(Language language, int pageSize, int pageNo) {
+        final String TAG = new String("GetDataByRestApi.getHotSongsByLanguage()");
+
+        if (language == null) {
+            // singer cannot be null
+            Log.d(TAG, "songsList is null.");
+            return null;
+        }
+
+        int languageId = language.getId();
+        String orderBy = "";  // no order by. Only the number that the song is ordered by descending order
+
+        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
+        Call<SongsList> call = retrofitApiInterface.getHotSongsByLanguageId(languageId, pageSize, pageNo);
+
+        SongsList songsList = null;
+        try {
+            songsList = call.execute().body();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return songsList;
+    }
+
     public static SingerTypesList getAllSingerTypes() {
         final String TAG = new String("GetDataByRestApi.getAllSingerTypes()");
 

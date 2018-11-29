@@ -25,4 +25,12 @@ public interface RetrofitApiInterface {
 
     @GET("api/Languages/{id}/{numOfWords}/Songs/{pageSize}/{pageNo}/{orderBy}")
     Call<SongsList> getSongsByLanguageIdNumOfWords(@Path("id") int id, @Path("numOfWords") int numOfWords, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
+
+    // no order by, Only the date that the song came by descending order
+    @GET("api/Languages/{id}/NewSongs/{pageSize}/{pageNo}")
+    Call<SongsList> getNewSongsByLanguageId(@Path("id") int id, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo);
+
+    // no order by, Only the number that the song is ordered by descending order
+    @GET("api/Languages/{id}/HotSongs/{pageSize}/{pageNo}")
+    Call<SongsList> getHotSongsByLanguageId(@Path("id") int id, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo);
 }

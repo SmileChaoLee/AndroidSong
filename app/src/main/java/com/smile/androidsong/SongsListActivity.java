@@ -302,10 +302,12 @@ public class SongsListActivity extends AppCompatActivity {
                 case AndroidSongApp.NewSongOrdered:
                     break;
                 case AndroidSongApp.NewSongLanguageOrdered:
+                    songsList = GetDataByRetrofitRestApi.getNewSongsByLanguage((Language)objectAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
                     break;
                 case AndroidSongApp.HotSongOrdered:
                     break;
                 case AndroidSongApp.HotSongLanguageOrdered:
+                    songsList = GetDataByRetrofitRestApi.getHotSongsByLanguage((Language)objectAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
                     break;
                 case AndroidSongApp.LanguageOrdered:
                     songsList = GetDataByRetrofitRestApi.getSongsByLanguage((Language)objectAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);

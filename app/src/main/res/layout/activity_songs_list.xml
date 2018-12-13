@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/green"
     android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".SongsListActivity">
 
     <TextView
@@ -20,14 +22,39 @@
         app:layout_constraintTop_toTopOf="parent">
     </TextView>
 
+    <LinearLayout
+        android:id="@+id/songSearchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/search_bar"
+        android:gravity="center"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintTop_toBottomOf="@+id/songsListMenuTextView" >
+
+        <EditText
+            android:id="@+id/songSearchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:text=""
+            android:hint="@string/songNameString"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="80dp"
+            android:gravity="center_vertical|left">
+        </EditText>
+
+    </LinearLayout>
+
+
     <FrameLayout
         android:id="@+id/songsListView_Layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/darkYellow"
-        app:layout_constraintHeight_percent="0.7"
-        app:layout_constraintTop_toBottomOf="@+id/songsListMenuTextView" >
+        app:layout_constraintHeight_percent="0.6"
+        app:layout_constraintTop_toBottomOf="@+id/songSearchLayout" >
 
         <ListView android:id="@+id/songsListView"
             android:layout_width="match_parent"
@@ -58,7 +85,7 @@
         <Button
             android:id="@+id/firstPageButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/firstPage"
             android:background="@android:drawable/btn_default"
             android:textStyle="bold"
@@ -70,7 +97,7 @@
         <Button
             android:id="@+id/previousPageButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/previousPage"
             android:background="@android:drawable/btn_default"
             android:textStyle="bold"
@@ -82,7 +109,7 @@
         <Button
             android:id="@+id/nextPageButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/nextPage"
             android:background="@android:drawable/btn_default"
             android:textStyle="bold"
@@ -94,7 +121,7 @@
         <Button
             android:id="@+id/lastPageButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/lastPage"
             android:background="@android:drawable/btn_default"
             android:textStyle="bold"
@@ -110,7 +137,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:text="@string/returnToPrevious"
-        android:background="@android:drawable/btn_default"
+        android:background="@drawable/yellow_square_button"
         android:textColor="@color/red"
         android:textStyle="bold"
         android:gravity="center"

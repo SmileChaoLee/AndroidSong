@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +34,7 @@ import java.util.List;
 public class SingersListActivity extends AppCompatActivity {
 
     private float textFontSize;
+    private EditText searchEditText;
     private ListView singersListView;
     private TextView singersListEmptyTextView;
     private MyListAdapter mMyListAdapter;
@@ -55,6 +58,12 @@ public class SingersListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_singers_list);
+
+        searchEditText = findViewById(R.id.singerSearchEditText);
+        LinearLayout.LayoutParams searchEditLp = (LinearLayout.LayoutParams) searchEditText.getLayoutParams();
+        searchEditLp.leftMargin = (int)(textFontSize * 2.0f);
+        searchEditLp.rightMargin = (int)(textFontSize * 5.0f);
+        // searchEditLp.setMargins(100, 0, (int)textFontSize*2, 0);
 
         singersListView = findViewById(R.id.singersListView);
         singersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

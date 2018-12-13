@@ -55,4 +55,7 @@
     <string name="eightWordsOrderString">八字部</string>
     <string name="nineWordsOrderString">九字部</string>
     <string name="tenWordsOrderString">十字部或以上</string>
+
+    <string name="singerNameString">歌星名字</string>
+    <string name="songNameString">歌曲名稱</string>
 </resources>

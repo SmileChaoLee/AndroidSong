@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +34,7 @@ public class SongsListActivity extends AppCompatActivity {
 
     private static final String TAG = new String("SongsListActivity");
     private float textFontSize;
+    private EditText searchEditText;
     private ListView songsListView;
     private TextView songsListEmptyTextView;
     private MyListAdapter mMyListAdapter;
@@ -43,14 +46,14 @@ public class SongsListActivity extends AppCompatActivity {
     private int orderedFrom = 0;
     private int numOfWords = 0;
     private int pageNo = 1;
-    private int pageSize = 8;
+    private int pageSize = 7;
     private int totalPages = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);    // smaller than MyActivity
         if (ScreenUtil.isTablet(this)) {
-            pageSize = 10;
+            pageSize = 9;
         }
         orderedFrom = 0;    // default value
         numOfWords = 0;
@@ -91,6 +94,12 @@ public class SongsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_songs_list);
+
+        searchEditText = findViewById(R.id.songSearchEditText);
+        LinearLayout.LayoutParams searchEditLp = (LinearLayout.LayoutParams) searchEditText.getLayoutParams();
+        searchEditLp.leftMargin = (int)(textFontSize * 2.0f);
+        searchEditLp.rightMargin = (int)(textFontSize * 5.0f);
+        // searchEditLp.setMargins(100, 0, (int)textFontSize*2, 0);
 
         songsListView = findViewById(R.id.songsListView);
         songsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -26,6 +26,7 @@ import com.smile.model.SingerType;
 import com.smile.model.SingersList;
 import com.smile.retrofit_package.GetDataByRetrofitRestApi;
 import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
+import com.smile.smilepublicclasseslibrary.utilities.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,9 @@ public class SingersListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);    // smaller than MyActivity
+        if (ScreenUtil.isTablet(this)) {
+            pageSize = 13;
+        }
         Bundle extras = getIntent().getExtras();
         if (extras != null )
         {

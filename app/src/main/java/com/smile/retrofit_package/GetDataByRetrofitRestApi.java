@@ -187,7 +187,8 @@ public class GetDataByRetrofitRestApi {
         }
 
         int singerId = singer.getId();
-        String orderBy = "NumWordsSongNa";  // order by (number of words + song's name)
+        // String orderBy = "NumWordsSongNa";  // order by (number of words + song's name)
+        String orderBy = "SongNa";  // order by song's name
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);

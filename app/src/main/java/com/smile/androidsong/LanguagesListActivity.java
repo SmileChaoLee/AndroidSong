@@ -230,10 +230,9 @@ public class LanguagesListActivity extends AppCompatActivity {
                 } else {
                     languagesListEmptyTextView.setVisibility(View.GONE);
                 }
-
-                mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.languages_list_item ,languagesList.getLanguages());
-                languagesListView.setAdapter(mMyListAdapter);
             }
+            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.languages_list_item ,languagesList.getLanguages());
+            languagesListView.setAdapter(mMyListAdapter);
         }
     }
 }

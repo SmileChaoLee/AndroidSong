@@ -232,13 +232,13 @@ public class SingerTypesListActivity extends AppCompatActivity {
                 } else {
                     singerTypesListEmptyTextView.setVisibility(View.GONE);
                 }
-                mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singer_types_list_item, singerTypesList.getSingerTypes());
-                singerTypesListView.setAdapter(mMyListAdapter);
             } else {
                 singerTypesList = new SingerTypesList();
                 singerTypesListEmptyTextView.setText("response.isSuccessful() --> false.");
                 singerTypesListEmptyTextView.setVisibility(View.VISIBLE);
             }
+            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singer_types_list_item, singerTypesList.getSingerTypes());
+            singerTypesListView.setAdapter(mMyListAdapter);
         }
 
         @Override

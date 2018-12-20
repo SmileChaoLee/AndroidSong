@@ -13,6 +13,9 @@ public interface RetrofitApiInterface {
     @GET("api/Singareas/{id}/Singers/{sex}/{pageSize}/{pageNo}/{orderBy}")
     Call<SingersList> getSingersBySingerTypeId(@Path("id") int id, @Path("sex") String sex, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
 
+    @GET("api/Singareas/{id}/Singers/{sex}/{pageSize}/{pageNo}/{orderBy}/{filter}")
+    Call<SingersList> getSingersBySingerTypeWithFilter(@Path("id") int id, @Path("sex") String sex, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy, @Path("filter") String filter);
+
     // [HttpGet("{id}/[Action]/{pageSize}/{pageNo}/{orderBy}")] from ASP.NET Core API
     @GET("api/Singers/{id}/Songs/{pageSize}/{pageNo}/{orderBy}")
     Call<SongsList> getSongsBySingerId(@Path("id") int id, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);

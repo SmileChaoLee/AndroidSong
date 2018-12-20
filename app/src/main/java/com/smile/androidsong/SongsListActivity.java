@@ -366,10 +366,9 @@ public class SongsListActivity extends AppCompatActivity {
                 } else {
                     songsListEmptyTextView.setVisibility(View.GONE);
                 }
-
-                mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.songs_list_item ,songsList.getSongs());
-                songsListView.setAdapter(mMyListAdapter);
             }
+            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.songs_list_item ,songsList.getSongs());
+            songsListView.setAdapter(mMyListAdapter);
         }
     }
 }

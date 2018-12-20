@@ -150,7 +150,7 @@ public class GetDataByRetrofitRestApi {
         return singerTypesList;
     }
 
-    public static SingersList getSingersBySingerType(SingerType singerType, int pageSize, int pageNo) {
+    public static SingersList getSingersBySingerType(SingerType singerType, int pageSize, int pageNo, String filter) {
         final String TAG = new String("GetDataByRestApi.getSingersBySingerType()");
 
         if (singerType == null) {
@@ -165,7 +165,12 @@ public class GetDataByRetrofitRestApi {
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
-        Call<SingersList> call = retrofitApiInterface.getSingersBySingerTypeId(areaId, sex, pageSize, pageNo, orderBy);
+        Call<SingersList> call;
+        if (filter.isEmpty()) {
+            call = retrofitApiInterface.getSingersBySingerTypeId(areaId, sex, pageSize, pageNo, orderBy);
+        } else {
+            call = retrofitApiInterface.getSingersBySingerTypeWithFilter(areaId, sex, pageSize, pageNo, orderBy, filter);
+        }
 
         SingersList singersList = null;
         try {

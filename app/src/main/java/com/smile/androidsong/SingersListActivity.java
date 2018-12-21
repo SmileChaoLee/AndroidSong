@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -36,6 +39,8 @@ public class SingersListActivity extends AppCompatActivity {
 
     private float textFontSize;
     private EditText searchEditText;
+    private boolean isSearchEditTextChanged;
+    private String filterString;
     private ListView singersListView;
     private TextView singersListEmptyTextView;
     private MyListAdapter mMyListAdapter;
@@ -63,11 +68,35 @@ public class SingersListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_singers_list);
 
+        filterString = "";
         searchEditText = findViewById(R.id.singerSearchEditText);
         LinearLayout.LayoutParams searchEditLp = (LinearLayout.LayoutParams) searchEditText.getLayoutParams();
         searchEditLp.leftMargin = (int)(textFontSize * 2.0f);
         searchEditLp.rightMargin = (int)(textFontSize * 5.0f);
         // searchEditLp.setMargins(100, 0, (int)textFontSize*2, 0);
+        searchEditText.setText(filterString);
+        isSearchEditTextChanged = false;
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filterString = "SingNa+" + editable.toString();
+                pageNo = 1;
+                isSearchEditTextChanged = true;
+                // searchEditText.clearFocus();
+                AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
+                accessSingersAsyncTask.execute();
+            }
+        });
 
         singersListView = findViewById(R.id.singersListView);
         singersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -130,7 +159,7 @@ public class SingersListActivity extends AppCompatActivity {
             }
         });
 
-        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
+        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
         accessSingersAsyncTask.execute();
     }
 
@@ -159,7 +188,7 @@ public class SingersListActivity extends AppCompatActivity {
 
     private void firstPage() {
         pageNo = 1;
-        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
+        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
         accessSingersAsyncTask.execute();
     }
 
@@ -168,7 +197,7 @@ public class SingersListActivity extends AppCompatActivity {
         if (pageNo < 1) {
             pageNo = 1;
         }
-        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
+        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
         accessSingersAsyncTask.execute();
     }
 
@@ -177,13 +206,13 @@ public class SingersListActivity extends AppCompatActivity {
         if (pageNo > totalPages) {
             pageNo = totalPages;
         }
-        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
+        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
         accessSingersAsyncTask.execute();
     }
 
     private void lastPage() {
         pageNo = -1;    // represent last page
-        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask(singerType, pageSize, pageNo);
+        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
         accessSingersAsyncTask.execute();
     }
 
@@ -241,14 +270,7 @@ public class SingersListActivity extends AppCompatActivity {
         private final String loadingString = getApplicationContext().getString(R.string.loadingString);
         private AlertDialogFragment loadingDialog;
 
-        private SingerType singerTypeAsyncTask;
-        private int pageSizeAsyncTask;
-        private int pageNoAsyncTask;
-
-        public AccessSingersAsyncTask(SingerType singerTypeAsyncTask, int pageSizeAsyncTask, int pageNoAsyncTask) {
-            this.singerTypeAsyncTask = singerTypeAsyncTask;
-            this.pageSizeAsyncTask = pageSizeAsyncTask;
-            this.pageNoAsyncTask = pageNoAsyncTask;
+        public AccessSingersAsyncTask() {
 
             loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0, true);
         }
@@ -263,7 +285,7 @@ public class SingersListActivity extends AppCompatActivity {
             Log.i(TAG, "doInBackground() started.");
 
             // implement Retrofit to get results synchronously
-            singersList = GetDataByRetrofitRestApi.getSingersBySingerType(singerTypeAsyncTask, pageSizeAsyncTask, pageNoAsyncTask);
+            singersList = GetDataByRetrofitRestApi.getSingersBySingerType(singerType, pageSize, pageNo, filterString);
 
             Log.i(TAG, "doInBackground() finished.");
 
@@ -285,8 +307,8 @@ public class SingersListActivity extends AppCompatActivity {
             if (singersList == null) {
                 // failed
                 singersList = new SingersList();
-                singersList.setPageNo(pageNoAsyncTask);
-                singersList.setPageSize(pageSizeAsyncTask);
+                singersList.setPageNo(pageNo);
+                singersList.setPageSize(pageSize);
                 singersList.setTotalRecords(0); // temporary
                 singersList.setTotalPages(0);   // temporary
                 totalPages = 0;
@@ -305,9 +327,17 @@ public class SingersListActivity extends AppCompatActivity {
                 } else {
                     singersListEmptyTextView.setVisibility(View.GONE);
                 }
+            }
+            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item ,singersList.getSingers());
+            singersListView.setAdapter(mMyListAdapter);
 
-                mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item ,singersList.getSingers());
-                singersListView.setAdapter(mMyListAdapter);
+            if (isSearchEditTextChanged) {
+                // searchEditText.setFocusable(true);              // needed for requestFocus()
+                // searchEditText.setFocusableInTouchMode(true);   // needed for requestFocus()
+                // searchEditText.requestFocus();  // needed for the next two statements
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(null, InputMethodManager.SHOW_IMPLICIT);
+                isSearchEditTextChanged = false;
             }
         }
     }

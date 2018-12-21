@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.smile.Utility.FontSizeAndTheme;
@@ -22,6 +23,8 @@ public class MyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_my);
+
+        // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         final Button singerOrderButton = findViewById(R.id.singerOrderButton);
         singerOrderButton.setOnClickListener(new View.OnClickListener() {

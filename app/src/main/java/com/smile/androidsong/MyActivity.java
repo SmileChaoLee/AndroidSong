@@ -2,6 +2,7 @@ package com.smile.androidsong;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,7 +69,7 @@ public class MyActivity extends AppCompatActivity {
         exitProgramButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                quitApplication();
             }
         });
     }
@@ -85,7 +86,24 @@ public class MyActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        quitApplication();
+    }
+
+    private void quitApplication() {
+        final Handler handlerClose = new Handler();
+        final int timeDelay = 200;
+        handlerClose.postDelayed(new Runnable() {
+            public void run() {
+                // quit game
+                finish();
+            }
+        },timeDelay);
     }
 }

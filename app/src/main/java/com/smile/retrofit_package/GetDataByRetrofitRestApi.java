@@ -29,7 +29,7 @@ public class GetDataByRetrofitRestApi {
         return languagesList;
     }
 
-    public static SongsList getSongsByLanguage(Language language, int pageSize, int pageNo) {
+    public static SongsList getSongsByLanguage(Language language, int pageSize, int pageNo, String filter) {
         final String TAG = new String("GetDataByRestApi.getSongsByLanguage()");
 
         if (language == null) {
@@ -43,7 +43,12 @@ public class GetDataByRetrofitRestApi {
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
-        Call<SongsList> call = retrofitApiInterface.getSongsByLanguageId(languageId, pageSize, pageNo, orderBy);
+        Call<SongsList> call;
+        if ( (filter == null) || (filter.isEmpty()) ) {
+            call = retrofitApiInterface.getSongsByLanguageIdOrderBy(languageId, pageSize, pageNo, orderBy);
+        } else {
+            call = retrofitApiInterface.getSongsByLanguageIdOrderByWithFilter(languageId, pageSize, pageNo, orderBy, filter);
+        }
 
         SongsList songsList = null;
         try {
@@ -55,7 +60,7 @@ public class GetDataByRetrofitRestApi {
         return songsList;
     }
 
-    public static SongsList getSongsByLanguageNumOfWords(Language language, int numOfWords, int pageSize, int pageNo) {
+    public static SongsList getSongsByLanguageNumOfWords(Language language, int numOfWords, int pageSize, int pageNo, String filter) {
         final String TAG = new String("GetDataByRestApi.getSongsByLanguageNumOfWords()");
 
         if (language == null) {
@@ -69,7 +74,12 @@ public class GetDataByRetrofitRestApi {
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
-        Call<SongsList> call = retrofitApiInterface.getSongsByLanguageIdNumOfWords(languageId, numOfWords, pageSize, pageNo, orderBy);
+        Call<SongsList> call;
+        if ( (filter == null) || (filter.isEmpty()) ) {
+            call = retrofitApiInterface.getSongsByLanguageIdNumOfWords(languageId, numOfWords, pageSize, pageNo, orderBy);
+        } else {
+            call = retrofitApiInterface.getSongsByLanguageIdNumOfWordsWithFilter(languageId, numOfWords, pageSize, pageNo, orderBy, filter);
+        }
 
         SongsList songsList = null;
         try {
@@ -81,7 +91,7 @@ public class GetDataByRetrofitRestApi {
         return songsList;
     }
 
-    public static SongsList getNewSongsByLanguage(Language language, int pageSize, int pageNo) {
+    public static SongsList getNewSongsByLanguage(Language language, int pageSize, int pageNo, String filter) {
         final String TAG = new String("GetDataByRestApi.getNewSongsByLanguage()");
 
         if (language == null) {
@@ -95,7 +105,12 @@ public class GetDataByRetrofitRestApi {
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
-        Call<SongsList> call = retrofitApiInterface.getNewSongsByLanguageId(languageId, pageSize, pageNo);
+        Call<SongsList> call;
+        if ( (filter == null) || (filter.isEmpty()) ) {
+            call = retrofitApiInterface.getNewSongsByLanguageId(languageId, pageSize, pageNo);
+        } else {
+            call = retrofitApiInterface.getNewSongsByLanguageIdWithFilter(languageId, pageSize, pageNo, filter);
+        }
 
         SongsList songsList = null;
         try {
@@ -107,7 +122,7 @@ public class GetDataByRetrofitRestApi {
         return songsList;
     }
 
-    public static SongsList getHotSongsByLanguage(Language language, int pageSize, int pageNo) {
+    public static SongsList getHotSongsByLanguage(Language language, int pageSize, int pageNo, String filter) {
         final String TAG = new String("GetDataByRestApi.getHotSongsByLanguage()");
 
         if (language == null) {
@@ -121,7 +136,12 @@ public class GetDataByRetrofitRestApi {
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
-        Call<SongsList> call = retrofitApiInterface.getHotSongsByLanguageId(languageId, pageSize, pageNo);
+        Call<SongsList> call;
+        if ( (filter == null) || (filter.isEmpty()) ) {
+            call = retrofitApiInterface.getHotSongsByLanguageId(languageId, pageSize, pageNo);
+        } else {
+            call = retrofitApiInterface.getHotSongsByLanguageIdWithFilter(languageId, pageSize, pageNo, filter);
+        }
 
         SongsList songsList = null;
         try {
@@ -166,10 +186,10 @@ public class GetDataByRetrofitRestApi {
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<SingersList> call;
-        if (filter.isEmpty()) {
+        if ( (filter == null) || (filter.isEmpty()) )  {
             call = retrofitApiInterface.getSingersBySingerTypeId(areaId, sex, pageSize, pageNo, orderBy);
         } else {
-            call = retrofitApiInterface.getSingersBySingerTypeWithFilter(areaId, sex, pageSize, pageNo, orderBy, filter);
+            call = retrofitApiInterface.getSingersBySingerTypeIdWithFilter(areaId, sex, pageSize, pageNo, orderBy, filter);
         }
 
         SingersList singersList = null;
@@ -182,7 +202,7 @@ public class GetDataByRetrofitRestApi {
         return singersList;
     }
 
-    public static SongsList getSongsBySinger(Singer singer, int pageSize, int pageNo) {
+    public static SongsList getSongsBySinger(Singer singer, int pageSize, int pageNo, String filter) {
         final String TAG = new String("GetDataByRestApi.getSongsBySinger()");
 
         if (singer == null) {
@@ -197,7 +217,12 @@ public class GetDataByRetrofitRestApi {
 
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
-        Call<SongsList> call = retrofitApiInterface.getSongsBySingerId(singerId, pageSize, pageNo, orderBy);
+        Call<SongsList> call;
+        if ( (filter == null) || (filter.isEmpty()) )  {
+            call = retrofitApiInterface.getSongsBySingerId(singerId, pageSize, pageNo, orderBy);
+        } else {
+            call = retrofitApiInterface.getSongsBySingerIdWithFilter(singerId, pageSize, pageNo, orderBy, filter);
+        }
 
         SongsList songsList = null;
         try {

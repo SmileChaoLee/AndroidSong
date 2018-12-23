@@ -12,7 +12,7 @@ import com.smile.Utility.FontSizeAndTheme;
 
 public class MyActivity extends AppCompatActivity {
 
-    private final String TAG = "MyActivity";
+    private static final String TAG = new String("MyActivity");
     private float textFontSize;
 
     @Override

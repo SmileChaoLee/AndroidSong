@@ -33,6 +33,7 @@ import retrofit2.Retrofit;
 
 public class SingerTypesListActivity extends AppCompatActivity {
 
+    private static final String TAG = new String("SingerTypesListActivity");
     private float textFontSize;
     private ListView singerTypesListView;
     private TextView singerTypesListEmptyTextView;
@@ -58,8 +59,13 @@ public class SingerTypesListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 SingerType singerType = singerTypesList.getSingerTypes().get(i);
-                // Toast.makeText(SingerTypesListActivity.this, singerType.toString(), Toast.LENGTH_SHORT).show();
+                String singersListActivityTitle = "";
+                if (singerType != null) {
+                    singersListActivityTitle = singerType.getAreaNa();
+                }
+                Toast.makeText(SingerTypesListActivity.this, singersListActivityTitle, Toast.LENGTH_SHORT).show();
                 Intent singersIntent = new Intent(getApplicationContext(), SingersListActivity.class);
+                singersIntent.putExtra("SingersListActivityTitle", singersListActivityTitle);
                 singersIntent.putExtra("SingerTypeParcelable", singerType);
                 startActivity(singersIntent);
             }

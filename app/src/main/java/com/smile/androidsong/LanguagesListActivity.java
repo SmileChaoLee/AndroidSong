@@ -28,6 +28,7 @@ import java.util.List;
 
 public class LanguagesListActivity extends AppCompatActivity {
 
+    private static final String TAG = new String("LanguagesListActivity");
     private float textFontSize;
     private ListView languagesListView;
     private TextView languagesListEmptyTextView;
@@ -69,23 +70,30 @@ public class LanguagesListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Language language = languagesList.getLanguages().get(i);
-                Toast.makeText(LanguagesListActivity.this, language.getLangNa().toString(), Toast.LENGTH_SHORT).show();
+                String languageTitle = "";
+                if (language != null) {
+                    languageTitle = language.getLangNa();
+                }
+                Toast.makeText(LanguagesListActivity.this, languageTitle, Toast.LENGTH_SHORT).show();
                 switch (orderedFrom) {
                     case 0:
                         Intent wordsIntent = new Intent(LanguagesListActivity.this, WordsListActivity.class);
                         wordsIntent.putExtra("OrderedFrom", AndroidSongApp.LanguageOrdered);
+                        wordsIntent.putExtra("LanguageTitle", languageTitle);
                         wordsIntent.putExtra("LanguageParcelable", language);
                         startActivity(wordsIntent);
                         break;
                     case AndroidSongApp.NewSongOrdered:
                         Intent newSongsIntent = new Intent(LanguagesListActivity.this, SongsListActivity.class);
                         newSongsIntent.putExtra("OrderedFrom", AndroidSongApp.NewSongLanguageOrdered);
+                        newSongsIntent.putExtra("SongsListActivityTitle", languageTitle + " " + getString(R.string.newString));
                         newSongsIntent.putExtra("LanguageParcelable", language);
                         startActivity(newSongsIntent);
                         break;
                     case AndroidSongApp.HotSongOrdered:
                         Intent hotSongsIntent = new Intent(LanguagesListActivity.this, SongsListActivity.class);
                         hotSongsIntent.putExtra("OrderedFrom", AndroidSongApp.HotSongLanguageOrdered);
+                        hotSongsIntent.putExtra("SongsListActivityTitle", languageTitle + " " + getString(R.string.hotString));
                         hotSongsIntent.putExtra("LanguageParcelable", language);
                         startActivity(hotSongsIntent);
                         break;

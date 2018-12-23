@@ -37,6 +37,8 @@ import java.util.List;
 
 public class SingersListActivity extends AppCompatActivity {
 
+    private static final String TAG = new String("SingersListActivity");
+    private String singersListActivityTitle;
     private float textFontSize;
     private EditText searchEditText;
     private boolean isSearchEditTextChanged;
@@ -58,15 +60,22 @@ public class SingersListActivity extends AppCompatActivity {
         if (ScreenUtil.isTablet(this)) {
             pageSize = 13;
         }
+
+        String singersListTitle = getString(R.string.singersListString);
+        singersListActivityTitle = "";
         Bundle extras = getIntent().getExtras();
         if (extras != null )
         {
+            singersListActivityTitle = extras.getString("SingersListActivityTitle").trim();
             singerType = extras.getParcelable("SingerTypeParcelable");
         }
 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_singers_list);
+
+        TextView singersListMenuTextView = findViewById(R.id.singersListMenuTextView);
+        singersListMenuTextView.setText(singersListActivityTitle + " " + singersListTitle);
 
         filterString = "";
         searchEditText = findViewById(R.id.singerSearchEditText);
@@ -89,7 +98,11 @@ public class SingersListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                filterString = "SingNa+" + editable.toString();
+                String content = editable.toString().trim();
+                filterString = "";
+                if (!content.isEmpty()) {
+                    filterString = "SingNa+" + content;
+                }
                 pageNo = 1;
                 isSearchEditTextChanged = true;
                 // searchEditText.clearFocus();
@@ -103,9 +116,14 @@ public class SingersListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Singer singer = singersList.getSingers().get(i);
-                Toast.makeText(SingersListActivity.this, singer.getSingNa().toString(), Toast.LENGTH_SHORT).show();
+                String songsListActivityTitle = "";
+                if (singer != null) {
+                    songsListActivityTitle = singer.getSingNa();
+                }
+                Toast.makeText(SingersListActivity.this, songsListActivityTitle, Toast.LENGTH_SHORT).show();
                 Intent songsIntent = new Intent(SingersListActivity.this, SongsListActivity.class);
                 songsIntent.putExtra("OrderedFrom", AndroidSongApp.SingerOrdered);
+                songsIntent.putExtra("SongsListActivityTitle", songsListActivityTitle);
                 songsIntent.putExtra("SingerParcelable", singer);
                 startActivity(songsIntent);
             }

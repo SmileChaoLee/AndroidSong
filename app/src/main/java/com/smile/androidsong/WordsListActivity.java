@@ -23,7 +23,8 @@ import java.util.ArrayList;
 
 public class WordsListActivity extends AppCompatActivity {
 
-    private final String TAG = "WordsListActivity";
+    private static final String TAG = new String("WordsListActivity");
+    private String languageTitle;
     private float textFontSize;
     private ListView wordsListView;
     private MyListAdapter myListAdapter;
@@ -32,18 +33,26 @@ public class WordsListActivity extends AppCompatActivity {
     private int orderedFrom = 0;
     private Language language;
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);
         orderedFrom = 0;
+        String wordsListTitle = getString(R.string.wordsListString);
+        languageTitle = "";
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             orderedFrom = extras.getInt("OrderedFrom", 0);
+            languageTitle = extras.getString("LanguageTitle").trim();
             language = extras.getParcelable("LanguageParcelable");
         }
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_words_list);
+
+        TextView wordsListMenuTextView = findViewById(R.id.wordsListMenuTextView);
+        wordsListMenuTextView.setText(languageTitle + " " + wordsListTitle);
 
         wordsList = new ArrayList<Pair<Integer, String>>();
         wordsList.add(new Pair(1, getString(R.string.oneWordOrderString)));
@@ -70,6 +79,7 @@ public class WordsListActivity extends AppCompatActivity {
 
                 Intent songsIntent = new Intent(WordsListActivity.this, SongsListActivity.class);
                 songsIntent.putExtra("OrderedFrom", AndroidSongApp.LanguageWordsOrdered);
+                songsIntent.putExtra("SongsListActivityTitle", languageTitle + " " + itemName);
                 songsIntent.putExtra("LanguageParcelable", language);
                 songsIntent.putExtra("NumOfWords", numOfWords);
                 startActivity(songsIntent);
@@ -105,6 +115,7 @@ public class WordsListActivity extends AppCompatActivity {
         TextView wordsOrderNameTextView;
         ArrayList<Pair<Integer, String>> listItems;
 
+        @SuppressWarnings("unchecked")
         public MyListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Pair<Integer, String>> listItems) {
             super(context, resource, listItems);
             this.layoutId = resource;
@@ -117,6 +128,7 @@ public class WordsListActivity extends AppCompatActivity {
             return super.getItem(position);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public int getPosition(@Nullable Object item) {
             return super.getPosition(item);

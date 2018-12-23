@@ -20,7 +20,6 @@
     <string name="newSongOrderString">新歌点歌</string>
     <string name="hotSongOrderString">排行榜点歌</string>
     <string name="languageOrderString">语言分类点歌</string>
-    <string name="wordsListMenuTitle">请选择以下其中一个功能</string>
     <string name="exitProgram">结束程式</string>
 
     <string name="maleSinger">男性歌手</string>
@@ -29,6 +28,7 @@
     <string name="returnToPrevious">回上一个功能</string>
 
     <string name="languagesListString">语言类别清单</string>
+    <string name="wordsListString">字部选项</string>
     <string name="newSOngLanguagesListString">最新歌曲的语言清单</string>
     <string name="hotSongLanguagesListString">排行歌曲的语言清单</string>
     <string name="singerTypesListString">歌星类别清单</string>
@@ -58,4 +58,7 @@
 
     <string name="singerNameString">歌星名字</string>
     <string name="songNameString">歌曲名称</string>
+
+    <string name="newString">新</string>
+    <string name="hotString">排行</string>
 </resources>

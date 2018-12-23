@@ -20,7 +20,6 @@
     <string name="newSongOrderString">Songs By New Published</string>
     <string name="hotSongOrderString">Songs By Most Popular"</string>
     <string name="languageOrderString">Songs By Language</string>
-    <string name="wordsListMenuTitle">Please Select one option</string>
     <string name="exitProgram">Exit Program</string>
 
     <string name="maleSinger">Male Singers</string>
@@ -29,6 +28,7 @@
     <string name="returnToPrevious">Return</string>
 
     <string name="languagesListString">Languages List</string>
+    <string name="wordsListString">Number of Words</string>
     <string name="newSOngLanguagesListString">Languages List of New Songs</string>
     <string name="hotSongLanguagesListString">Languages List of Hot Songs</string>
     <string name="singerTypesListString">Singer Types List</string>
@@ -58,5 +58,8 @@
 
     <string name="singerNameString">"Singer's Name"</string>
     <string name="songNameString">"Song's Name"</string>
+
+    <string name="newString">New</string>
+    <string name="hotString">Hot</string>
 
 </resources>

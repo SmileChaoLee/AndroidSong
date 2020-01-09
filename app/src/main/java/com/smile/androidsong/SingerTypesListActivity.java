@@ -3,9 +3,9 @@ package com.smile.androidsong;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +16,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.smile.Utility.FontSizeAndTheme;
 import com.smile.model.SingerType;
 import com.smile.model.SingerTypesList;
 import com.smile.retrofit_package.RetrofitApiInterface;
 import com.smile.retrofit_package.RetrofitClient;
-import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
+import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
+import com.smile.smilelibraries.utilities.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +47,16 @@ public class SingerTypesListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);
+
+        float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, AndroidSongApp.FontSize_Scale_Type, null);
+        textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, AndroidSongApp.FontSize_Scale_Type, 0.0f);
 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_singer_types_list);
+
+        final TextView singerTypesListMenuTextView = findViewById(R.id.singerTypesListMenuTextView);
+        ScreenUtil.resizeTextSize(singerTypesListMenuTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
 
         singerTypesListView = findViewById(R.id.singerTypesListView);
         singerTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,7 +68,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
                 if (singerType != null) {
                     singersListActivityTitle = singerType.getAreaNa();
                 }
-                Toast.makeText(SingerTypesListActivity.this, singersListActivityTitle, Toast.LENGTH_SHORT).show();
+                ScreenUtil.showToast(getApplicationContext(), singersListActivityTitle, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
                 Intent singersIntent = new Intent(getApplicationContext(), SingersListActivity.class);
                 singersIntent.putExtra("SingersListActivityTitle", singersListActivityTitle);
                 singersIntent.putExtra("SingerTypeParcelable", singerType);
@@ -72,9 +77,11 @@ public class SingerTypesListActivity extends AppCompatActivity {
         });
 
         singerTypesListEmptyTextView = findViewById(R.id.singerTypesListEmptyTextView);
+        ScreenUtil.resizeTextSize(singerTypesListEmptyTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
         singerTypesListEmptyTextView.setVisibility(View.GONE);
 
-        Button singerTypesListReturnButton = findViewById(R.id.singerTypesListReturnButton);
+        final Button singerTypesListReturnButton = findViewById(R.id.singerTypesListReturnButton);
+        ScreenUtil.resizeTextSize(singerTypesListReturnButton, textFontSize, AndroidSongApp.FontSize_Scale_Type);
         singerTypesListReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,12 +183,15 @@ public class SingerTypesListActivity extends AppCompatActivity {
             View view = getLayoutInflater().inflate(layoutId, parent, false);
 
             positionNoTextView = view.findViewById(R.id.singerTypeItem_Layout_positionNoTextView);
+            ScreenUtil.resizeTextSize(positionNoTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
             positionNoTextView.setText(String.valueOf(position));
 
             singerAreaNaTextView = view.findViewById(R.id.singerAreaNaTextView);
+            ScreenUtil.resizeTextSize(singerAreaNaTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
             singerAreaNaTextView.setText(singerTypes.get(position).getAreaNa());
 
             singerSexTextView = view.findViewById(R.id.singerSexTextView);
+            ScreenUtil.resizeTextSize(singerSexTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
             String sex = singerTypes.get(position).getSex();
             String sexString;
             switch (sex) {
@@ -214,7 +224,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
         private Retrofit retrofit;
 
         public RetrofitRetrieveSingerType() {
-            loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0, true);
+            loadingDialog = AlertDialogFragment.newInstance(loadingString, AndroidSongApp.FontSize_Scale_Type, textFontSize, Color.RED, 0, 0, true);
         }
 
         public void startRetrieve() {

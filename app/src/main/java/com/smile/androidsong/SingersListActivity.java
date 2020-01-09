@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,13 +23,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.smile.Utility.FontSizeAndTheme;
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
 import com.smile.model.SingersList;
 import com.smile.retrofit_package.GetDataByRetrofitRestApi;
-import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
-import com.smile.smilepublicclasseslibrary.utilities.ScreenUtil;
+import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
+import com.smile.smilelibraries.utilities.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +55,8 @@ public class SingersListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);    // smaller than MyActivity
-        if (ScreenUtil.isTablet(this)) {
-            pageSize = 13;
-        }
+        float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, AndroidSongApp.FontSize_Scale_Type, null);
+        textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, AndroidSongApp.FontSize_Scale_Type, 0.0f);
 
         String singersListTitle = getString(R.string.singersListString);
         singersListActivityTitle = "";
@@ -74,11 +71,13 @@ public class SingersListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_singers_list);
 
-        TextView singersListMenuTextView = findViewById(R.id.singersListMenuTextView);
+        final TextView singersListMenuTextView = findViewById(R.id.singersListMenuTextView);
+        ScreenUtil.resizeTextSize(singersListMenuTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
         singersListMenuTextView.setText(singersListActivityTitle + " " + singersListTitle);
 
         filterString = "";
         searchEditText = findViewById(R.id.singerSearchEditText);
+        ScreenUtil.resizeTextSize(searchEditText, textFontSize, AndroidSongApp.FontSize_Scale_Type);
         LinearLayout.LayoutParams searchEditLp = (LinearLayout.LayoutParams) searchEditText.getLayoutParams();
         searchEditLp.leftMargin = (int)(textFontSize * 2.0f);
         searchEditLp.rightMargin = (int)(textFontSize * 5.0f);
@@ -120,7 +119,7 @@ public class SingersListActivity extends AppCompatActivity {
                 if (singer != null) {
                     songsListActivityTitle = singer.getSingNa();
                 }
-                Toast.makeText(SingersListActivity.this, songsListActivityTitle, Toast.LENGTH_SHORT).show();
+                ScreenUtil.showToast(getApplicationContext(), songsListActivityTitle, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
                 Intent songsIntent = new Intent(SingersListActivity.this, SongsListActivity.class);
                 songsIntent.putExtra("OrderedFrom", AndroidSongApp.SingerOrdered);
                 songsIntent.putExtra("SongsListActivityTitle", songsListActivityTitle);
@@ -130,11 +129,12 @@ public class SingersListActivity extends AppCompatActivity {
         });
 
         singersListEmptyTextView = findViewById(R.id.singersListEmptyTextView);
+        ScreenUtil.resizeTextSize(singersListEmptyTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
         singersListEmptyTextView.setVisibility(View.GONE);
 
         float smallButtonFontSize = textFontSize * 0.7f;
-        Button firstPageButton = findViewById(R.id.firstPageButton);
-        firstPageButton.setTextSize(smallButtonFontSize);
+        final Button firstPageButton = findViewById(R.id.firstPageButton);
+        ScreenUtil.resizeTextSize(firstPageButton, smallButtonFontSize, AndroidSongApp.FontSize_Scale_Type);
         firstPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,8 +142,8 @@ public class SingersListActivity extends AppCompatActivity {
             }
         });
 
-        Button previousPageButton = findViewById(R.id.previousPageButton);
-        previousPageButton.setTextSize(smallButtonFontSize);
+        final Button previousPageButton = findViewById(R.id.previousPageButton);
+        ScreenUtil.resizeTextSize(previousPageButton, smallButtonFontSize, AndroidSongApp.FontSize_Scale_Type);
         previousPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,8 +151,8 @@ public class SingersListActivity extends AppCompatActivity {
             }
         });
 
-        Button nextPageButton = findViewById(R.id.nextPageButton);
-        nextPageButton.setTextSize(smallButtonFontSize);
+        final Button nextPageButton = findViewById(R.id.nextPageButton);
+        ScreenUtil.resizeTextSize(nextPageButton, smallButtonFontSize, AndroidSongApp.FontSize_Scale_Type);
         nextPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,8 +160,8 @@ public class SingersListActivity extends AppCompatActivity {
             }
         });
 
-        Button lastPageButton = findViewById(R.id.lastPageButton);
-        lastPageButton.setTextSize(smallButtonFontSize);
+        final Button lastPageButton = findViewById(R.id.lastPageButton);
+        ScreenUtil.resizeTextSize(lastPageButton, smallButtonFontSize, AndroidSongApp.FontSize_Scale_Type);
         lastPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +170,7 @@ public class SingersListActivity extends AppCompatActivity {
         });
 
         final Button singersListReturnButton = findViewById(R.id.singersListReturnButton);
+        ScreenUtil.resizeTextSize(singersListReturnButton, textFontSize, AndroidSongApp.FontSize_Scale_Type);
         singersListReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,12 +269,15 @@ public class SingersListActivity extends AppCompatActivity {
             View view = getLayoutInflater().inflate(layoutId, parent, false);
 
             positionNoTextView = view.findViewById(R.id.singerItem_Layout_positionNoTextView);
+            ScreenUtil.resizeTextSize(positionNoTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
             positionNoTextView.setText(String.valueOf(position));
 
             singerNoTextView = view.findViewById(R.id.singerNoTextView);
+            ScreenUtil.resizeTextSize(singerNoTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
             singerNoTextView.setText(singers.get(position).getSingNo());
 
             singerNaTextView = view.findViewById(R.id.singerNaTextView);
+            ScreenUtil.resizeTextSize(singerNaTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
             singerNaTextView.setText(singers.get(position).getSingNa());
 
             return view;
@@ -290,7 +294,7 @@ public class SingersListActivity extends AppCompatActivity {
 
         public AccessSingersAsyncTask() {
 
-            loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0, true);
+            loadingDialog = AlertDialogFragment.newInstance(loadingString, AndroidSongApp.FontSize_Scale_Type, textFontSize, Color.RED, 0, 0, true);
         }
 
         @Override

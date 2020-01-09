@@ -7,12 +7,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.smile.model.Computer;
 
 import java.util.List;
 
 
-public class OrderOneSong extends Activity {
+public class OrderOneSong extends AppCompatActivity {
 
     private Computer computerData=null;
     private List<Computer> computers=null;

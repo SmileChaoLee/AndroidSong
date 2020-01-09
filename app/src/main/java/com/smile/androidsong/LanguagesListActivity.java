@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +18,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.smile.Utility.FontSizeAndTheme;
 import com.smile.model.*;
 import com.smile.retrofit_package.GetDataByRetrofitRestApi;
-import com.smile.smilepublicclasseslibrary.alertdialogfragment.AlertDialogFragment;
+import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
+import com.smile.smilelibraries.utilities.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,9 @@ public class LanguagesListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        textFontSize = FontSizeAndTheme.GetTextFontSizeAndSetTheme(this);    // smaller than MyActivity
+        float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, AndroidSongApp.FontSize_Scale_Type, null);
+        textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, AndroidSongApp.FontSize_Scale_Type, 0.0f);
+
         orderedFrom = 0;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -52,6 +54,7 @@ public class LanguagesListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_languages_list);
 
         TextView menuTextView = findViewById(R.id.languagesListMenuTextView);
+        ScreenUtil.resizeTextSize(menuTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
         switch (orderedFrom) {
             case 0:
                 // from main activity (MyActivity)
@@ -74,7 +77,7 @@ public class LanguagesListActivity extends AppCompatActivity {
                 if (language != null) {
                     languageTitle = language.getLangNa();
                 }
-                Toast.makeText(LanguagesListActivity.this, languageTitle, Toast.LENGTH_SHORT).show();
+                ScreenUtil.showToast(getApplicationContext(), languageTitle, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
                 switch (orderedFrom) {
                     case 0:
                         Intent wordsIntent = new Intent(LanguagesListActivity.this, WordsListActivity.class);
@@ -102,9 +105,11 @@ public class LanguagesListActivity extends AppCompatActivity {
         });
 
         languagesListEmptyTextView = findViewById(R.id.languagesListEmptyTextView);
+        ScreenUtil.resizeTextSize(languagesListEmptyTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
         languagesListEmptyTextView.setVisibility(View.GONE);
 
         final Button languagesListReturnButton = findViewById(R.id.languagesListReturnButton);
+        ScreenUtil.resizeTextSize(languagesListReturnButton, textFontSize, AndroidSongApp.FontSize_Scale_Type);
         languagesListReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,9 +177,11 @@ public class LanguagesListActivity extends AppCompatActivity {
             View view = getLayoutInflater().inflate(layoutId, parent, false);
 
             positionNoTextView = view.findViewById(R.id.languageItem_Layout_positionNoTextView);
+            ScreenUtil.resizeTextSize(positionNoTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
             positionNoTextView.setText(String.valueOf(position));
 
             languageNaTextView = view.findViewById(R.id.languageNaTextView);
+            ScreenUtil.resizeTextSize(languageNaTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
             languageNaTextView.setText(languages.get(position).getLangNa());
 
             return view;
@@ -191,7 +198,7 @@ public class LanguagesListActivity extends AppCompatActivity {
 
         public AccessLanguagesAsyncTask() {
 
-            loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0, true);
+            loadingDialog = AlertDialogFragment.newInstance(loadingString, AndroidSongApp.FontSize_Scale_Type, textFontSize, Color.RED, 0, 0, true);
         }
 
         @Override

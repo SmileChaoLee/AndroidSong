@@ -13,7 +13,7 @@ import com.smile.smilelibraries.utilities.ScreenUtil;
 
 public class MyActivity extends AppCompatActivity {
 
-    private static final String TAG = new String("MyActivity");
+    private static final String TAG = "MyActivity";
     private float textFontSize;
 
     @Override

@@ -6,7 +6,12 @@ import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,8 +21,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smile.adapter.SingerTypesListViewAdapter;
 import com.smile.model.SingerType;
 import com.smile.model.SingerTypesList;
+import com.smile.recyclerview_adapter.SingerTypesRecyclerViewAdapter;
 import com.smile.retrofit_package.RetrofitApiInterface;
 import com.smile.retrofit_package.RetrofitClient;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
@@ -33,11 +40,13 @@ import retrofit2.Retrofit;
 
 public class SingerTypesListActivity extends AppCompatActivity {
 
-    private static final String TAG = new String("SingerTypesListActivity");
+    private static final String TAG = "SingerTypesListActivity";
     private float textFontSize;
     private ListView singerTypesListView;
+    private RecyclerView singerTypesRecyclerView;
     private TextView singerTypesListEmptyTextView;
-    private MyListAdapter mMyListAdapter;
+    // private SingerTypesListViewAdapter mMyListAdapter;
+    private SingerTypesRecyclerViewAdapter myRecyclerViewAdapter;
     private SingerTypesList singerTypesList;
     private final String noResultString = AndroidSongApp.AppResources.getString(R.string.noResultString);
     private final String failedMessage = AndroidSongApp.AppResources.getString(R.string.failedMessage);
@@ -58,6 +67,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
         final TextView singerTypesListMenuTextView = findViewById(R.id.singerTypesListMenuTextView);
         ScreenUtil.resizeTextSize(singerTypesListMenuTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
 
+        // deprecated
         singerTypesListView = findViewById(R.id.singerTypesListView);
         singerTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -75,6 +85,9 @@ public class SingerTypesListActivity extends AppCompatActivity {
                 startActivity(singersIntent);
             }
         });
+        //
+
+        singerTypesRecyclerView = findViewById(R.id.singerTypesRecyclerView);
 
         singerTypesListEmptyTextView = findViewById(R.id.singerTypesListEmptyTextView);
         ScreenUtil.resizeTextSize(singerTypesListEmptyTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
@@ -89,7 +102,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
             }
         });
 
-        retrofitRetrieveSingerType = new RetrofitRetrieveSingerType();
+        retrofitRetrieveSingerType = new RetrofitRetrieveSingerType(this);
         retrofitRetrieveSingerType.startRetrieve();
 
 
@@ -116,7 +129,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
                     } else {
                         singerTypesListEmptyTextView.setVisibility(View.GONE);
                     }
-                    mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singer_types_list_item, singerTypesList.getSingerTypes());
+                    mMyListAdapter = new SingerTypesListViewAdapter(getBaseContext(), R.layout.singer_types_list_item, singerTypesList.getSingerTypes());
                     singerTypesListView.setAdapter(mMyListAdapter);
                 } else {
                     singerTypesList = new SingerTypesList();
@@ -149,69 +162,6 @@ public class SingerTypesListActivity extends AppCompatActivity {
         finish();
     }
 
-    private class MyListAdapter extends ArrayAdapter {
-
-        int layoutId;
-        TextView positionNoTextView;
-        TextView singerAreaNaTextView;
-        TextView singerSexTextView;
-        ArrayList<SingerType> singerTypes;
-
-        @SuppressWarnings("unchecked")
-        public MyListAdapter(@NonNull Context context, int resource, @NonNull List objects) {
-            super(context, resource, objects);
-            layoutId = resource;
-            singerTypes = (ArrayList<SingerType>)objects;
-        }
-
-        @Nullable
-        @Override
-        public Object getItem(int position) {
-            return super.getItem(position);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public int getPosition(@Nullable Object item) {
-            return super.getPosition(item);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-            View view = getLayoutInflater().inflate(layoutId, parent, false);
-
-            positionNoTextView = view.findViewById(R.id.singerTypeItem_Layout_positionNoTextView);
-            ScreenUtil.resizeTextSize(positionNoTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
-            positionNoTextView.setText(String.valueOf(position));
-
-            singerAreaNaTextView = view.findViewById(R.id.singerAreaNaTextView);
-            ScreenUtil.resizeTextSize(singerAreaNaTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
-            singerAreaNaTextView.setText(singerTypes.get(position).getAreaNa());
-
-            singerSexTextView = view.findViewById(R.id.singerSexTextView);
-            ScreenUtil.resizeTextSize(singerSexTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
-            String sex = singerTypes.get(position).getSex();
-            String sexString;
-            switch (sex) {
-                case "1":
-                    sexString = "Male";
-                    break;
-                case "2":
-                    sexString = "Female";
-                    break;
-                default:
-                    // "0"
-                    sexString = "";
-                    break;
-            }
-            singerSexTextView.setText(sexString);
-
-            return view;
-        }
-    }
-
     // implement Callback<List<SingerType>> of RetrofitApiInterface
     // implement Retrofit to get results asynchronously
     private class RetrofitRetrieveSingerType implements Callback<SingerTypesList> {
@@ -219,11 +169,11 @@ public class SingerTypesListActivity extends AppCompatActivity {
         private final String TAG = new String("RetrofitRetrieveSingerType.class");
         private final String failedMessage = getApplicationContext().getString(R.string.failedMessage);
         private final String noResultString = getApplicationContext().getString(R.string.noResultString);
-        private AlertDialogFragment loadingDialog;
+        private final Context context;
+        private final AlertDialogFragment loadingDialog;
 
-        private Retrofit retrofit;
-
-        public RetrofitRetrieveSingerType() {
+        public RetrofitRetrieveSingerType(Context context) {
+            this.context = context;
             loadingDialog = AlertDialogFragment.newInstance(loadingString, AndroidSongApp.FontSize_Scale_Type, textFontSize, Color.RED, 0, 0, true);
         }
 
@@ -253,8 +203,12 @@ public class SingerTypesListActivity extends AppCompatActivity {
                 singerTypesListEmptyTextView.setText("response.isSuccessful() --> false.");
                 singerTypesListEmptyTextView.setVisibility(View.VISIBLE);
             }
-            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singer_types_list_item, singerTypesList.getSingerTypes());
-            singerTypesListView.setAdapter(mMyListAdapter);
+            // mMyListAdapter = new SingerTypesListViewAdapter(context, textFontSize, R.layout.singer_types_list_item, singerTypesList.getSingerTypes());
+            // singerTypesListView.setAdapter(mMyListAdapter);
+
+            myRecyclerViewAdapter = new SingerTypesRecyclerViewAdapter(textFontSize, singerTypesList.getSingerTypes());
+            singerTypesRecyclerView.setAdapter(myRecyclerViewAdapter);
+            singerTypesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         }
 
         @Override

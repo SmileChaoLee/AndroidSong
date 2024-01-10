@@ -78,7 +78,7 @@ public class WordsListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int numOfWords = wordsList.get(i).first;
                 String itemName = wordsList.get(i).second;
-                ScreenUtil.showToast(getApplicationContext(), itemName, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                ScreenUtil.showToast(WordsListActivity.this, itemName, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
 
                 Intent songsIntent = new Intent(WordsListActivity.this, SongsListActivity.class);
                 songsIntent.putExtra("OrderedFrom", AndroidSongApp.LanguageWordsOrdered);

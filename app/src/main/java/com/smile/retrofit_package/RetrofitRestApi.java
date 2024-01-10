@@ -9,12 +9,10 @@ import java.io.IOException;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
-public class GetDataByRetrofitRestApi {
-
+public class RetrofitRestApi {
+    private static final String TAG = "RetrofitRestApi";
     // implement Retrofit to get results synchronously
     public static LanguagesList getAllLanguages() {
-        final String TAG = new String("GetDataByRestApi.getAllLanguages()");
-
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<LanguagesList> call = retrofitApiInterface.getAllLanguages();
@@ -30,11 +28,9 @@ public class GetDataByRetrofitRestApi {
     }
 
     public static SongsList getSongsByLanguage(Language language, int pageSize, int pageNo, String filter) {
-        final String TAG = new String("GetDataByRestApi.getSongsByLanguage()");
-
         if (language == null) {
             // singer cannot be null
-            Log.d(TAG, "songsList is null.");
+            Log.d(TAG, "getSongsByLanguage.songsList is null.");
             return null;
         }
 
@@ -61,11 +57,9 @@ public class GetDataByRetrofitRestApi {
     }
 
     public static SongsList getSongsByLanguageNumOfWords(Language language, int numOfWords, int pageSize, int pageNo, String filter) {
-        final String TAG = new String("GetDataByRestApi.getSongsByLanguageNumOfWords()");
-
         if (language == null) {
             // singer cannot be null
-            Log.d(TAG, "songsList is null.");
+            Log.d(TAG, "getSongsByLanguageNumOfWords.songsList is null.");
             return null;
         }
 
@@ -92,11 +86,9 @@ public class GetDataByRetrofitRestApi {
     }
 
     public static SongsList getNewSongsByLanguage(Language language, int pageSize, int pageNo, String filter) {
-        final String TAG = new String("GetDataByRestApi.getNewSongsByLanguage()");
-
         if (language == null) {
             // singer cannot be null
-            Log.d(TAG, "songsList is null.");
+            Log.d(TAG, "getNewSongsByLanguage.songsList is null.");
             return null;
         }
 
@@ -123,11 +115,9 @@ public class GetDataByRetrofitRestApi {
     }
 
     public static SongsList getHotSongsByLanguage(Language language, int pageSize, int pageNo, String filter) {
-        final String TAG = new String("GetDataByRestApi.getHotSongsByLanguage()");
-
         if (language == null) {
             // singer cannot be null
-            Log.d(TAG, "songsList is null.");
+            Log.d(TAG, "getHotSongsByLanguage.songsList is null.");
             return null;
         }
 
@@ -154,8 +144,6 @@ public class GetDataByRetrofitRestApi {
     }
 
     public static SingerTypesList getAllSingerTypes() {
-        final String TAG = new String("GetDataByRestApi.getAllSingerTypes()");
-
         Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<SingerTypesList> call = retrofitApiInterface.getAllSingerTypes();
@@ -171,11 +159,9 @@ public class GetDataByRetrofitRestApi {
     }
 
     public static SingersList getSingersBySingerType(SingerType singerType, int pageSize, int pageNo, String filter) {
-        final String TAG = new String("GetDataByRestApi.getSingersBySingerType()");
-
         if (singerType == null) {
             // singerType cannot be null
-            Log.d(TAG, "singersList is null.");
+            Log.d(TAG, "getSingersBySingerType.singersList is null.");
             return null;
         }
 
@@ -203,11 +189,9 @@ public class GetDataByRetrofitRestApi {
     }
 
     public static SongsList getSongsBySinger(Singer singer, int pageSize, int pageNo, String filter) {
-        final String TAG = new String("GetDataByRestApi.getSongsBySinger()");
-
         if (singer == null) {
             // singer cannot be null
-            Log.d(TAG, "songsList is null.");
+            Log.d(TAG, "getSongsBySinger.songsList is null.");
             return null;
         }
 

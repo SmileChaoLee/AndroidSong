@@ -4,10 +4,10 @@ package com.smile.model;
  * Created by lee on 9/3/2014.
  */
 public class Computer {
-    private String computer_id = new String("");
-    private String branch_id = new String("");
-    private String room_no = new String("");
-    private String song_no  = new String("");
+    private String computer_id = "";
+    private String branch_id = "";
+    private String room_no = "";
+    private String song_no  = "";
 
     public Computer() {
         initiateRecordData();

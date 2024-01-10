@@ -12,40 +12,39 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class GetDataByHttpURLConnection {
-    private static final String BASE_URL = new String("http://192.168.0.35:5000/");
-    // private static final String BASE_URL = new String("http://10.0.9.191:5000/");
-    // private static final String BASE_URL = "http://ec2-13-59-195-3.us-east-2.compute.amazonaws.com/";
+public class HttpURLConnection {
+    private static final String TAG = "HttpURLConnection";
+    private static final String BASE_URL = "http://137.184.120.171/";
+    // private static final String BASE_URL = "http://192.168.0.35:5000/";
 
     public static SingerTypesList getAllSingerTypes() {
-        final String TAG = new String("GetDataByHttpURLConnection.getSingerTypes()");
         final String webUrl = BASE_URL + "api/SingerType";
         Log.i(TAG, "WebUrl = " + webUrl);
 
-        SingerTypesList singerTypesList = null;
+        SingerTypesList singerTypesList;
 
-        URL url = null;
-        HttpURLConnection myConnection = null;
+        URL url;
+        java.net.HttpURLConnection myConnection = null;
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
         try {
             url = new URL(webUrl);
-            myConnection = (HttpURLConnection)url.openConnection();
+            myConnection = (java.net.HttpURLConnection)url.openConnection();
             myConnection.setConnectTimeout(15000);
             myConnection.setReadTimeout(15000);
             myConnection.setRequestMethod("GET");
             myConnection.setDoInput(true);
             int responseCode = myConnection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
+            if (responseCode == java.net.HttpURLConnection.HTTP_OK) {
                 Log.i(TAG, "REST Web Service -> Succeeded to connect.");
                 inputStream = myConnection.getInputStream();
-                inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 StringBuilder sb = new StringBuilder();
-                int readBuff = -1;
+                int readBuff;
                 while ( (readBuff=inputStreamReader.read()) != -1) {
                     sb.append((char)readBuff);
                 }
@@ -121,9 +120,6 @@ public class GetDataByHttpURLConnection {
     public static SingersList getSingersBySingerType(SingerType singerType, int pageSize, int pageNo) {
         // using int[] pageSize to return the result of pageSize
         // using int[] pageNo to return the result of pageNo
-
-        final String TAG = new String("GetDataByHttpURLConnection.getSingersBySingerType()");
-
         if (singerType == null) {
             // singerType cannot be null
             Log.d(TAG, "singersList is null.");
@@ -136,26 +132,26 @@ public class GetDataByHttpURLConnection {
         final String webUrl = BASE_URL + "api/Singer" + param;
         Log.i(TAG, "WebUrl = " + webUrl);
 
-        SingersList singersList = null;
+        SingersList singersList;
 
-        URL url = null;
-        HttpURLConnection myConnection = null;
+        URL url;
+        java.net.HttpURLConnection myConnection = null;
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
         try {
             url = new URL(webUrl);
-            myConnection = (HttpURLConnection)url.openConnection();
+            myConnection = (java.net.HttpURLConnection)url.openConnection();
             myConnection.setConnectTimeout(15000);
             myConnection.setReadTimeout(15000);
             myConnection.setRequestMethod("GET");
             myConnection.setDoInput(true);
             int responseCode = myConnection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
+            if (responseCode == java.net.HttpURLConnection.HTTP_OK) {
                 Log.i(TAG, "REST Web Service -> Succeeded to connect.");
                 inputStream = myConnection.getInputStream();
-                inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 StringBuilder sb = new StringBuilder();
-                int readBuff = -1;
+                int readBuff;
                 while ( (readBuff=inputStreamReader.read()) != -1) {
                     sb.append((char)readBuff);
                 }

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smile.model.*;
-import com.smile.retrofit_package.GetDataByRetrofitRestApi;
+import com.smile.retrofit_package.RetrofitRestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
@@ -77,7 +77,8 @@ public class LanguagesListActivity extends AppCompatActivity {
                 if (language != null) {
                     languageTitle = language.getLangNa();
                 }
-                ScreenUtil.showToast(getApplicationContext(), languageTitle, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                ScreenUtil.showToast(LanguagesListActivity.this, languageTitle,
+                        textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
                 switch (orderedFrom) {
                     case 0:
                         Intent wordsIntent = new Intent(LanguagesListActivity.this, WordsListActivity.class);
@@ -211,7 +212,7 @@ public class LanguagesListActivity extends AppCompatActivity {
             Log.i(TAG, "doInBackground() started.");
 
             // implement Retrofit to get results synchronously
-            languagesList = GetDataByRetrofitRestApi.getAllLanguages();
+            languagesList = RetrofitRestApi.getAllLanguages();
 
             Log.i(TAG, "doInBackground() finished.");
 

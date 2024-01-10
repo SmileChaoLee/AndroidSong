@@ -17,11 +17,11 @@ import com.smile.smilelibraries.utilities.ScreenUtil;
 
 import java.util.ArrayList;
 
-public class SingerTypesRecyclerViewAdapter extends RecyclerView.Adapter<SingerTypesRecyclerViewAdapter.MyViewHolder> {
-    private static final String TAG = "SingerTypesRecyclerViewAdapter";
+public class SingerTypesAdapter extends RecyclerView.Adapter<SingerTypesAdapter.MyViewHolder> {
+    private static final String TAG = "SingerTypesAdapter";
     private ArrayList<SingerType> singerTypes;
     private final float textFontSize;
-    public SingerTypesRecyclerViewAdapter(float textFontSize, ArrayList<SingerType> singerTypes) {
+    public SingerTypesAdapter(float textFontSize, ArrayList<SingerType> singerTypes) {
         this.textFontSize = textFontSize;
         this.singerTypes = singerTypes;
     }

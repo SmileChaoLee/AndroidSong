@@ -3,35 +3,27 @@ package com.smile.androidsong;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.smile.adapter.SingerTypesListViewAdapter;
 import com.smile.model.SingerType;
 import com.smile.model.SingerTypesList;
-import com.smile.recyclerview_adapter.SingerTypesRecyclerViewAdapter;
+import com.smile.recyclerview_adapter.SingerTypesAdapter;
 import com.smile.retrofit_package.RetrofitApiInterface;
 import com.smile.retrofit_package.RetrofitClient;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,7 +38,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
     private RecyclerView singerTypesRecyclerView;
     private TextView singerTypesListEmptyTextView;
     // private SingerTypesListViewAdapter mMyListAdapter;
-    private SingerTypesRecyclerViewAdapter myRecyclerViewAdapter;
+    private SingerTypesAdapter myRecyclerViewAdapter;
     private SingerTypesList singerTypesList;
     private final String noResultString = AndroidSongApp.AppResources.getString(R.string.noResultString);
     private final String failedMessage = AndroidSongApp.AppResources.getString(R.string.failedMessage);
@@ -56,7 +48,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Log.d(TAG, "onCreate");
         float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, AndroidSongApp.FontSize_Scale_Type, null);
         textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, AndroidSongApp.FontSize_Scale_Type, 0.0f);
 
@@ -78,7 +70,8 @@ public class SingerTypesListActivity extends AppCompatActivity {
                 if (singerType != null) {
                     singersListActivityTitle = singerType.getAreaNa();
                 }
-                ScreenUtil.showToast(getApplicationContext(), singersListActivityTitle, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                ScreenUtil.showToast(SingerTypesListActivity.this, singersListActivityTitle,
+                        textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
                 Intent singersIntent = new Intent(getApplicationContext(), SingersListActivity.class);
                 singersIntent.putExtra("SingersListActivityTitle", singersListActivityTitle);
                 singersIntent.putExtra("SingerTypeParcelable", singerType);
@@ -104,52 +97,6 @@ public class SingerTypesListActivity extends AppCompatActivity {
 
         retrofitRetrieveSingerType = new RetrofitRetrieveSingerType(this);
         retrofitRetrieveSingerType.startRetrieve();
-
-
-        /*
-        // the following works too
-        loadingDialog = AlertDialogFragment.newInstance(loadingString, textFontSize, Color.RED, 0, 0, true);
-        loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
-
-        // implement the RetrofitApiInterface using anonymous Callback<List<SingerType>> class
-        // implement Retrofit to get results asynchronously
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();     // get Retrofit client
-        RetrofitApiInterface retrofitApiInterface = retrofit.create(RetrofitApiInterface.class);
-        Call<SingerTypesList> call = retrofitApiInterface.getAllSingerTypes();
-        call.enqueue(new Callback<SingerTypesList>() {
-            @Override
-            public void onResponse(Call<SingerTypesList> call, Response<SingerTypesList> response) {
-                loadingDialog.dismissAllowingStateLoss();
-
-                if (response.isSuccessful()) {
-                    singerTypesList = response.body();
-                    if (singerTypesList.getSingerTypes().size() == 0) {
-                        singerTypesListEmptyTextView.setText(noResultString);
-                        singerTypesListEmptyTextView.setVisibility(View.VISIBLE);
-                    } else {
-                        singerTypesListEmptyTextView.setVisibility(View.GONE);
-                    }
-                    mMyListAdapter = new SingerTypesListViewAdapter(getBaseContext(), R.layout.singer_types_list_item, singerTypesList.getSingerTypes());
-                    singerTypesListView.setAdapter(mMyListAdapter);
-                } else {
-                    singerTypesList = new SingerTypesList();
-                    singerTypesListEmptyTextView.setText("response.isSuccessful() --> false.");
-                    singerTypesListEmptyTextView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SingerTypesList> call, Throwable t) {
-                System.out.println("RetrofitRetrieveSingerType --> " + t.toString());
-
-                loadingDialog.dismissAllowingStateLoss();
-
-                singerTypesList = new SingerTypesList();
-                singerTypesListEmptyTextView.setText(failedMessage);
-                singerTypesListEmptyTextView.setVisibility(View.VISIBLE);
-            }
-        });
-        */
     }
 
 
@@ -165,8 +112,6 @@ public class SingerTypesListActivity extends AppCompatActivity {
     // implement Callback<List<SingerType>> of RetrofitApiInterface
     // implement Retrofit to get results asynchronously
     private class RetrofitRetrieveSingerType implements Callback<SingerTypesList> {
-
-        private final String TAG = new String("RetrofitRetrieveSingerType.class");
         private final String failedMessage = getApplicationContext().getString(R.string.failedMessage);
         private final String noResultString = getApplicationContext().getString(R.string.noResultString);
         private final Context context;
@@ -178,16 +123,19 @@ public class SingerTypesListActivity extends AppCompatActivity {
         }
 
         public void startRetrieve() {
+            Log.d(TAG, "RetrofitRetrieveSingerType.startRetrieve");
             loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
 
             Retrofit retrofit = RetrofitClient.getRetrofitInstance();     // get Retrofit client
             RetrofitApiInterface retrofitApiInterface = retrofit.create(RetrofitApiInterface.class);
             Call<SingerTypesList> call = retrofitApiInterface.getAllSingerTypes();
+            Log.d(TAG, "RetrofitRetrieveSingerType.startRetrieve.call = " + call);
             call.enqueue(this);
         }
 
         @Override
         public void onResponse(Call<SingerTypesList> call, Response<SingerTypesList> response) {
+            Log.d(TAG, "onResponse");
             loadingDialog.dismissAllowingStateLoss();
 
             if (response.isSuccessful()) {
@@ -203,20 +151,16 @@ public class SingerTypesListActivity extends AppCompatActivity {
                 singerTypesListEmptyTextView.setText("response.isSuccessful() --> false.");
                 singerTypesListEmptyTextView.setVisibility(View.VISIBLE);
             }
-            // mMyListAdapter = new SingerTypesListViewAdapter(context, textFontSize, R.layout.singer_types_list_item, singerTypesList.getSingerTypes());
-            // singerTypesListView.setAdapter(mMyListAdapter);
 
-            myRecyclerViewAdapter = new SingerTypesRecyclerViewAdapter(textFontSize, singerTypesList.getSingerTypes());
+            myRecyclerViewAdapter = new SingerTypesAdapter(textFontSize, singerTypesList.getSingerTypes());
             singerTypesRecyclerView.setAdapter(myRecyclerViewAdapter);
             singerTypesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         }
 
         @Override
         public void onFailure(Call<SingerTypesList> call, Throwable t) {
-            System.out.println("RetrofitRetrieveSingerType --> " + t.toString());
-
+            Log.d(TAG, "onFailure." + t.toString());
             loadingDialog.dismissAllowingStateLoss();
-
             singerTypesList = new SingerTypesList();
             singerTypesListEmptyTextView.setText(failedMessage);
             singerTypesListEmptyTextView.setVisibility(View.VISIBLE);

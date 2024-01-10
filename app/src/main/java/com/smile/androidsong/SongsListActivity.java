@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smile.model.*;
-import com.smile.retrofit_package.GetDataByRetrofitRestApi;
+import com.smile.retrofit_package.RetrofitRestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
@@ -144,7 +144,7 @@ public class SongsListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Song song = songsList.getSongs().get(i);
-                ScreenUtil.showToast(getApplicationContext(), song.getSongNa().toString(), textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                ScreenUtil.showToast(SongsListActivity.this, song.getSongNa().toString(), textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
             }
         });
 
@@ -337,23 +337,23 @@ public class SongsListActivity extends AppCompatActivity {
             // implement Retrofit to get results synchronously
             switch (orderedFrom) {
                 case AndroidSongApp.SingerOrdered:
-                    songsList = GetDataByRetrofitRestApi.getSongsBySinger((Singer)objectPassed, pageSize, pageNo, filterString);
+                    songsList = RetrofitRestApi.getSongsBySinger((Singer)objectPassed, pageSize, pageNo, filterString);
                     break;
                 case AndroidSongApp.NewSongOrdered:
                     break;
                 case AndroidSongApp.NewSongLanguageOrdered:
-                    songsList = GetDataByRetrofitRestApi.getNewSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
+                    songsList = RetrofitRestApi.getNewSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
                     break;
                 case AndroidSongApp.HotSongOrdered:
                     break;
                 case AndroidSongApp.HotSongLanguageOrdered:
-                    songsList = GetDataByRetrofitRestApi.getHotSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
+                    songsList = RetrofitRestApi.getHotSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
                     break;
                 case AndroidSongApp.LanguageOrdered:
-                    songsList = GetDataByRetrofitRestApi.getSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
+                    songsList = RetrofitRestApi.getSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
                     break;
                 case AndroidSongApp.LanguageWordsOrdered:
-                    songsList = GetDataByRetrofitRestApi.getSongsByLanguageNumOfWords((Language)objectPassed, numOfWords, pageSize, pageNo, filterString);
+                    songsList = RetrofitRestApi.getSongsByLanguageNumOfWords((Language)objectPassed, numOfWords, pageSize, pageNo, filterString);
                     break;
             }
 

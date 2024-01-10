@@ -26,7 +26,7 @@ import android.widget.Toast;
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
 import com.smile.model.SingersList;
-import com.smile.retrofit_package.GetDataByRetrofitRestApi;
+import com.smile.retrofit_package.RetrofitRestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
@@ -119,7 +119,7 @@ public class SingersListActivity extends AppCompatActivity {
                 if (singer != null) {
                     songsListActivityTitle = singer.getSingNa();
                 }
-                ScreenUtil.showToast(getApplicationContext(), songsListActivityTitle, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                ScreenUtil.showToast(SingersListActivity.this, songsListActivityTitle, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
                 Intent songsIntent = new Intent(SingersListActivity.this, SongsListActivity.class);
                 songsIntent.putExtra("OrderedFrom", AndroidSongApp.SingerOrdered);
                 songsIntent.putExtra("SongsListActivityTitle", songsListActivityTitle);
@@ -307,7 +307,7 @@ public class SingersListActivity extends AppCompatActivity {
             Log.i(TAG, "doInBackground() started.");
 
             // implement Retrofit to get results synchronously
-            singersList = GetDataByRetrofitRestApi.getSingersBySingerType(singerType, pageSize, pageNo, filterString);
+            singersList = RetrofitRestApi.getSingersBySingerType(singerType, pageSize, pageNo, filterString);
 
             Log.i(TAG, "doInBackground() finished.");
 

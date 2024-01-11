@@ -17,7 +17,7 @@ public class RetrofitClient {
     private static final String BASE_URL = "http://137.184.120.171/";
     // For emulator
     // private static final String BASE_URL = "http://10.0.2.2:5000/";
-    // For local computer with the same Ethernet (have to set port 5000 to be listening in Firewall)
+    // For Physical Android Phone
     // private static final String BASE_URL = "http://192.168.0.108:5000/";
     private static Retrofit retrofit;
 

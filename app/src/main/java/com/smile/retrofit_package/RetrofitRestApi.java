@@ -13,7 +13,7 @@ public class RetrofitRestApi {
     private static final String TAG = "RetrofitRestApi";
     // implement Retrofit to get results synchronously
     public static LanguagesList getAllLanguages() {
-        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit localRetrofit = RetrofitClient.getInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<LanguagesList> call = retrofitApiInterface.getAllLanguages();
 
@@ -37,7 +37,7 @@ public class RetrofitRestApi {
         int languageId = language.getId();
         String orderBy = "NumWordsSongNa";  // order by (number of words + song's name)
 
-        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit localRetrofit = RetrofitClient.getInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<SongsList> call;
         if ( (filter == null) || (filter.isEmpty()) ) {
@@ -66,7 +66,7 @@ public class RetrofitRestApi {
         int languageId = language.getId();
         String orderBy = "NumWordsSongNa";  // order by (number of words + song's name)
 
-        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit localRetrofit = RetrofitClient.getInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<SongsList> call;
         if ( (filter == null) || (filter.isEmpty()) ) {
@@ -95,7 +95,7 @@ public class RetrofitRestApi {
         int languageId = language.getId();
         String orderBy = "";  // no order. Only the date that the song came in by descending order
 
-        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit localRetrofit = RetrofitClient.getInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<SongsList> call;
         if ( (filter == null) || (filter.isEmpty()) ) {
@@ -124,7 +124,7 @@ public class RetrofitRestApi {
         int languageId = language.getId();
         String orderBy = "";  // no order by. Only the number that the song is ordered by descending order
 
-        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit localRetrofit = RetrofitClient.getInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<SongsList> call;
         if ( (filter == null) || (filter.isEmpty()) ) {
@@ -143,21 +143,6 @@ public class RetrofitRestApi {
         return songsList;
     }
 
-    public static SingerTypesList getAllSingerTypes() {
-        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
-        RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
-        Call<SingerTypesList> call = retrofitApiInterface.getAllSingerTypes();
-
-        SingerTypesList singerTypesList = null;
-        try {
-            singerTypesList = call.execute().body();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return singerTypesList;
-    }
-
     public static SingersList getSingersBySingerType(SingerType singerType, int pageSize, int pageNo, String filter) {
         if (singerType == null) {
             // singerType cannot be null
@@ -169,7 +154,7 @@ public class RetrofitRestApi {
         String sex = singerType.getSex();
         String orderBy = "SingNa";  // singer's name
 
-        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit localRetrofit = RetrofitClient.getInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<SingersList> call;
         if ( (filter == null) || (filter.isEmpty()) )  {
@@ -199,7 +184,7 @@ public class RetrofitRestApi {
         // String orderBy = "NumWordsSongNa";  // order by (number of words + song's name)
         String orderBy = "SongNa";  // order by song's name
 
-        Retrofit localRetrofit = RetrofitClient.getRetrofitInstance();
+        Retrofit localRetrofit = RetrofitClient.getInstance();
         RetrofitApiInterface retrofitApiInterface = localRetrofit.create(RetrofitApiInterface.class);
         Call<SongsList> call;
         if ( (filter == null) || (filter.isEmpty()) )  {

@@ -126,7 +126,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
             Log.d(TAG, "RetrofitRetrieveSingerType.startRetrieve");
             loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
 
-            Retrofit retrofit = RetrofitClient.getRetrofitInstance();     // get Retrofit client
+            Retrofit retrofit = RetrofitClient.getInstance();     // get Retrofit client
             RetrofitApiInterface retrofitApiInterface = retrofit.create(RetrofitApiInterface.class);
             Call<SingerTypesList> call = retrofitApiInterface.getAllSingerTypes();
             Log.d(TAG, "RetrofitRetrieveSingerType.startRetrieve.call = " + call);
@@ -138,6 +138,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
             Log.d(TAG, "onResponse");
             loadingDialog.dismissAllowingStateLoss();
 
+            Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
             if (response.isSuccessful()) {
                 singerTypesList = response.body();
                 if (singerTypesList.getSingerTypes().size() == 0) {
@@ -148,7 +149,7 @@ public class SingerTypesListActivity extends AppCompatActivity {
                 }
             } else {
                 singerTypesList = new SingerTypesList();
-                singerTypesListEmptyTextView.setText("response.isSuccessful() --> false.");
+                singerTypesListEmptyTextView.setText("response.isSuccessful() = false.");
                 singerTypesListEmptyTextView.setVisibility(View.VISIBLE);
             }
 

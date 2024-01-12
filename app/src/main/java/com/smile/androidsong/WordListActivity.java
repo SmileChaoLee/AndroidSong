@@ -20,7 +20,7 @@ import com.smile.smilelibraries.utilities.ScreenUtil;
 
 import java.util.ArrayList;
 
-public class WordsListActivity extends AppCompatActivity {
+public class WordListActivity extends AppCompatActivity {
 
     private static final String TAG = new String("WordsListActivity");
     private String languageTitle;
@@ -78,9 +78,9 @@ public class WordsListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int numOfWords = wordsList.get(i).first;
                 String itemName = wordsList.get(i).second;
-                ScreenUtil.showToast(WordsListActivity.this, itemName, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                ScreenUtil.showToast(WordListActivity.this, itemName, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
 
-                Intent songsIntent = new Intent(WordsListActivity.this, SongsListActivity.class);
+                Intent songsIntent = new Intent(WordListActivity.this, SongListActivity.class);
                 songsIntent.putExtra("OrderedFrom", AndroidSongApp.LanguageWordsOrdered);
                 songsIntent.putExtra("SongsListActivityTitle", languageTitle + " " + itemName);
                 songsIntent.putExtra("LanguageParcelable", language);

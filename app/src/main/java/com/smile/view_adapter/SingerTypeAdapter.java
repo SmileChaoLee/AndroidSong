@@ -1,4 +1,4 @@
-package com.smile.recyclerview_adapter;
+package com.smile.view_adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -17,11 +17,11 @@ import com.smile.smilelibraries.utilities.ScreenUtil;
 
 import java.util.ArrayList;
 
-public class SingerTypesAdapter extends RecyclerView.Adapter<SingerTypesAdapter.MyViewHolder> {
+public class SingerTypeAdapter extends RecyclerView.Adapter<SingerTypeAdapter.MyViewHolder> {
     private static final String TAG = "SingerTypesAdapter";
     private ArrayList<SingerType> singerTypes;
     private final float textFontSize;
-    public SingerTypesAdapter(float textFontSize, ArrayList<SingerType> singerTypes) {
+    public SingerTypeAdapter(float textFontSize, ArrayList<SingerType> singerTypes) {
         this.textFontSize = textFontSize;
         this.singerTypes = singerTypes;
     }

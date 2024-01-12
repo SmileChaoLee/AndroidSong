@@ -36,7 +36,7 @@ public class MyActivity extends AppCompatActivity {
         singerOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent singerTypesIntent = new Intent(MyActivity.this, SingerTypesListActivity.class);
+                Intent singerTypesIntent = new Intent(MyActivity.this, SingerTypeListActivity.class);
                 startActivity(singerTypesIntent);
             }
         });
@@ -46,7 +46,7 @@ public class MyActivity extends AppCompatActivity {
         newSongOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent languagesIntent = new Intent(MyActivity.this, LanguagesListActivity.class);
+                Intent languagesIntent = new Intent(MyActivity.this, LanguageListActivity.class);
                 languagesIntent.putExtra("OrderedFrom", AndroidSongApp.NewSongOrdered);
                 startActivity(languagesIntent);
             }
@@ -57,7 +57,7 @@ public class MyActivity extends AppCompatActivity {
         hotSongOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent languagesIntent = new Intent(MyActivity.this, LanguagesListActivity.class);
+                Intent languagesIntent = new Intent(MyActivity.this, LanguageListActivity.class);
                 languagesIntent.putExtra("OrderedFrom", AndroidSongApp.HotSongOrdered);
                 startActivity(languagesIntent);
             }
@@ -68,7 +68,7 @@ public class MyActivity extends AppCompatActivity {
         songLanguageOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_LanguageOrder = new Intent(MyActivity.this , LanguagesListActivity.class);
+                Intent intent_LanguageOrder = new Intent(MyActivity.this , LanguageListActivity.class);
                 startActivity(intent_LanguageOrder);
             }
         });

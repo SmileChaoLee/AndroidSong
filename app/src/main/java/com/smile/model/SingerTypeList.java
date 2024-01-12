@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class SingerTypesList {
+public class SingerTypeList {
     @SerializedName("pageNo")
     private int pageNo;
     @SerializedName("pageSize")
@@ -16,7 +16,7 @@ public class SingerTypesList {
     @SerializedName("singerTypes")
     private ArrayList<SingerType> singerTypes;
 
-    public SingerTypesList() {
+    public SingerTypeList() {
         singerTypes = new ArrayList<>();
     }
 

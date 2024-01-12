@@ -25,8 +25,8 @@ import android.widget.Toast;
 
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
-import com.smile.model.SingersList;
-import com.smile.retrofit_package.RetrofitRestApi;
+import com.smile.model.SingerList;
+import com.smile.retrofit_package.RestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SingersListActivity extends AppCompatActivity {
+public class SingerListActivity extends AppCompatActivity {
 
     private static final String TAG = new String("SingersListActivity");
     private String singersListActivityTitle;
@@ -45,7 +45,7 @@ public class SingersListActivity extends AppCompatActivity {
     private ListView singersListView;
     private TextView singersListEmptyTextView;
     private MyListAdapter mMyListAdapter;
-    private SingersList singersList = null;
+    private SingerList singerList = null;
     private SingerType singerType;
 
     private int pageNo = 1;
@@ -114,13 +114,13 @@ public class SingersListActivity extends AppCompatActivity {
         singersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Singer singer = singersList.getSingers().get(i);
+                Singer singer = singerList.getSingers().get(i);
                 String songsListActivityTitle = "";
                 if (singer != null) {
                     songsListActivityTitle = singer.getSingNa();
                 }
-                ScreenUtil.showToast(SingersListActivity.this, songsListActivityTitle, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
-                Intent songsIntent = new Intent(SingersListActivity.this, SongsListActivity.class);
+                ScreenUtil.showToast(SingerListActivity.this, songsListActivityTitle, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                Intent songsIntent = new Intent(SingerListActivity.this, SongListActivity.class);
                 songsIntent.putExtra("OrderedFrom", AndroidSongApp.SingerOrdered);
                 songsIntent.putExtra("SongsListActivityTitle", songsListActivityTitle);
                 songsIntent.putExtra("SingerParcelable", singer);
@@ -307,7 +307,7 @@ public class SingersListActivity extends AppCompatActivity {
             Log.i(TAG, "doInBackground() started.");
 
             // implement Retrofit to get results synchronously
-            singersList = RetrofitRestApi.getSingersBySingerType(singerType, pageSize, pageNo, filterString);
+            singerList = RestApi.getSingersBySingerType(singerType, pageSize, pageNo, filterString);
 
             Log.i(TAG, "doInBackground() finished.");
 
@@ -326,31 +326,31 @@ public class SingersListActivity extends AppCompatActivity {
 
             loadingDialog.dismissAllowingStateLoss();
 
-            if (singersList == null) {
+            if (singerList == null) {
                 // failed
-                singersList = new SingersList();
-                singersList.setPageNo(pageNo);
-                singersList.setPageSize(pageSize);
-                singersList.setTotalRecords(0); // temporary
-                singersList.setTotalPages(0);   // temporary
+                singerList = new SingerList();
+                singerList.setPageNo(pageNo);
+                singerList.setPageSize(pageSize);
+                singerList.setTotalRecords(0); // temporary
+                singerList.setTotalPages(0);   // temporary
                 totalPages = 0;
 
                 singersListEmptyTextView.setText(failedMessage);
                 singersListEmptyTextView.setVisibility(View.VISIBLE);
             } else {
                 // successfully
-                pageNo = singersList.getPageNo();      // get the back value from called function
-                pageSize = singersList.getPageSize();    // get the back value from called function
-                totalPages = singersList.getTotalPages();
+                pageNo = singerList.getPageNo();      // get the back value from called function
+                pageSize = singerList.getPageSize();    // get the back value from called function
+                totalPages = singerList.getTotalPages();
 
-                if (singersList.getSingers().size() == 0) {
+                if (singerList.getSingers().size() == 0) {
                     singersListEmptyTextView.setText(noResultString);
                     singersListEmptyTextView.setVisibility(View.VISIBLE);
                 } else {
                     singersListEmptyTextView.setVisibility(View.GONE);
                 }
             }
-            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item ,singersList.getSingers());
+            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item , singerList.getSingers());
             singersListView.setAdapter(mMyListAdapter);
 
             if (isSearchEditTextChanged) {

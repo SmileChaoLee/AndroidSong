@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/green"
     android:orientation="vertical"
-    tools:context=".SingerTypesListActivity">
+    tools:context=".SingerTypeListActivity">
 
     <TextView
         android:id="@+id/singerTypesListMenuTextView"

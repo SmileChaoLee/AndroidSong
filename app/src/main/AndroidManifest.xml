@@ -25,13 +25,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SongsListActivity"
+            android:name=".SongListActivity"
             android:label="@string/title_activity_song_query"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".SingersListActivity"
+            android:name=".SingerListActivity"
             android:label="@string/title_activity_singer_query"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
@@ -44,18 +44,18 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name=".LanguagesListActivity"
+            android:name=".LanguageListActivity"
             android:label="@string/title_activity_language_query"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
         </activity>
-        <activity android:name=".SingerTypesListActivity"
+        <activity android:name=".SingerTypeListActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
         </activity>
-        <activity android:name=".WordsListActivity"
+        <activity android:name=".WordListActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >

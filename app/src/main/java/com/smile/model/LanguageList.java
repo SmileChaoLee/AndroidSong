@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class SongsList {
+public class LanguageList {
     @SerializedName("pageNo")
     private int pageNo;
     @SerializedName("pageSize")
@@ -13,11 +13,11 @@ public class SongsList {
     private int totalRecords;
     @SerializedName("totalPages")
     private int totalPages;
-    @SerializedName("songs")
-    private ArrayList<Song> songs;
+    @SerializedName("languages")
+    private ArrayList<Language> languages;
 
-    public SongsList() {
-        songs = new ArrayList<>();
+    public LanguageList() {
+        languages = new ArrayList<>();
     }
 
     public int getPageNo() {
@@ -52,11 +52,11 @@ public class SongsList {
         this.totalPages = totalPages;
     }
 
-    public ArrayList<Song> getSongs() {
-        return songs;
+    public ArrayList<Language> getLanguages() {
+        return languages;
     }
 
-    public void setSongs(ArrayList<Song> songs) {
-        this.songs = songs;
+    public void setLanguages(ArrayList<Language> languages) {
+        this.languages = languages;
     }
 }

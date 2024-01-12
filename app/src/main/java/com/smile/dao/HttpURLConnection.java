@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
-import com.smile.model.SingerTypesList;
-import com.smile.model.SingersList;
+import com.smile.model.SingerTypeList;
+import com.smile.model.SingerList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,11 +21,11 @@ public class HttpURLConnection {
     private static final String BASE_URL = "http://137.184.120.171/";
     // private static final String BASE_URL = "http://192.168.0.35:5000/";
 
-    public static SingerTypesList getAllSingerTypes() {
+    public static SingerTypeList getAllSingerTypes() {
         final String webUrl = BASE_URL + "api/SingerType";
         Log.i(TAG, "WebUrl = " + webUrl);
 
-        SingerTypesList singerTypesList;
+        SingerTypeList singerTypeList;
 
         URL url;
         java.net.HttpURLConnection myConnection = null;
@@ -53,12 +53,12 @@ public class HttpURLConnection {
 
                 JSONObject json = new JSONObject(result);
 
-                singerTypesList = new SingerTypesList();
+                singerTypeList = new SingerTypeList();
 
-                singerTypesList.setPageNo(json.getInt("pageNo"));
-                singerTypesList.setPageSize(json.getInt("pageSize"));
-                singerTypesList.setTotalRecords(json.getInt("totalRecords"));
-                singerTypesList.setTotalPages(json.getInt("totalPages"));
+                singerTypeList.setPageNo(json.getInt("pageNo"));
+                singerTypeList.setPageSize(json.getInt("pageSize"));
+                singerTypeList.setTotalRecords(json.getInt("totalRecords"));
+                singerTypeList.setTotalPages(json.getInt("totalPages"));
                 JSONArray jsonArray = new JSONArray(json.getString("singerTypes"));
 
                 ArrayList<SingerType> singerTypes = new ArrayList<>();
@@ -86,17 +86,17 @@ public class HttpURLConnection {
 
                     singerTypes.add(singerType);
                 }
-                singerTypesList.setSingerTypes(singerTypes);
+                singerTypeList.setSingerTypes(singerTypes);
             } else {
                 Log.i(TAG, "REST Web Service -> Failed to connect.");
                 // singerTypes is null
-                singerTypesList = null;
+                singerTypeList = null;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.i(TAG, "REST Web Service -> Failed due to exception.");
             // singerTypes is null
-            singerTypesList = null;
+            singerTypeList = null;
         }
         finally {
             try {
@@ -114,10 +114,10 @@ public class HttpURLConnection {
             }
         }
 
-        return singerTypesList;
+        return singerTypeList;
     }
 
-    public static SingersList getSingersBySingerType(SingerType singerType, int pageSize, int pageNo) {
+    public static SingerList getSingersBySingerType(SingerType singerType, int pageSize, int pageNo) {
         // using int[] pageSize to return the result of pageSize
         // using int[] pageNo to return the result of pageNo
         if (singerType == null) {
@@ -132,7 +132,7 @@ public class HttpURLConnection {
         final String webUrl = BASE_URL + "api/Singer" + param;
         Log.i(TAG, "WebUrl = " + webUrl);
 
-        SingersList singersList;
+        SingerList singerList;
 
         URL url;
         java.net.HttpURLConnection myConnection = null;
@@ -160,12 +160,12 @@ public class HttpURLConnection {
 
                 JSONObject json = new JSONObject(result);
 
-                singersList = new SingersList();
+                singerList = new SingerList();
 
-                singersList.setPageNo(json.getInt("pageNo"));
-                singersList.setPageSize(json.getInt("pageSize"));
-                singersList.setTotalRecords(json.getInt("totalRecords"));
-                singersList.setTotalPages(json.getInt("totalPages"));
+                singerList.setPageNo(json.getInt("pageNo"));
+                singerList.setPageSize(json.getInt("pageSize"));
+                singerList.setTotalRecords(json.getInt("totalRecords"));
+                singerList.setTotalPages(json.getInt("totalPages"));
 
                 JSONArray jsonArray = new JSONArray(json.getString("singers"));
                 // or
@@ -190,17 +190,17 @@ public class HttpURLConnection {
 
                     singers.add(singer);
                 }
-                singersList.setSingers(singers);
+                singerList.setSingers(singers);
             } else {
                 Log.i(TAG, "REST Web Service -> Failed to connect.");
                 // singerTypes is null
-                singersList = null;
+                singerList = null;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.i(TAG, "REST Web Service -> Failed due to exception.");
             // singerTypes is null
-            singersList = null;
+            singerList = null;
         }
         finally {
             try {
@@ -218,6 +218,6 @@ public class HttpURLConnection {
             }
         }
 
-        return singersList;
+        return singerList;
     }
 }

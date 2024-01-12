@@ -23,14 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smile.model.*;
-import com.smile.retrofit_package.RetrofitRestApi;
+import com.smile.retrofit_package.RestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongsListActivity extends AppCompatActivity {
+public class SongListActivity extends AppCompatActivity {
 
     private static final String TAG = new String("SongsListActivity");
     private String songsListActivityTitle;
@@ -41,7 +41,7 @@ public class SongsListActivity extends AppCompatActivity {
     private ListView songsListView;
     private TextView songsListEmptyTextView;
     private MyListAdapter mMyListAdapter;
-    private SongsList songsList = null;
+    private SongList songList = null;
     private Singer singer;
     private Language language;
     private Object objectPassed;
@@ -143,8 +143,8 @@ public class SongsListActivity extends AppCompatActivity {
         songsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Song song = songsList.getSongs().get(i);
-                ScreenUtil.showToast(SongsListActivity.this, song.getSongNa().toString(), textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                Song song = songList.getSongs().get(i);
+                ScreenUtil.showToast(SongListActivity.this, song.getSongNa().toString(), textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
             }
         });
 
@@ -337,23 +337,21 @@ public class SongsListActivity extends AppCompatActivity {
             // implement Retrofit to get results synchronously
             switch (orderedFrom) {
                 case AndroidSongApp.SingerOrdered:
-                    songsList = RetrofitRestApi.getSongsBySinger((Singer)objectPassed, pageSize, pageNo, filterString);
+                    songList = RestApi.getSongsBySinger((Singer)objectPassed, pageSize, pageNo, filterString);
                     break;
-                case AndroidSongApp.NewSongOrdered:
+                case AndroidSongApp.NewSongOrdered, AndroidSongApp.HotSongOrdered:
                     break;
                 case AndroidSongApp.NewSongLanguageOrdered:
-                    songsList = RetrofitRestApi.getNewSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
-                    break;
-                case AndroidSongApp.HotSongOrdered:
+                    songList = RestApi.getNewSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
                     break;
                 case AndroidSongApp.HotSongLanguageOrdered:
-                    songsList = RetrofitRestApi.getHotSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
+                    songList = RestApi.getHotSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
                     break;
                 case AndroidSongApp.LanguageOrdered:
-                    songsList = RetrofitRestApi.getSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
+                    songList = RestApi.getSongsByLanguage((Language)objectPassed, pageSize, pageNo, filterString);
                     break;
                 case AndroidSongApp.LanguageWordsOrdered:
-                    songsList = RetrofitRestApi.getSongsByLanguageNumOfWords((Language)objectPassed, numOfWords, pageSize, pageNo, filterString);
+                    songList = RestApi.getSongsByLanguageNumOfWords((Language)objectPassed, numOfWords, pageSize, pageNo, filterString);
                     break;
             }
 
@@ -374,31 +372,31 @@ public class SongsListActivity extends AppCompatActivity {
 
             loadingDialog.dismissAllowingStateLoss();
 
-            if (songsList == null) {
+            if (songList == null) {
                 // failed
-                songsList = new SongsList();
-                songsList.setPageNo(pageNo);
-                songsList.setPageSize(pageSize);
-                songsList.setTotalRecords(0); // temporary
-                songsList.setTotalPages(0);   // temporary
+                songList = new SongList();
+                songList.setPageNo(pageNo);
+                songList.setPageSize(pageSize);
+                songList.setTotalRecords(0); // temporary
+                songList.setTotalPages(0);   // temporary
                 totalPages = 0;
 
                 songsListEmptyTextView.setText(failedMessage);
                 songsListEmptyTextView.setVisibility(View.VISIBLE);
             } else {
                 // successfully
-                pageNo = songsList.getPageNo();         // get the back value from called function
-                pageSize = songsList.getPageSize();     // get the back value from called function
-                totalPages = songsList.getTotalPages(); // get the back value from called function
+                pageNo = songList.getPageNo();         // get the back value from called function
+                pageSize = songList.getPageSize();     // get the back value from called function
+                totalPages = songList.getTotalPages(); // get the back value from called function
 
-                if (songsList.getSongs().size() == 0) {
+                if (songList.getSongs().size() == 0) {
                     songsListEmptyTextView.setText(noResultString);
                     songsListEmptyTextView.setVisibility(View.VISIBLE);
                 } else {
                     songsListEmptyTextView.setVisibility(View.GONE);
                 }
             }
-            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.songs_list_item ,songsList.getSongs());
+            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.songs_list_item , songList.getSongs());
             songsListView.setAdapter(mMyListAdapter);
 
             if (isSearchEditTextChanged) {

@@ -31,7 +31,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class LanguageListActivity extends AppCompatActivity {
+public class LanguageListActivity extends AppCompatActivity implements RestApiKotlin<LanguageList> {
 
     private static final String TAG = "LanguagesListActivity";
     private float textFontSize;
@@ -42,6 +42,10 @@ public class LanguageListActivity extends AppCompatActivity {
     private final String noResultString = AndroidSongApp.AppResources.getString(R.string.noResultString);
     private final String failedMessage = AndroidSongApp.AppResources.getString(R.string.failedMessage);
     private final String loadingString = AndroidSongApp.AppResources.getString(R.string.loadingString);
+    private final AlertDialogFragment loadingDialog
+            = AlertDialogFragment.newInstance(loadingString,
+            AndroidSongApp.FontSize_Scale_Type,
+            textFontSize, Color.RED, 0, 0, true);
 
     private int orderedFrom;
 
@@ -126,44 +130,9 @@ public class LanguageListActivity extends AppCompatActivity {
             }
         });
 
-        final AlertDialogFragment loadingDialog
-                = AlertDialogFragment.newInstance(loadingString,
-                AndroidSongApp.FontSize_Scale_Type,
-                textFontSize, Color.RED, 0, 0, true);
-        loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
 
-        new RestApiKotlin<LanguageList>() {
-            @Override
-            public void onResponse(Call<LanguageList> call, Response<LanguageList> response) {
-                Log.d(TAG, "onResponse");
-                loadingDialog.dismissAllowingStateLoss();
-                Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
-                if (response.isSuccessful()) {
-                    languageList = response.body();
-                    if (languageList.getLanguages().size() == 0) {
-                        languagesListEmptyTextView.setText(noResultString);
-                        languagesListEmptyTextView.setVisibility(View.VISIBLE);
-                    } else {
-                        languagesListEmptyTextView.setVisibility(View.GONE);
-                    }
-                } else {
-                    languageList = new LanguageList();
-                    languagesListEmptyTextView.setText(failedMessage);
-                    languagesListEmptyTextView.setVisibility(View.VISIBLE);
-                }
-                mMyListAdapter = new MyListAdapter(getBaseContext(),
-                        R.layout.languages_list_item , languageList.getLanguages());
-                languagesListView.setAdapter(mMyListAdapter);
-            }
-            @Override
-            public void onFailure(Call<LanguageList> call, Throwable t) {
-                Log.d(TAG, "onFailure." + t.toString());
-                loadingDialog.dismissAllowingStateLoss();
-                languageList = new LanguageList();
-                languagesListEmptyTextView.setText(failedMessage);
-                languagesListEmptyTextView.setVisibility(View.VISIBLE);
-            }
-        }.getAllLanguages();
+        loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
+        getAllLanguages();
     }
 
     @Override
@@ -174,6 +143,37 @@ public class LanguageListActivity extends AppCompatActivity {
     private void returnToPrevious() {
         Log.d(TAG, "returnToPrevious");
         finish();
+    }
+
+    @Override
+    public void onResponse(Call<LanguageList> call, Response<LanguageList> response) {
+        Log.d(TAG, "onResponse");
+        loadingDialog.dismissAllowingStateLoss();
+        Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
+        if (response.isSuccessful()) {
+            languageList = response.body();
+            if (languageList.getLanguages().size() == 0) {
+                languagesListEmptyTextView.setText(noResultString);
+                languagesListEmptyTextView.setVisibility(View.VISIBLE);
+            } else {
+                languagesListEmptyTextView.setVisibility(View.GONE);
+            }
+        } else {
+            languageList = new LanguageList();
+            languagesListEmptyTextView.setText(failedMessage);
+            languagesListEmptyTextView.setVisibility(View.VISIBLE);
+        }
+        mMyListAdapter = new MyListAdapter(getBaseContext(),
+                R.layout.languages_list_item , languageList.getLanguages());
+        languagesListView.setAdapter(mMyListAdapter);
+    }
+    @Override
+    public void onFailure(Call<LanguageList> call, Throwable t) {
+        Log.d(TAG, "onFailure." + t.toString());
+        loadingDialog.dismissAllowingStateLoss();
+        languageList = new LanguageList();
+        languagesListEmptyTextView.setText(failedMessage);
+        languagesListEmptyTextView.setVisibility(View.VISIBLE);
     }
 
     private class MyListAdapter extends ArrayAdapter {

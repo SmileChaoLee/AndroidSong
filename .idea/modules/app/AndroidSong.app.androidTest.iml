@@ -24,6 +24,7 @@
           </flagArguments>
           <stringArguments>
             <stringArg name="destination" arg="$MODULE_DIR$/../../../app/build/tmp/kotlin-classes/debugAndroidTest" />
+            <stringArg name="jvmDefault" arg="all" />
             <stringArg name="jvmTarget" arg="17" />
             <stringArg name="moduleName" arg="app_debugAndroidTest" />
             <stringArg name="apiVersion" arg="1.9" />

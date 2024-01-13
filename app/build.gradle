@@ -39,6 +39,8 @@ android {
     }
     kotlinOptions {
         jvmTarget = '17'
+        // for default fun of Kotlin
+        freeCompilerArgs = ['-Xjvm-default=all']
     }
 
     namespace 'com.smile.androidsong'

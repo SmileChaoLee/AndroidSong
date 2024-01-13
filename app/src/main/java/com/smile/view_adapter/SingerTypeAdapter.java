@@ -1,17 +1,21 @@
 package com.smile.view_adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.smile.androidsong.AndroidSongApp;
 import com.smile.androidsong.R;
+import com.smile.androidsong.SingerListActivity;
 import com.smile.model.SingerType;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
@@ -19,27 +23,29 @@ import java.util.ArrayList;
 
 public class SingerTypeAdapter extends RecyclerView.Adapter<SingerTypeAdapter.MyViewHolder> {
     private static final String TAG = "SingerTypesAdapter";
-    private ArrayList<SingerType> singerTypes;
-    private final float textFontSize;
-    public SingerTypeAdapter(float textFontSize, ArrayList<SingerType> singerTypes) {
-        this.textFontSize = textFontSize;
-        this.singerTypes = singerTypes;
+    private final Activity mActivity;
+    private final ArrayList<SingerType> mSingerTypes;
+    private final float mTextFontSize;
+    public SingerTypeAdapter(Activity activity, ArrayList<SingerType> singerTypes, float textFontSize) {
+        mActivity = activity;
+        mTextFontSize = textFontSize;
+        mSingerTypes = singerTypes;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView positionNoTextView;
-        private TextView singerAreaNaTextView;
-        private TextView singerSexTextView;
+        private final TextView positionNoTextView;
+        private final TextView singerAreaNaTextView;
+        private final TextView singerSexTextView;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             positionNoTextView = itemView.findViewById(R.id.singerTypeItem_Layout_positionNoTextView);
-            ScreenUtil.resizeTextSize(positionNoTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+            ScreenUtil.resizeTextSize(positionNoTextView, mTextFontSize, AndroidSongApp.FontSize_Scale_Type);
 
             singerAreaNaTextView = itemView.findViewById(R.id.singerAreaNaTextView);
-            ScreenUtil.resizeTextSize(singerAreaNaTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+            ScreenUtil.resizeTextSize(singerAreaNaTextView, mTextFontSize, AndroidSongApp.FontSize_Scale_Type);
 
             singerSexTextView = itemView.findViewById(R.id.singerSexTextView);
-            ScreenUtil.resizeTextSize(singerSexTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+            ScreenUtil.resizeTextSize(singerSexTextView, mTextFontSize, AndroidSongApp.FontSize_Scale_Type);
         }
     }
 
@@ -52,16 +58,13 @@ public class SingerTypeAdapter extends RecyclerView.Adapter<SingerTypeAdapter.My
 
         // inflate the singerType item view
         View singerTypeItemView = layoutInflater.inflate(R.layout.singer_types_list_item, parent, false);
-        MyViewHolder myViewHolder = new MyViewHolder(singerTypeItemView);
-        //
-        return myViewHolder;
+        return new MyViewHolder(singerTypeItemView);
     }
 
     // Involves populating data into the item through holder
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        SingerType singerType = singerTypes.get(position);
-
+        final SingerType singerType = mSingerTypes.get(position);
         holder.positionNoTextView.setText(String.valueOf(position));
         holder.singerAreaNaTextView.setText(singerType.getAreaNa());
         String sex = singerType.getSex();
@@ -79,11 +82,23 @@ public class SingerTypeAdapter extends RecyclerView.Adapter<SingerTypeAdapter.My
                 break;
         }
         holder.singerSexTextView.setText(sexString);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String singersListActivityTitle = singerType.getAreaNa();
+                ScreenUtil.showToast(mActivity, singersListActivityTitle,
+                        mTextFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                Intent singersIntent = new Intent(mActivity, SingerListActivity.class);
+                singersIntent.putExtra("SingersListActivityTitle", singersListActivityTitle);
+                singersIntent.putExtra("SingerTypeParcelable", singerType);
+                mActivity.startActivity(singersIntent);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        int size = singerTypes.size();
+        int size = mSingerTypes.size();
         Log.d(TAG, "singerTypes.size() = " + size);
         return size;
     }

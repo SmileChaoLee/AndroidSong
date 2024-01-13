@@ -5,10 +5,10 @@ import com.smile.model.Language
 import com.smile.model.LanguageList
 import com.smile.model.SingerTypeList
 import com.smile.model.SongList
-import retrofit2.Call
 import retrofit2.Callback
 
-abstract class RestApiKotlin<T>() : Callback<T> {
+@JvmDefaultWithCompatibility
+interface RestApiKotlin<T> : Callback<T> {
 
     companion object {
         const val TAG = "RestApiKotlin"
@@ -19,7 +19,10 @@ abstract class RestApiKotlin<T>() : Callback<T> {
             return this
         }
     // get Retrofit client and Retrofit Api
-    private val apiInterface = Client.getInstance().create(ApiInterface::class.java)
+    private val apiInterface : ApiInterface
+        get() {
+            return Client.getInstance().create(ApiInterface::class.java)
+        }
 
     fun getAllSingerTypes() {
         Log.d(TAG, "getAllSingerTypes")

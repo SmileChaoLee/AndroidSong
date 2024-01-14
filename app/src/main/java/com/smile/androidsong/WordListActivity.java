@@ -15,14 +15,16 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.smile.model.Constants;
 import com.smile.model.Language;
 import com.smile.smilelibraries.utilities.ScreenUtil;
-
+import android.util.Log;
 import java.util.ArrayList;
 
 public class WordListActivity extends AppCompatActivity {
 
-    private static final String TAG = new String("WordsListActivity");
+    private static final String TAG = "WordsListActivity";
     private String languageTitle;
     private float textFontSize;
     private ListView wordsListView;
@@ -35,9 +37,9 @@ public class WordListActivity extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, AndroidSongApp.FontSize_Scale_Type, null);
-        textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, AndroidSongApp.FontSize_Scale_Type, 0.0f);
+        Log.d(TAG, "onCreate");
+        float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, Constants.FontSize_Scale_Type, null);
+        textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, Constants.FontSize_Scale_Type, 0.0f);
 
         orderedFrom = 0;
         String wordsListTitle = getString(R.string.wordsListString);
@@ -54,7 +56,7 @@ public class WordListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_words_list);
 
         final TextView wordsListMenuTextView = findViewById(R.id.wordsListMenuTextView);
-        ScreenUtil.resizeTextSize(wordsListMenuTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(wordsListMenuTextView, textFontSize, Constants.FontSize_Scale_Type);
         wordsListMenuTextView.setText(languageTitle + " " + wordsListTitle);
 
         wordsList = new ArrayList<Pair<Integer, String>>();
@@ -78,10 +80,12 @@ public class WordListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int numOfWords = wordsList.get(i).first;
                 String itemName = wordsList.get(i).second;
-                ScreenUtil.showToast(WordListActivity.this, itemName, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                Log.d(TAG, "startActivity.SongListActivity.numOfWords = " + numOfWords +
+                        ", itemName = " + itemName);
+                ScreenUtil.showToast(WordListActivity.this, itemName, textFontSize, Constants.FontSize_Scale_Type, Toast.LENGTH_SHORT);
 
                 Intent songsIntent = new Intent(WordListActivity.this, SongListActivity.class);
-                songsIntent.putExtra("OrderedFrom", AndroidSongApp.LanguageWordsOrdered);
+                songsIntent.putExtra("OrderedFrom", Constants.LanguageWordsOrdered);
                 songsIntent.putExtra("SongsListActivityTitle", languageTitle + " " + itemName);
                 songsIntent.putExtra("LanguageParcelable", language);
                 songsIntent.putExtra("NumOfWords", numOfWords);
@@ -90,7 +94,7 @@ public class WordListActivity extends AppCompatActivity {
         });
 
         final Button wordsListReturnButton = findViewById(R.id.wordsListReturnButton);
-        ScreenUtil.resizeTextSize(wordsListReturnButton, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(wordsListReturnButton, textFontSize, Constants.FontSize_Scale_Type);
         wordsListReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +148,7 @@ public class WordListActivity extends AppCompatActivity {
 
             View view = getLayoutInflater().inflate(layoutId, parent, false);
             wordsOrderNameTextView = view.findViewById(R.id.wordsOrderNameTextView);
-            ScreenUtil.resizeTextSize(wordsOrderNameTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+            ScreenUtil.resizeTextSize(wordsOrderNameTextView, textFontSize, Constants.FontSize_Scale_Type);
             wordsOrderNameTextView.setText(listItems.get(position).second);
 
             return view;

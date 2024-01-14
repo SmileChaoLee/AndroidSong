@@ -3,7 +3,6 @@ package com.smile.androidsong;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smile.model.Constants;
 import com.smile.model.Singer;
 import com.smile.model.SingerType;
 import com.smile.model.SingerList;
@@ -33,11 +33,13 @@ import com.smile.smilelibraries.utilities.ScreenUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
 
-public class SingerListActivity extends AppCompatActivity {
+public class SingerListActivity extends AppCompatActivity
+        implements RestApi<SingerList> {
 
-    private static final String TAG = new String("SingersListActivity");
-    private String singersListActivityTitle;
+    private static final String TAG = "SingersListActivity";
     private float textFontSize;
     private EditText searchEditText;
     private boolean isSearchEditTextChanged;
@@ -51,18 +53,25 @@ public class SingerListActivity extends AppCompatActivity {
     private int pageNo = 1;
     private int pageSize = 10;
     private int totalPages = 0;
+    private String noResultString;
+    private String failedMessage;
+    private String loadingString;
+    private AlertDialogFragment loadingDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
+        noResultString = getString(R.string.noResultString);
+        failedMessage = getString(R.string.failedMessage);
+        loadingString = getString(R.string.loadingString);
 
-        float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, AndroidSongApp.FontSize_Scale_Type, null);
-        textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, AndroidSongApp.FontSize_Scale_Type, 0.0f);
+        float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, Constants.FontSize_Scale_Type, null);
+        textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, Constants.FontSize_Scale_Type, 0.0f);
 
         String singersListTitle = getString(R.string.singersListString);
-        singersListActivityTitle = "";
+        String singersListActivityTitle = "";
         Bundle extras = getIntent().getExtras();
-        if (extras != null )
-        {
+        if (extras != null ) {
             singersListActivityTitle = extras.getString("SingersListActivityTitle").trim();
             singerType = extras.getParcelable("SingerTypeParcelable");
         }
@@ -72,12 +81,12 @@ public class SingerListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_singers_list);
 
         final TextView singersListMenuTextView = findViewById(R.id.singersListMenuTextView);
-        ScreenUtil.resizeTextSize(singersListMenuTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(singersListMenuTextView, textFontSize, Constants.FontSize_Scale_Type);
         singersListMenuTextView.setText(singersListActivityTitle + " " + singersListTitle);
 
         filterString = "";
         searchEditText = findViewById(R.id.singerSearchEditText);
-        ScreenUtil.resizeTextSize(searchEditText, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(searchEditText, textFontSize, Constants.FontSize_Scale_Type);
         LinearLayout.LayoutParams searchEditLp = (LinearLayout.LayoutParams) searchEditText.getLayoutParams();
         searchEditLp.leftMargin = (int)(textFontSize * 2.0f);
         searchEditLp.rightMargin = (int)(textFontSize * 5.0f);
@@ -97,16 +106,15 @@ public class SingerListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.d(TAG, "searchEditText.addTextChangedListener.afterTextChanged");
                 String content = editable.toString().trim();
-                filterString = "";
-                if (!content.isEmpty()) {
-                    filterString = "SingNa+" + content;
-                }
+                filterString = content.isEmpty() ? "" : "SingNa+" + content;
+                Log.d(TAG, "searchEditText.addTextChangedListener.afterTextChanged.filterString = "
+                        + filterString);
                 pageNo = 1;
                 isSearchEditTextChanged = true;
                 // searchEditText.clearFocus();
-                AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
-                accessSingersAsyncTask.execute();
+                retrieveSingerList();
             }
         });
 
@@ -114,14 +122,15 @@ public class SingerListActivity extends AppCompatActivity {
         singersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d(TAG, "singersListView.onItemClick");
                 Singer singer = singerList.getSingers().get(i);
                 String songsListActivityTitle = "";
                 if (singer != null) {
                     songsListActivityTitle = singer.getSingNa();
                 }
-                ScreenUtil.showToast(SingerListActivity.this, songsListActivityTitle, textFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                ScreenUtil.showToast(SingerListActivity.this, songsListActivityTitle, textFontSize, Constants.FontSize_Scale_Type, Toast.LENGTH_SHORT);
                 Intent songsIntent = new Intent(SingerListActivity.this, SongListActivity.class);
-                songsIntent.putExtra("OrderedFrom", AndroidSongApp.SingerOrdered);
+                songsIntent.putExtra("OrderedFrom", Constants.SingerOrdered);
                 songsIntent.putExtra("SongsListActivityTitle", songsListActivityTitle);
                 songsIntent.putExtra("SingerParcelable", singer);
                 startActivity(songsIntent);
@@ -129,12 +138,12 @@ public class SingerListActivity extends AppCompatActivity {
         });
 
         singersListEmptyTextView = findViewById(R.id.singersListEmptyTextView);
-        ScreenUtil.resizeTextSize(singersListEmptyTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(singersListEmptyTextView, textFontSize, Constants.FontSize_Scale_Type);
         singersListEmptyTextView.setVisibility(View.GONE);
 
         float smallButtonFontSize = textFontSize * 0.7f;
         final Button firstPageButton = findViewById(R.id.firstPageButton);
-        ScreenUtil.resizeTextSize(firstPageButton, smallButtonFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(firstPageButton, smallButtonFontSize, Constants.FontSize_Scale_Type);
         firstPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,7 +152,7 @@ public class SingerListActivity extends AppCompatActivity {
         });
 
         final Button previousPageButton = findViewById(R.id.previousPageButton);
-        ScreenUtil.resizeTextSize(previousPageButton, smallButtonFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(previousPageButton, smallButtonFontSize, Constants.FontSize_Scale_Type);
         previousPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,7 +161,7 @@ public class SingerListActivity extends AppCompatActivity {
         });
 
         final Button nextPageButton = findViewById(R.id.nextPageButton);
-        ScreenUtil.resizeTextSize(nextPageButton, smallButtonFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(nextPageButton, smallButtonFontSize, Constants.FontSize_Scale_Type);
         nextPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,7 +170,7 @@ public class SingerListActivity extends AppCompatActivity {
         });
 
         final Button lastPageButton = findViewById(R.id.lastPageButton);
-        ScreenUtil.resizeTextSize(lastPageButton, smallButtonFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(lastPageButton, smallButtonFontSize, Constants.FontSize_Scale_Type);
         lastPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +179,7 @@ public class SingerListActivity extends AppCompatActivity {
         });
 
         final Button singersListReturnButton = findViewById(R.id.singersListReturnButton);
-        ScreenUtil.resizeTextSize(singersListReturnButton, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(singersListReturnButton, textFontSize, Constants.FontSize_Scale_Type);
         singersListReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,19 +187,24 @@ public class SingerListActivity extends AppCompatActivity {
             }
         });
 
-        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
-        accessSingersAsyncTask.execute();
+        retrieveSingerList();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void retrieveSingerList() {
+        Log.d(TAG, "retrieveSingerList.filterString = " + filterString);
+        if (loadingDialog == null) {
+            loadingDialog = AlertDialogFragment.newInstance(loadingString,
+                    Constants.FontSize_Scale_Type,
+                    textFontSize, Color.RED, 0, 0, true);
+            loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
+        }
+        if (filterString != null && !filterString.isEmpty()) {
+            getSingersBySingerType(singerType, pageSize, pageNo, filterString);
+        } else {
+            getSingersBySingerType(singerType, pageSize, pageNo);
+        }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -202,13 +216,13 @@ public class SingerListActivity extends AppCompatActivity {
     }
 
     private void returnToPrevious() {
+        Log.d(TAG, "returnToPrevious");
         finish();
     }
 
     private void firstPage() {
         pageNo = 1;
-        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
-        accessSingersAsyncTask.execute();
+        retrieveSingerList();
     }
 
     private void previousPage() {
@@ -216,8 +230,7 @@ public class SingerListActivity extends AppCompatActivity {
         if (pageNo < 1) {
             pageNo = 1;
         }
-        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
-        accessSingersAsyncTask.execute();
+        retrieveSingerList();
     }
 
     private void nextPage() {
@@ -225,14 +238,57 @@ public class SingerListActivity extends AppCompatActivity {
         if (pageNo > totalPages) {
             pageNo = totalPages;
         }
-        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
-        accessSingersAsyncTask.execute();
+        retrieveSingerList();
     }
 
     private void lastPage() {
         pageNo = -1;    // represent last page
-        AccessSingersAsyncTask accessSingersAsyncTask = new AccessSingersAsyncTask();
-        accessSingersAsyncTask.execute();
+        retrieveSingerList();
+    }
+
+    @Override
+    public void onResponse(Call<SingerList> call, Response<SingerList> response) {
+        if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
+        loadingDialog = null;
+        Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
+        singerList = response.body();
+        if (!response.isSuccessful() || singerList == null) {
+            singerList = new SingerList();
+            singersListEmptyTextView.setText(failedMessage);
+            singersListEmptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            pageNo = singerList.getPageNo();         // get the back value from called function
+            pageSize = singerList.getPageSize();     // get the back value from called function
+            totalPages = singerList.getTotalPages(); // get the back value from called function
+            if (singerList.getSingers().size() == 0) {
+                singersListEmptyTextView.setText(noResultString);
+                singersListEmptyTextView.setVisibility(View.VISIBLE);
+            } else {
+                singersListEmptyTextView.setVisibility(View.GONE);
+            }
+        }
+        mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item , singerList.getSingers());
+        singersListView.setAdapter(mMyListAdapter);
+        Log.d(TAG, "onResponse.response.isSearchEditTextChanged = " + isSearchEditTextChanged);
+        if (isSearchEditTextChanged) {
+            // searchEditText.setFocusable(true);              // needed for requestFocus()
+            // searchEditText.setFocusableInTouchMode(true);   // needed for requestFocus()
+            // searchEditText.requestFocus();  // needed for the next two statements
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            // imm.showSoftInput(null, InputMethodManager.SHOW_IMPLICIT);
+            imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
+            isSearchEditTextChanged = false;
+        }
+    }
+
+    @Override
+    public void onFailure(Call call, Throwable t) {
+        Log.d(TAG, "onFailure." + t.toString());
+        if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
+        loadingDialog = null;
+        singerList = new SingerList();
+        singersListEmptyTextView.setText(failedMessage);
+        singersListEmptyTextView.setVisibility(View.VISIBLE);
     }
 
     private class MyListAdapter extends ArrayAdapter {
@@ -269,98 +325,18 @@ public class SingerListActivity extends AppCompatActivity {
             View view = getLayoutInflater().inflate(layoutId, parent, false);
 
             positionNoTextView = view.findViewById(R.id.singerItem_Layout_positionNoTextView);
-            ScreenUtil.resizeTextSize(positionNoTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+            ScreenUtil.resizeTextSize(positionNoTextView, textFontSize, Constants.FontSize_Scale_Type);
             positionNoTextView.setText(String.valueOf(position));
 
             singerNoTextView = view.findViewById(R.id.singerNoTextView);
-            ScreenUtil.resizeTextSize(singerNoTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+            ScreenUtil.resizeTextSize(singerNoTextView, textFontSize, Constants.FontSize_Scale_Type);
             singerNoTextView.setText(singers.get(position).getSingNo());
 
             singerNaTextView = view.findViewById(R.id.singerNaTextView);
-            ScreenUtil.resizeTextSize(singerNaTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+            ScreenUtil.resizeTextSize(singerNaTextView, textFontSize, Constants.FontSize_Scale_Type);
             singerNaTextView.setText(singers.get(position).getSingNa());
 
             return view;
-        }
-    }
-
-    private class AccessSingersAsyncTask extends AsyncTask<Void, Void, Void> {
-
-        private final String TAG = new String("AccessSingersAsyncTask");
-        private final String failedMessage = getApplicationContext().getString(R.string.failedMessage);
-        private final String noResultString = getApplicationContext().getString(R.string.noResultString);
-        private final String loadingString = getApplicationContext().getString(R.string.loadingString);
-        private AlertDialogFragment loadingDialog;
-
-        public AccessSingersAsyncTask() {
-
-            loadingDialog = AlertDialogFragment.newInstance(loadingString, AndroidSongApp.FontSize_Scale_Type, textFontSize, Color.RED, 0, 0, true);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            Log.i(TAG, "doInBackground() started.");
-
-            // implement Retrofit to get results synchronously
-            singerList = RestApi.getSingersBySingerType(singerType, pageSize, pageNo, filterString);
-
-            Log.i(TAG, "doInBackground() finished.");
-
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.i(TAG, "onPostExecute() started.");
-
-            loadingDialog.dismissAllowingStateLoss();
-
-            if (singerList == null) {
-                // failed
-                singerList = new SingerList();
-                singerList.setPageNo(pageNo);
-                singerList.setPageSize(pageSize);
-                singerList.setTotalRecords(0); // temporary
-                singerList.setTotalPages(0);   // temporary
-                totalPages = 0;
-
-                singersListEmptyTextView.setText(failedMessage);
-                singersListEmptyTextView.setVisibility(View.VISIBLE);
-            } else {
-                // successfully
-                pageNo = singerList.getPageNo();      // get the back value from called function
-                pageSize = singerList.getPageSize();    // get the back value from called function
-                totalPages = singerList.getTotalPages();
-
-                if (singerList.getSingers().size() == 0) {
-                    singersListEmptyTextView.setText(noResultString);
-                    singersListEmptyTextView.setVisibility(View.VISIBLE);
-                } else {
-                    singersListEmptyTextView.setVisibility(View.GONE);
-                }
-            }
-            mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item , singerList.getSingers());
-            singersListView.setAdapter(mMyListAdapter);
-
-            if (isSearchEditTextChanged) {
-                // searchEditText.setFocusable(true);              // needed for requestFocus()
-                // searchEditText.setFocusableInTouchMode(true);   // needed for requestFocus()
-                // searchEditText.requestFocus();  // needed for the next two statements
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(null, InputMethodManager.SHOW_IMPLICIT);
-                isSearchEditTextChanged = false;
-            }
         }
     }
 }

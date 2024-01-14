@@ -1,47 +1,29 @@
 package com.smile.androidsong;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.smile.model.Computer;
-
-import java.util.List;
-
 
 public class OrderOneSong extends AppCompatActivity {
 
-    private Computer computerData=null;
-    private List<Computer> computers=null;
-
-    private String song_no = new String("");
-    private String song_na = new String("");
-    private String sing_na  = new String("");
-    private String lang_na  = new String("");
-
-    private String queryCondition = new String("");
-    private String message = new String("");
+    private static final String TAG = "OrderOneSong";
+    private final Computer computerData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_one_song);
 
-        /*
-        computerTable = new ComputerTable();
-        if (computerTable.getConnectionYN() == -1) {
-            message = "Failed to connect to computer table with JDBC !!";
-            return;
-        }
-        */
-
         Bundle extras = getIntent().getExtras();
-        if (extras==null) {
+        String song_no, song_na, sing_na, lang_na;
+        if (extras == null) {
             return;
         } else {
             song_no = extras.getString("song_no").trim();
@@ -54,36 +36,33 @@ public class OrderOneSong extends AppCompatActivity {
             return;
         }
 
-        TextView songNameView = (TextView) findViewById(R.id.songName);
+        TextView songNameView = findViewById(R.id.songName);
         songNameView.setText(song_na);
-        TextView songNoView = (TextView) findViewById(R.id.songNo);
+        TextView songNoView = findViewById(R.id.songNo);
         songNoView.setText(song_no);
-        TextView singerNameView = (TextView) findViewById(R.id.singerName);
+        TextView singerNameView = findViewById(R.id.singerName);
         singerNameView.setText(sing_na);
-        TextView languageNameView = (TextView) findViewById(R.id.languageName);
+        TextView languageNameView = findViewById(R.id.languageName);
         languageNameView.setText(lang_na);
 
-        Button SubmitButton = (Button) findViewById(R.id.SubmitButton);
+        Button SubmitButton = findViewById(R.id.SubmitButton);
         SubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText editText = (EditText) findViewById(R.id.inputComputerId);
+                Log.d(TAG, "SubmitButton.onClick() = " + computerData.getComputer_id());
+                final EditText editText = findViewById(R.id.inputComputerId);
                 String computerID = editText.getText().toString().trim();
-                if (computerID.length()>=5) {
-                    computerID = computerID.substring(0, Math.min(5, computerID.length()));
-                    // System.out.println("computer id="+computerID);
-                    // computerTable.updateSongNoOfComputerTable(computerID, song_no);
-                    // computerData = computerTable.getCurrentRecord();
-                    System.out.println(computerData.getComputer_id());
-                    System.out.println(computerData.getBranch_id());
-                    System.out.println(computerData.getRoom_no());
-                    System.out.println(computerData.getSong_no());
+                if (computerID.length() >= 5) {
+                    Log.d(TAG, "computerData.getComputer_id() = " + computerData.getComputer_id());
+                    Log.d(TAG, "computerData.getBranch_id() = " + computerData.getBranch_id());
+                    Log.d(TAG, "computerData.getRoom_no() = " + computerData.getRoom_no());
+                    Log.d(TAG, "computerData.getSong_no() = " + computerData.getSong_no());
                 }
                 finish();
             }
         });
 
-        Button CancelButton = (Button) findViewById(R.id.CancelButton);
+        Button CancelButton = findViewById(R.id.CancelButton);
         CancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

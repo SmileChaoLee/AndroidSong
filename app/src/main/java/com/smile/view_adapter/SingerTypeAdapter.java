@@ -13,9 +13,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.smile.androidsong.AndroidSongApp;
 import com.smile.androidsong.R;
 import com.smile.androidsong.SingerListActivity;
+import com.smile.model.Constants;
 import com.smile.model.SingerType;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
@@ -39,13 +39,13 @@ public class SingerTypeAdapter extends RecyclerView.Adapter<SingerTypeAdapter.My
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             positionNoTextView = itemView.findViewById(R.id.singerTypeItem_Layout_positionNoTextView);
-            ScreenUtil.resizeTextSize(positionNoTextView, mTextFontSize, AndroidSongApp.FontSize_Scale_Type);
+            ScreenUtil.resizeTextSize(positionNoTextView, mTextFontSize, Constants.FontSize_Scale_Type);
 
             singerAreaNaTextView = itemView.findViewById(R.id.singerAreaNaTextView);
-            ScreenUtil.resizeTextSize(singerAreaNaTextView, mTextFontSize, AndroidSongApp.FontSize_Scale_Type);
+            ScreenUtil.resizeTextSize(singerAreaNaTextView, mTextFontSize, Constants.FontSize_Scale_Type);
 
             singerSexTextView = itemView.findViewById(R.id.singerSexTextView);
-            ScreenUtil.resizeTextSize(singerSexTextView, mTextFontSize, AndroidSongApp.FontSize_Scale_Type);
+            ScreenUtil.resizeTextSize(singerSexTextView, mTextFontSize, Constants.FontSize_Scale_Type);
         }
     }
 
@@ -87,7 +87,7 @@ public class SingerTypeAdapter extends RecyclerView.Adapter<SingerTypeAdapter.My
             public void onClick(View v) {
                 String singersListActivityTitle = singerType.getAreaNa();
                 ScreenUtil.showToast(mActivity, singersListActivityTitle,
-                        mTextFontSize, AndroidSongApp.FontSize_Scale_Type, Toast.LENGTH_SHORT);
+                        mTextFontSize, Constants.FontSize_Scale_Type, Toast.LENGTH_SHORT);
                 Intent singersIntent = new Intent(mActivity, SingerListActivity.class);
                 singersIntent.putExtra("SingersListActivityTitle", singersListActivityTitle);
                 singersIntent.putExtra("SingerTypeParcelable", singerType);

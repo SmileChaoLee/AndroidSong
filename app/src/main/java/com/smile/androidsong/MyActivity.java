@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.smile.model.Constants;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
 public class MyActivity extends AppCompatActivity {
@@ -19,8 +20,8 @@ public class MyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, AndroidSongApp.FontSize_Scale_Type, null);
-        textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, AndroidSongApp.FontSize_Scale_Type, 0.0f);
+        float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, Constants.FontSize_Scale_Type, null);
+        textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, Constants.FontSize_Scale_Type, 0.0f);
 
         super.onCreate(savedInstanceState);
 
@@ -29,10 +30,10 @@ public class MyActivity extends AppCompatActivity {
         // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         final TextView mainMenuTextView = findViewById(R.id.mainMenuTextView);
-        ScreenUtil.resizeTextSize(mainMenuTextView, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(mainMenuTextView, textFontSize, Constants.FontSize_Scale_Type);
 
         final Button singerOrderButton = findViewById(R.id.singerOrderButton);
-        ScreenUtil.resizeTextSize(singerOrderButton, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(singerOrderButton, textFontSize, Constants.FontSize_Scale_Type);
         singerOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,29 +43,29 @@ public class MyActivity extends AppCompatActivity {
         });
 
         final Button newSongOrderButton = findViewById(R.id.newSongOrderButton);
-        ScreenUtil.resizeTextSize(newSongOrderButton, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(newSongOrderButton, textFontSize, Constants.FontSize_Scale_Type);
         newSongOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent languagesIntent = new Intent(MyActivity.this, LanguageListActivity.class);
-                languagesIntent.putExtra("OrderedFrom", AndroidSongApp.NewSongOrdered);
+                languagesIntent.putExtra("OrderedFrom", Constants.NewSongOrdered);
                 startActivity(languagesIntent);
             }
         });
 
         final Button hotSongOrderButton = findViewById(R.id.hotSongOrderButton);
-        ScreenUtil.resizeTextSize(hotSongOrderButton, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(hotSongOrderButton, textFontSize, Constants.FontSize_Scale_Type);
         hotSongOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent languagesIntent = new Intent(MyActivity.this, LanguageListActivity.class);
-                languagesIntent.putExtra("OrderedFrom", AndroidSongApp.HotSongOrdered);
+                languagesIntent.putExtra("OrderedFrom", Constants.HotSongOrdered);
                 startActivity(languagesIntent);
             }
         });
 
         final Button songLanguageOrderButton = findViewById(R.id.songLanguageOrderButton);
-        ScreenUtil.resizeTextSize(songLanguageOrderButton, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(songLanguageOrderButton, textFontSize, Constants.FontSize_Scale_Type);
         songLanguageOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +75,7 @@ public class MyActivity extends AppCompatActivity {
         });
 
         final Button exitProgramButton = findViewById(R.id.exitProgramButton);
-        ScreenUtil.resizeTextSize(exitProgramButton, textFontSize, AndroidSongApp.FontSize_Scale_Type);
+        ScreenUtil.resizeTextSize(exitProgramButton, textFontSize, Constants.FontSize_Scale_Type);
         exitProgramButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

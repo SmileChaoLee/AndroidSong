@@ -6,25 +6,26 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.smile.model.*;
 import com.smile.retrofit_package.RestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
+import com.smile.view_adapter.SongListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,15 +35,14 @@ import retrofit2.Response;
 
 public class SongListActivity extends AppCompatActivity implements RestApi<SongList> {
 
-    private static final String TAG = "SongsListActivity";
-    private String songsListActivityTitle;
+    private static final String TAG = "SongListActivity";
     private float textFontSize;
     private EditText searchEditText;
     private boolean isSearchEditTextChanged;
     private String filterString;
-    private ListView songsListView;
     private TextView songsListEmptyTextView;
-    private MyListAdapter mMyListAdapter;
+    private RecyclerView mRecyclerView;
+    private SongListAdapter myViewAdapter;
     private SongList songList = null;
     private Singer singer;
     private Language language;
@@ -69,28 +69,28 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
         textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, Constants.FontSize_Scale_Type, 0.0f);
 
         orderedFrom = 0;    // default value
-        String songsListTitle = getString(R.string.songsListString);
-        songsListActivityTitle = "";
+        String songListTitle = getString(R.string.songsListString);
+        String activityTitle = "";
         numOfWords = 0;
         Bundle extras = getIntent().getExtras();
         if (extras != null ) {
-            orderedFrom = extras.getInt("OrderedFrom", 0);
-            songsListActivityTitle = extras.getString("SongsListActivityTitle", songsListActivityTitle).trim();
+            orderedFrom = extras.getInt(Constants.OrderedFrom, 0);
+            activityTitle = extras.getString(Constants.SongListActivityTitle, "").trim();
             switch (orderedFrom) {
                 case Constants.SingerOrdered -> {
-                    singer = extras.getParcelable("SingerParcelable");
+                    singer = extras.getParcelable(Constants.SingerParcelable);
                     objectPassed = singer;
                 }
                 case Constants.NewSongOrdered -> objectPassed = language;
                 case Constants.NewSongLanguageOrdered, Constants.HotSongLanguageOrdered -> {
-                    language = extras.getParcelable("LanguageParcelable");
+                    language = extras.getParcelable(Constants.LanguageParcelable);
                     objectPassed = language;
                 }
                 case Constants.HotSongOrdered -> objectPassed = null;
                 case Constants.LanguageOrdered, Constants.LanguageWordsOrdered -> {
-                    language = extras.getParcelable("LanguageParcelable");
+                    language = extras.getParcelable(Constants.LanguageParcelable);
                     objectPassed = language;
-                    numOfWords = extras.getInt("NumOfWords");
+                    numOfWords = extras.getInt(Constants.NumOfWords);
                 }
             }
         }
@@ -98,11 +98,11 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_songs_list);
+        setContentView(R.layout.activity_song_list);
 
         TextView songsListMenuTextView = findViewById(R.id.songsListMenuTextView);
         ScreenUtil.resizeTextSize(songsListMenuTextView, textFontSize, Constants.FontSize_Scale_Type);
-        songsListMenuTextView.setText(songsListActivityTitle + " " + songsListTitle);
+        songsListMenuTextView.setText(activityTitle + " " + songListTitle);
 
         filterString = "";
         searchEditText = findViewById(R.id.songSearchEditText);
@@ -138,14 +138,7 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
             }
         });
 
-        songsListView = findViewById(R.id.songsListView);
-        songsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Song song = songList.getSongs().get(i);
-                ScreenUtil.showToast(SongListActivity.this, song.getSongNa(), textFontSize, Constants.FontSize_Scale_Type, Toast.LENGTH_SHORT);
-            }
-        });
+        mRecyclerView = findViewById(R.id.songListRecyclerView);
 
         songsListEmptyTextView = findViewById(R.id.songsListEmptyTextView);
         ScreenUtil.resizeTextSize(songsListEmptyTextView, textFontSize, Constants.FontSize_Scale_Type);
@@ -314,6 +307,7 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
             pageNo = songList.getPageNo();         // get the back value from called function
             pageSize = songList.getPageSize();     // get the back value from called function
             totalPages = songList.getTotalPages(); // get the back value from called function
+            Log.d(TAG, "onResponse.response.songList.getSongs().size() = " + songList.getSongs().size());
             if (songList.getSongs().size() == 0) {
                 songsListEmptyTextView.setText(noResultString);
                 songsListEmptyTextView.setVisibility(View.VISIBLE);
@@ -321,8 +315,11 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
                 songsListEmptyTextView.setVisibility(View.GONE);
             }
         }
-        mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.songs_list_item , songList.getSongs());
-        songsListView.setAdapter(mMyListAdapter);
+        myViewAdapter = new SongListAdapter(SongListActivity.this,
+                songList.getSongs(), textFontSize);
+        mRecyclerView.setAdapter(myViewAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
         Log.d(TAG, "onResponse.response.isSearchEditTextChanged = " + isSearchEditTextChanged);
         if (isSearchEditTextChanged) {
             // searchEditText.setFocusable(true);              // needed for requestFocus()
@@ -343,71 +340,5 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
         songList = new SongList();
         songsListEmptyTextView.setText(failedMessage);
         songsListEmptyTextView.setVisibility(View.VISIBLE);
-    }
-
-    private class MyListAdapter extends ArrayAdapter {
-
-        int layoutId;
-        TextView positionNoTextView;
-        TextView songNoTextView;
-        TextView songNaTextView;
-        TextView languageNameTextView;
-        TextView singer1NameTextView;
-        TextView singer2NameTextView;
-        ArrayList<Song> songs;
-        final float songNaFontSize = textFontSize * 0.8f;
-        final float smallFontSize = textFontSize * 0.6f;
-
-        @SuppressWarnings("unchecked")
-        public MyListAdapter(@NonNull Context context, int resource, @NonNull List objects) {
-            super(context, resource, objects);
-            layoutId = resource;
-            songs = (ArrayList<Song>)objects;
-        }
-
-        @Nullable
-        @Override
-        public Object getItem(int position) {
-            return super.getItem(position);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public int getPosition(@Nullable Object item) {
-            return super.getPosition(item);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-            View view = getLayoutInflater().inflate(layoutId, parent, false);
-
-            positionNoTextView = view.findViewById(R.id.songItem_Layout_positionNoTextView);
-            ScreenUtil.resizeTextSize(positionNoTextView, songNaFontSize, Constants.FontSize_Scale_Type);
-            positionNoTextView.setText(String.valueOf(position));
-
-            songNaTextView = view.findViewById(R.id.songNaTextView);
-            ScreenUtil.resizeTextSize(songNaTextView, songNaFontSize, Constants.FontSize_Scale_Type);
-            songNaTextView.setText(songs.get(position).getSongNa());
-
-            songNoTextView = view.findViewById(R.id.songNoTextView);
-            ScreenUtil.resizeTextSize(songNoTextView, smallFontSize, Constants.FontSize_Scale_Type);
-            songNoTextView.setText(songs.get(position).getSongNo());
-
-            languageNameTextView = view.findViewById(R.id.languageNameTextView);
-            ScreenUtil.resizeTextSize(languageNameTextView, smallFontSize, Constants.FontSize_Scale_Type);
-            languageNameTextView.setText(songs.get(position).getLanguageNa());
-
-            singer1NameTextView = view.findViewById(R.id.singer1NameTextView);
-            ScreenUtil.resizeTextSize(singer1NameTextView, smallFontSize, Constants.FontSize_Scale_Type);
-            singer1NameTextView.setText(songs.get(position).getSinger1Na());
-
-            singer2NameTextView = view.findViewById(R.id.singer2NameTextView);
-            ScreenUtil.resizeTextSize(singer2NameTextView, smallFontSize, Constants.FontSize_Scale_Type);
-            singer2NameTextView.setText(songs.get(position).getSinger2Na());
-
-            return view;
-        }
     }
 }

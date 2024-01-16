@@ -8,63 +8,60 @@
     android:orientation="vertical"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".SongListActivity">
+    tools:context=".SingerListActivity">
 
     <TextView
-        android:id="@+id/songsListMenuTextView"
+        android:id="@+id/singersListMenuTextView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:textStyle="bold"
         android:textColor="@color/darkOrange"
-        android:text="@string/songsListString"
+        android:text="@string/singersListString"
         android:gravity="center"
         app:layout_constraintHeight_percent="0.1"
         app:layout_constraintTop_toTopOf="parent">
     </TextView>
 
     <LinearLayout
-        android:id="@+id/songSearchLayout"
+        android:id="@+id/singerSearchLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/search_bar"
         android:gravity="center"
         app:layout_constraintHeight_percent="0.1"
-        app:layout_constraintTop_toBottomOf="@+id/songsListMenuTextView" >
+        app:layout_constraintTop_toBottomOf="@+id/singersListMenuTextView" >
 
         <EditText
-            android:id="@+id/songSearchEditText"
+            android:id="@+id/singerSearchEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:text=""
-            android:hint="@string/songNameString"
+            android:hint="@string/singerNameString"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="80dp"
-            android:inputType="textMultiLine"
             android:gravity="center_vertical|left">
         </EditText>
 
     </LinearLayout>
 
-
     <FrameLayout
-        android:id="@+id/songsListView_Layout"
+        android:id="@+id/singersListView_Layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/darkYellow"
         app:layout_constraintHeight_percent="0.6"
-        app:layout_constraintTop_toBottomOf="@+id/songSearchLayout" >
+        app:layout_constraintTop_toBottomOf="@+id/singerSearchLayout" >
 
-        <ListView android:id="@+id/songsListView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/singerListRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay"
-            android:drawSelectorOnTop="false" >
-        </ListView>
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
 
-        <TextView android:id="@+id/songsListEmptyTextView"
+        <TextView android:id="@+id/singerListEmptyTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textStyle="bold"
@@ -80,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintHeight_percent="0.1"
-        app:layout_constraintBottom_toTopOf="@id/songsListReturnButton"
+        app:layout_constraintBottom_toTopOf="@id/singersListReturnButton"
         android:weightSum="4">
 
         <Button
@@ -134,7 +131,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/songsListReturnButton"
+        android:id="@+id/singersListReturnButton"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:text="@string/returnToPrevious"

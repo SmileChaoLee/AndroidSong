@@ -29,12 +29,11 @@
         app:layout_constraintHeight_percent="0.8"
         app:layout_constraintTop_toBottomOf="@+id/wordsListMenuTextView" >
 
-        <ListView android:id="@+id/wordsListView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/wordListRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay"
-            android:drawSelectorOnTop="false" >
-        </ListView>
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
 

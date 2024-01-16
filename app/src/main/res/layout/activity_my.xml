@@ -59,7 +59,7 @@
             android:layout_weight="1">
         </Button>
         <Button
-            android:id="@+id/songLanguageOrderButton"
+            android:id="@+id/languageOrderButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/languageOrderString"

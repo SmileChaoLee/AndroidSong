@@ -1,37 +1,29 @@
 package com.smile.androidsong;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.smile.model.Constants;
-import com.smile.model.Singer;
 import com.smile.model.SingerType;
 import com.smile.model.SingerList;
 import com.smile.retrofit_package.RestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.smile.view_adapter.SingerListAdapter;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -39,14 +31,14 @@ import retrofit2.Response;
 public class SingerListActivity extends AppCompatActivity
         implements RestApi<SingerList> {
 
-    private static final String TAG = "SingersListActivity";
+    private static final String TAG = "SingerListActivity";
     private float textFontSize;
     private EditText searchEditText;
     private boolean isSearchEditTextChanged;
     private String filterString;
-    private ListView singersListView;
-    private TextView singersListEmptyTextView;
-    private MyListAdapter mMyListAdapter;
+    private TextView singerListEmptyTextView;
+    private RecyclerView mRecyclerView;
+    private SingerListAdapter myViewAdapter;
     private SingerList singerList = null;
     private SingerType singerType;
 
@@ -68,21 +60,21 @@ public class SingerListActivity extends AppCompatActivity
         float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, Constants.FontSize_Scale_Type, null);
         textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, Constants.FontSize_Scale_Type, 0.0f);
 
-        String singersListTitle = getString(R.string.singersListString);
-        String singersListActivityTitle = "";
+        String singerListTitle = getString(R.string.singersListString);
+        String activityTitle = "";
         Bundle extras = getIntent().getExtras();
         if (extras != null ) {
-            singersListActivityTitle = extras.getString("SingersListActivityTitle").trim();
-            singerType = extras.getParcelable("SingerTypeParcelable");
+            activityTitle = extras.getString(Constants.SingerListActivityTitle, "").trim();
+            singerType = extras.getParcelable(Constants.SingerTypeParcelable);
         }
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_singers_list);
+        setContentView(R.layout.activity_singer_list);
 
         final TextView singersListMenuTextView = findViewById(R.id.singersListMenuTextView);
         ScreenUtil.resizeTextSize(singersListMenuTextView, textFontSize, Constants.FontSize_Scale_Type);
-        singersListMenuTextView.setText(singersListActivityTitle + " " + singersListTitle);
+        singersListMenuTextView.setText(activityTitle + " " + singerListTitle);
 
         filterString = "";
         searchEditText = findViewById(R.id.singerSearchEditText);
@@ -118,28 +110,11 @@ public class SingerListActivity extends AppCompatActivity
             }
         });
 
-        singersListView = findViewById(R.id.singersListView);
-        singersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(TAG, "singersListView.onItemClick");
-                Singer singer = singerList.getSingers().get(i);
-                String songsListActivityTitle = "";
-                if (singer != null) {
-                    songsListActivityTitle = singer.getSingNa();
-                }
-                ScreenUtil.showToast(SingerListActivity.this, songsListActivityTitle, textFontSize, Constants.FontSize_Scale_Type, Toast.LENGTH_SHORT);
-                Intent songsIntent = new Intent(SingerListActivity.this, SongListActivity.class);
-                songsIntent.putExtra("OrderedFrom", Constants.SingerOrdered);
-                songsIntent.putExtra("SongsListActivityTitle", songsListActivityTitle);
-                songsIntent.putExtra("SingerParcelable", singer);
-                startActivity(songsIntent);
-            }
-        });
+        singerListEmptyTextView = findViewById(R.id.singerListEmptyTextView);
+        ScreenUtil.resizeTextSize(singerListEmptyTextView, textFontSize, Constants.FontSize_Scale_Type);
+        singerListEmptyTextView.setVisibility(View.GONE);
 
-        singersListEmptyTextView = findViewById(R.id.singersListEmptyTextView);
-        ScreenUtil.resizeTextSize(singersListEmptyTextView, textFontSize, Constants.FontSize_Scale_Type);
-        singersListEmptyTextView.setVisibility(View.GONE);
+        mRecyclerView = findViewById(R.id.singerListRecyclerView);
 
         float smallButtonFontSize = textFontSize * 0.7f;
         final Button firstPageButton = findViewById(R.id.firstPageButton);
@@ -254,21 +229,23 @@ public class SingerListActivity extends AppCompatActivity
         singerList = response.body();
         if (!response.isSuccessful() || singerList == null) {
             singerList = new SingerList();
-            singersListEmptyTextView.setText(failedMessage);
-            singersListEmptyTextView.setVisibility(View.VISIBLE);
+            singerListEmptyTextView.setText(failedMessage);
+            singerListEmptyTextView.setVisibility(View.VISIBLE);
         } else {
             pageNo = singerList.getPageNo();         // get the back value from called function
             pageSize = singerList.getPageSize();     // get the back value from called function
             totalPages = singerList.getTotalPages(); // get the back value from called function
             if (singerList.getSingers().size() == 0) {
-                singersListEmptyTextView.setText(noResultString);
-                singersListEmptyTextView.setVisibility(View.VISIBLE);
+                singerListEmptyTextView.setText(noResultString);
+                singerListEmptyTextView.setVisibility(View.VISIBLE);
             } else {
-                singersListEmptyTextView.setVisibility(View.GONE);
+                singerListEmptyTextView.setVisibility(View.GONE);
             }
         }
-        mMyListAdapter = new MyListAdapter(getBaseContext(), R.layout.singers_list_item , singerList.getSingers());
-        singersListView.setAdapter(mMyListAdapter);
+        myViewAdapter = new SingerListAdapter(SingerListActivity.this, singerList.getSingers(), textFontSize);
+        mRecyclerView.setAdapter(myViewAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
         Log.d(TAG, "onResponse.response.isSearchEditTextChanged = " + isSearchEditTextChanged);
         if (isSearchEditTextChanged) {
             // searchEditText.setFocusable(true);              // needed for requestFocus()
@@ -287,56 +264,7 @@ public class SingerListActivity extends AppCompatActivity
         if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
         loadingDialog = null;
         singerList = new SingerList();
-        singersListEmptyTextView.setText(failedMessage);
-        singersListEmptyTextView.setVisibility(View.VISIBLE);
-    }
-
-    private class MyListAdapter extends ArrayAdapter {
-
-        int layoutId;
-        TextView positionNoTextView;
-        TextView singerNoTextView;
-        TextView singerNaTextView;
-        ArrayList<Singer> singers;
-
-        @SuppressWarnings("unchecked")
-        public MyListAdapter(@NonNull Context context, int resource, @NonNull List objects) {
-            super(context, resource, objects);
-            layoutId = resource;
-            singers = (ArrayList<Singer>)objects;
-        }
-
-        @Nullable
-        @Override
-        public Object getItem(int position) {
-            return super.getItem(position);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public int getPosition(@Nullable Object item) {
-            return super.getPosition(item);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-            View view = getLayoutInflater().inflate(layoutId, parent, false);
-
-            positionNoTextView = view.findViewById(R.id.singerItem_Layout_positionNoTextView);
-            ScreenUtil.resizeTextSize(positionNoTextView, textFontSize, Constants.FontSize_Scale_Type);
-            positionNoTextView.setText(String.valueOf(position));
-
-            singerNoTextView = view.findViewById(R.id.singerNoTextView);
-            ScreenUtil.resizeTextSize(singerNoTextView, textFontSize, Constants.FontSize_Scale_Type);
-            singerNoTextView.setText(singers.get(position).getSingNo());
-
-            singerNaTextView = view.findViewById(R.id.singerNaTextView);
-            ScreenUtil.resizeTextSize(singerNaTextView, textFontSize, Constants.FontSize_Scale_Type);
-            singerNaTextView.setText(singers.get(position).getSingNa());
-
-            return view;
-        }
+        singerListEmptyTextView.setText(failedMessage);
+        singerListEmptyTextView.setVisibility(View.VISIBLE);
     }
 }

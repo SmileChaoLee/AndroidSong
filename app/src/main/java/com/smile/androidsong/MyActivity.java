@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +21,7 @@ public class MyActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Log.d(TAG, "MyActivity");
         float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, Constants.FontSize_Scale_Type, null);
         textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, Constants.FontSize_Scale_Type, 0.0f);
 
@@ -48,7 +50,7 @@ public class MyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent languagesIntent = new Intent(MyActivity.this, LanguageListActivity.class);
-                languagesIntent.putExtra("OrderedFrom", Constants.NewSongOrdered);
+                languagesIntent.putExtra(Constants.OrderedFrom, Constants.NewSongOrdered);
                 startActivity(languagesIntent);
             }
         });
@@ -59,18 +61,18 @@ public class MyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent languagesIntent = new Intent(MyActivity.this, LanguageListActivity.class);
-                languagesIntent.putExtra("OrderedFrom", Constants.HotSongOrdered);
+                languagesIntent.putExtra(Constants.OrderedFrom, Constants.HotSongOrdered);
                 startActivity(languagesIntent);
             }
         });
 
-        final Button songLanguageOrderButton = findViewById(R.id.songLanguageOrderButton);
-        ScreenUtil.resizeTextSize(songLanguageOrderButton, textFontSize, Constants.FontSize_Scale_Type);
-        songLanguageOrderButton.setOnClickListener(new View.OnClickListener() {
+        final Button languageOrderButton = findViewById(R.id.languageOrderButton);
+        ScreenUtil.resizeTextSize(languageOrderButton, textFontSize, Constants.FontSize_Scale_Type);
+        languageOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_LanguageOrder = new Intent(MyActivity.this , LanguageListActivity.class);
-                startActivity(intent_LanguageOrder);
+                Intent intentLanguageOrder = new Intent(MyActivity.this , LanguageListActivity.class);
+                startActivity(intentLanguageOrder);
             }
         });
 

@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.smile.model.Constants;
 import com.smile.model.SingerTypeList;
 import com.smile.retrofit_package.RestApi;
-import com.smile.view_adapter.SingerTypeAdapter;
+import com.smile.view_adapter.SingerTypeListAdapter;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
@@ -24,19 +24,16 @@ import retrofit2.Response;
 
 public class SingerTypeListActivity extends AppCompatActivity implements RestApi<SingerTypeList> {
 
-    private static final String TAG = "SingerTypesListActivity";
+    private static final String TAG = "SingerTypeListActivity";
     private float textFontSize;
-    private RecyclerView singerTypesRecyclerView;
-    private TextView singerTypesListEmptyTextView;
-    private SingerTypeAdapter myViewAdapter;
+    private TextView singerTypeListEmptyTextView;
+    private RecyclerView mRecyclerView;
+    private SingerTypeListAdapter myViewAdapter;
     private SingerTypeList singerTypeList;
     private String noResultString;
     private String failedMessage;
     private String loadingString;
-    private final AlertDialogFragment loadingDialog
-            = AlertDialogFragment.newInstance(loadingString,
-            Constants.FontSize_Scale_Type,
-            textFontSize, Color.RED, 0, 0, true);
+    private AlertDialogFragment loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +47,17 @@ public class SingerTypeListActivity extends AppCompatActivity implements RestApi
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_singer_types_list);
+        setContentView(R.layout.activity_singer_type_list);
 
         final TextView singerTypesListMenuTextView = findViewById(R.id.singerTypesListMenuTextView);
         ScreenUtil.resizeTextSize(singerTypesListMenuTextView, textFontSize, Constants.FontSize_Scale_Type);
 
-        singerTypesRecyclerView = findViewById(R.id.singerTypesRecyclerView);
-        singerTypesListEmptyTextView = findViewById(R.id.singerTypesListEmptyTextView);
-        ScreenUtil.resizeTextSize(singerTypesListEmptyTextView, textFontSize, Constants.FontSize_Scale_Type);
-        singerTypesListEmptyTextView.setVisibility(View.GONE);
+        singerTypeListEmptyTextView = findViewById(R.id.singerTypeListEmptyTextView);
+        ScreenUtil.resizeTextSize(singerTypeListEmptyTextView, textFontSize, Constants.FontSize_Scale_Type);
+        singerTypeListEmptyTextView.setVisibility(View.GONE);
+
+        mRecyclerView = findViewById(R.id.singerTypeListRecyclerView);
+
         final Button singerTypesListReturnButton = findViewById(R.id.singerTypesListReturnButton);
         ScreenUtil.resizeTextSize(singerTypesListReturnButton, textFontSize, Constants.FontSize_Scale_Type);
         singerTypesListReturnButton.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +67,9 @@ public class SingerTypeListActivity extends AppCompatActivity implements RestApi
             }
         });
 
+        loadingDialog = AlertDialogFragment.newInstance(loadingString,
+                Constants.FontSize_Scale_Type,
+                textFontSize, Color.RED, 0, 0, true);
 
         loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
         getAllSingerTypes();
@@ -91,19 +93,19 @@ public class SingerTypeListActivity extends AppCompatActivity implements RestApi
         if (response.isSuccessful()) {
             singerTypeList = response.body();
             if (singerTypeList.getSingerTypes().size() == 0) {
-                singerTypesListEmptyTextView.setText(noResultString);
-                singerTypesListEmptyTextView.setVisibility(View.VISIBLE);
+                singerTypeListEmptyTextView.setText(noResultString);
+                singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
             } else {
-                singerTypesListEmptyTextView.setVisibility(View.GONE);
+                singerTypeListEmptyTextView.setVisibility(View.GONE);
             }
         } else {
             singerTypeList = new SingerTypeList();
-            singerTypesListEmptyTextView.setText("response.isSuccessful() = false.");
-            singerTypesListEmptyTextView.setVisibility(View.VISIBLE);
+            singerTypeListEmptyTextView.setText("response.isSuccessful() = false.");
+            singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
         }
-        myViewAdapter = new SingerTypeAdapter(SingerTypeListActivity.this, singerTypeList.getSingerTypes(), textFontSize);
-        singerTypesRecyclerView.setAdapter(myViewAdapter);
-        singerTypesRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        myViewAdapter = new SingerTypeListAdapter(SingerTypeListActivity.this, singerTypeList.getSingerTypes(), textFontSize);
+        mRecyclerView.setAdapter(myViewAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
     }
 
     @Override
@@ -111,7 +113,7 @@ public class SingerTypeListActivity extends AppCompatActivity implements RestApi
         Log.d(TAG, "onFailure." + t.toString());
         loadingDialog.dismissAllowingStateLoss();
         singerTypeList = new SingerTypeList();
-        singerTypesListEmptyTextView.setText(failedMessage);
-        singerTypesListEmptyTextView.setVisibility(View.VISIBLE);
+        singerTypeListEmptyTextView.setText(failedMessage);
+        singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
     }
 }

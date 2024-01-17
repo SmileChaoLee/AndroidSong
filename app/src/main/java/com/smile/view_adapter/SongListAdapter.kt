@@ -73,7 +73,6 @@ class SongListAdapter(
     // Usually involves inflating a layout from XML and returning the holder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-
         // inflate the singerType item view
         return MyViewHolder(layoutInflater.inflate(R.layout.song_list_item, parent, false))
     }
@@ -99,7 +98,6 @@ class SongListAdapter(
     }
 
     override fun getItemCount(): Int {
-        Log.d(TAG, "getItemCount.mSongs.size = ${mSongs.size}")
         return mSongs.size
     }
 

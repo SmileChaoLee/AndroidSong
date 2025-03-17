@@ -7,12 +7,14 @@ import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.TimeUnit;
 
+import dagger.Module;
+import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@Module
 public class Client {
-
     private static final String TAG = "Client";
     private static final String BASE_URL = "http://137.184.120.171/";
     // For emulator
@@ -21,6 +23,7 @@ public class Client {
     // private static final String BASE_URL = "http://192.168.0.108:5000/";
     private static Retrofit retrofit;
 
+    @Provides
     public static Retrofit getInstance() {
         Log.d(TAG, "getInstance");
         if (retrofit == null) {

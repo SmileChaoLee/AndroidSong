@@ -17,28 +17,31 @@ interface RestApi<T> : Callback<T> {
         const val TAG = "RestApi"
     }
 
-    private val callback : Callback<T>
+    val callback : Callback<T>
         get() {
             return this
         }
     // get Retrofit client and Retrofit Api
-    private val apiInterface : ApiInterface
+    val apiInterface : ApiInterface
         get() {
             return Client.getInstance().create(ApiInterface::class.java)
         }
 
+    @Suppress("UNCHECKED_CAST")
     fun getAllSingerTypes() {
         Log.d(TAG, "getAllSingerTypes")
         // get Call from Retrofit Api
         apiInterface.allSingerTypes.enqueue(callback as Callback<SingerTypeList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getAllLanguages() {
         Log.d(TAG, "getAllLanguages")
         // get Call from Retrofit Api
         apiInterface.allLanguages.enqueue(callback as Callback<LanguageList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getSongsBySinger(singer: Singer, pageSize: Int, pageNo: Int) {
         val singerId = singer.id
         val orderBy = "SongNa" // order by song's name
@@ -46,6 +49,7 @@ interface RestApi<T> : Callback<T> {
             .enqueue(callback as Callback<SongList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getSongsBySinger(singer: Singer, pageSize: Int, pageNo: Int, filter: String) {
         val singerId = singer.id
         val orderBy = "SongNa" // order by song's name
@@ -53,6 +57,7 @@ interface RestApi<T> : Callback<T> {
             .enqueue(callback as Callback<SongList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getNewSongsByLanguage(language: Language, pageSize: Int, pageNo: Int) {
         Log.d(TAG, "getNewSongsByLanguage.no filter")
         val languageId = language.id
@@ -61,6 +66,7 @@ interface RestApi<T> : Callback<T> {
             .enqueue(callback as Callback<SongList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getNewSongsByLanguage(language: Language, pageSize: Int, pageNo: Int, filter: String) {
         Log.d(TAG, "getNewSongsByLanguage.filter not empty")
         val languageId = language.id
@@ -69,6 +75,7 @@ interface RestApi<T> : Callback<T> {
             .enqueue(callback as Callback<SongList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getHotSongsByLanguage(language: Language, pageSize: Int, pageNo: Int) {
         Log.d(TAG, "getHotSongsByLanguage.no filter")
         val languageId = language.id
@@ -77,6 +84,7 @@ interface RestApi<T> : Callback<T> {
             .enqueue(callback as Callback<SongList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getHotSongsByLanguage(language: Language, pageSize: Int, pageNo: Int, filter: String) {
         Log.d(TAG, "getHotSongsByLanguage.filter not empty")
         val languageId = language.id
@@ -89,6 +97,7 @@ interface RestApi<T> : Callback<T> {
             .enqueue(callback as Callback<SongList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getSongsByLanguage(language : Language, pageSize : Int, pageNo : Int) {
         Log.d(TAG, "getSongsByLanguage.no filter")
         val languageId = language.id
@@ -99,6 +108,7 @@ interface RestApi<T> : Callback<T> {
             .enqueue(callback as Callback<SongList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getSongsByLanguage(language : Language, pageSize : Int, pageNo : Int, filter: String) {
         // filter cannot be empty
         Log.d(TAG, "getSongsByLanguage.filter not empty")
@@ -115,6 +125,7 @@ interface RestApi<T> : Callback<T> {
         ).enqueue(callback as Callback<SongList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getSongsByLanguageNumOfWords(language: Language, numOfWords: Int, pageSize: Int
                                        , pageNo: Int) {
         Log.d(TAG, "getSongsByLanguageNumOfWords.no filter")
@@ -129,6 +140,7 @@ interface RestApi<T> : Callback<T> {
             orderBy).enqueue(callback as Callback<SongList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getSongsByLanguageNumOfWords(language: Language, numOfWords: Int, pageSize: Int
                                      , pageNo: Int, filter: String) {
         Log.d(TAG, "getSongsByLanguageNumOfWords.filter not empty")
@@ -144,6 +156,7 @@ interface RestApi<T> : Callback<T> {
             filter).enqueue(callback as Callback<SongList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getSingersBySingerType(singerType: SingerType, pageSize: Int, pageNo: Int) {
         Log.d(TAG, "getSingersBySingerType.no filter")
         val areaId = singerType.id
@@ -153,6 +166,7 @@ interface RestApi<T> : Callback<T> {
             pageNo, orderBy).enqueue(callback as Callback<SingerList>)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getSingersBySingerType(singerType: SingerType, pageSize: Int, pageNo: Int, filter: String) {
         Log.d(TAG, "getSingersBySingerType.filter not empty")
         val areaId = singerType.id

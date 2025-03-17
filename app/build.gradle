@@ -1,8 +1,9 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
-    id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -14,11 +15,11 @@ android {
             storePassword '86637971'
         }
     }
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         applicationId "com.smile.androidsong"
         minSdk 23
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.1"
         signingConfig signingConfigs.config
@@ -42,7 +43,14 @@ android {
         // for default fun of Kotlin
         freeCompilerArgs = ['-Xjvm-default=all']
     }
-
+    kotlin {
+        jvmToolchain(17)
+    }
+    /*
+    kapt {
+        generateStubs = true
+    }
+    */
     namespace 'com.smile.androidsong'
 }
 
@@ -54,14 +62,20 @@ allprojects {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'com.google.firebase:firebase-core:21.1.1'
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.6.4'  // support api under 21
     implementation 'com.squareup.retrofit2:converter-gson:2.6.4'
 
     implementation files('libs/smilelibraries-release.aar')
+
+    implementation 'com.google.dagger:dagger:2.55'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.55'
+    kapt 'com.google.dagger:dagger-android-processor:2.55'
+    kapt 'com.google.dagger:dagger-compiler:2.55'
+    // kapt 'androidx.room:room-compiler:2.6.1'
 }

@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.smile.model.Constants;
+import com.smile.androidsong.model.Constants;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
 public class MyActivity extends AppCompatActivity {

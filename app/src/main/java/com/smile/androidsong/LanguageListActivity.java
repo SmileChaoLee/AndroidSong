@@ -11,11 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.smile.model.*;
-import com.smile.retrofit_package.RestApi;
+import com.smile.androidsong.model.*;
+import com.smile.androidsong.retrofit_package.RestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
-import com.smile.view_adapter.LanguageListAdapter;
+import com.smile.androidsong.view_adapter.LanguageListAdapter;
 
 import retrofit2.Call;
 import retrofit2.Response;

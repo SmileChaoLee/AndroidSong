@@ -3,8 +3,7 @@ package com.smile.androidsong;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,22 +12,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.smile.model.*;
-import com.smile.retrofit_package.RestApi;
+import com.smile.androidsong.model.*;
+import com.smile.androidsong.retrofit_package.RestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
-import com.smile.view_adapter.SongListAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.smile.androidsong.view_adapter.SongListAdapter;
 
 import retrofit2.Call;
 import retrofit2.Response;

@@ -1,4 +1,4 @@
-package com.smile.view_adapter
+package com.smile.androidsong.view_adapter
 
 import android.app.Activity
 import android.util.Log
@@ -10,10 +10,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.smile.androidsong.R
-import com.smile.model.Constants
-import com.smile.model.Song
+import com.smile.androidsong.model.Constants
+import com.smile.androidsong.model.Song
 import com.smile.smilelibraries.utilities.ScreenUtil
-import com.smile.view_adapter.SongListAdapter.MyViewHolder
+import com.smile.androidsong.view_adapter.SongListAdapter.MyViewHolder
 
 class SongListAdapter(
     private val mActivity: Activity,

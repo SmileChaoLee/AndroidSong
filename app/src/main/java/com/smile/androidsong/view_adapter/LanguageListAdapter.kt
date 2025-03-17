@@ -1,4 +1,4 @@
-package com.smile.view_adapter
+package com.smile.androidsong.view_adapter
 
 import android.app.Activity
 import android.content.Intent
@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.smile.androidsong.R
 import com.smile.androidsong.SongListActivity
 import com.smile.androidsong.WordListActivity
-import com.smile.model.Constants
-import com.smile.model.Language
+import com.smile.androidsong.model.Constants
+import com.smile.androidsong.model.Language
 import com.smile.smilelibraries.utilities.ScreenUtil
-import com.smile.view_adapter.LanguageListAdapter.MyViewHolder
+import com.smile.androidsong.view_adapter.LanguageListAdapter.MyViewHolder
 
 class LanguageListAdapter(
     private val mActivity: Activity,

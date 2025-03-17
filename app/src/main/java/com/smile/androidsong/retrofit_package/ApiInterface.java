@@ -1,6 +1,6 @@
-package com.smile.retrofit_package;
+package com.smile.androidsong.retrofit_package;
 
-import com.smile.model.*;
+import com.smile.androidsong.model.*;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

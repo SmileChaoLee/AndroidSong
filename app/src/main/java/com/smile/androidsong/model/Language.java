@@ -1,4 +1,4 @@
-package com.smile.model;
+package com.smile.androidsong.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

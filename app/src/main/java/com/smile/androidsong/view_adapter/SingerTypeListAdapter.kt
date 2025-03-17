@@ -1,4 +1,4 @@
-package com.smile.view_adapter
+package com.smile.androidsong.view_adapter
 
 import android.app.Activity
 import android.content.Intent
@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.smile.androidsong.R
 import com.smile.androidsong.SingerListActivity
-import com.smile.model.Constants
-import com.smile.model.SingerType
+import com.smile.androidsong.model.Constants
+import com.smile.androidsong.model.SingerType
 import com.smile.smilelibraries.utilities.ScreenUtil
-import com.smile.view_adapter.SingerTypeListAdapter.MyViewHolder
+import com.smile.androidsong.view_adapter.SingerTypeListAdapter.MyViewHolder
 
 class SingerTypeListAdapter(
     private val mActivity: Activity,

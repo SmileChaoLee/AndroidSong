@@ -1,4 +1,4 @@
-package com.smile.model
+package com.smile.androidsong.model
 
 import com.smile.smilelibraries.utilities.ScreenUtil
 

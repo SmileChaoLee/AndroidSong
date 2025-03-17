@@ -12,10 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.smile.model.Constants;
-import com.smile.model.SingerTypeList;
-import com.smile.retrofit_package.RestApi;
-import com.smile.view_adapter.SingerTypeListAdapter;
+import com.smile.androidsong.model.Constants;
+import com.smile.androidsong.model.SingerTypeList;
+import com.smile.androidsong.retrofit_package.RestApi;
+import com.smile.androidsong.view_adapter.SingerTypeListAdapter;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 

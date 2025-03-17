@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.smile.model.Computer;
+import com.smile.androidsong.model.Computer;
 
 public class OrderOneSong extends AppCompatActivity {
 

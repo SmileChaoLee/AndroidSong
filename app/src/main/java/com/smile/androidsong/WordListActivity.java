@@ -10,10 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.smile.model.Constants;
-import com.smile.model.Language;
+import com.smile.androidsong.model.Constants;
+import com.smile.androidsong.model.Language;
 import com.smile.smilelibraries.utilities.ScreenUtil;
-import com.smile.view_adapter.WordListAdapter;
+import com.smile.androidsong.view_adapter.WordListAdapter;
 
 import android.util.Log;
 import java.util.ArrayList;

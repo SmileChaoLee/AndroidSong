@@ -1,13 +1,13 @@
-package com.smile.retrofit_package
+package com.smile.androidsong.retrofit_package
 
 import android.util.Log
-import com.smile.model.Language
-import com.smile.model.LanguageList
-import com.smile.model.Singer
-import com.smile.model.SingerList
-import com.smile.model.SingerType
-import com.smile.model.SingerTypeList
-import com.smile.model.SongList
+import com.smile.androidsong.model.Language
+import com.smile.androidsong.model.LanguageList
+import com.smile.androidsong.model.Singer
+import com.smile.androidsong.model.SingerList
+import com.smile.androidsong.model.SingerType
+import com.smile.androidsong.model.SingerTypeList
+import com.smile.androidsong.model.SongList
 import retrofit2.Callback
 
 @JvmDefaultWithCompatibility

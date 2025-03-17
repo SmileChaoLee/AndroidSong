@@ -1,4 +1,4 @@
-package com.smile.model;
+package com.smile.androidsong.model;
 
 /**
  * Created by lee on 9/3/2014.

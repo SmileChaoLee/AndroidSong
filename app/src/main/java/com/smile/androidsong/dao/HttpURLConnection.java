@@ -1,11 +1,11 @@
-package com.smile.dao;
+package com.smile.androidsong.dao;
 
 import android.util.Log;
 
-import com.smile.model.Singer;
-import com.smile.model.SingerType;
-import com.smile.model.SingerTypeList;
-import com.smile.model.SingerList;
+import com.smile.androidsong.model.Singer;
+import com.smile.androidsong.model.SingerType;
+import com.smile.androidsong.model.SingerTypeList;
+import com.smile.androidsong.model.SingerList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

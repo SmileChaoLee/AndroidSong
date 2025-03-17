@@ -17,13 +17,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.smile.model.Constants;
-import com.smile.model.SingerType;
-import com.smile.model.SingerList;
-import com.smile.retrofit_package.RestApi;
+import com.smile.androidsong.model.Constants;
+import com.smile.androidsong.model.SingerType;
+import com.smile.androidsong.model.SingerList;
+import com.smile.androidsong.retrofit_package.RestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
-import com.smile.view_adapter.SingerListAdapter;
+import com.smile.androidsong.view_adapter.SingerListAdapter;
 
 import retrofit2.Call;
 import retrofit2.Response;

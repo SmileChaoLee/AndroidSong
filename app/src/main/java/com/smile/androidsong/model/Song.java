@@ -1,11 +1,9 @@
-package com.smile.model;
+package com.smile.androidsong.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-
-import java.sql.Date;
 
 public class Song implements Parcelable {
 	@SerializedName("id")

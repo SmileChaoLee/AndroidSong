@@ -1,10 +1,10 @@
-package com.smile.model;
+package com.smile.androidsong.model;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class SingerTypeList {
+public class SongList {
     @SerializedName("pageNo")
     private int pageNo;
     @SerializedName("pageSize")
@@ -13,11 +13,11 @@ public class SingerTypeList {
     private int totalRecords;
     @SerializedName("totalPages")
     private int totalPages;
-    @SerializedName("singerTypes")
-    private ArrayList<SingerType> singerTypes;
+    @SerializedName("songs")
+    private ArrayList<Song> songs;
 
-    public SingerTypeList() {
-        singerTypes = new ArrayList<>();
+    public SongList() {
+        songs = new ArrayList<>();
     }
 
     public int getPageNo() {
@@ -52,11 +52,11 @@ public class SingerTypeList {
         this.totalPages = totalPages;
     }
 
-    public ArrayList<SingerType> getSingerTypes() {
-        return singerTypes;
+    public ArrayList<Song> getSongs() {
+        return songs;
     }
 
-    public void setSingerTypes(ArrayList<SingerType> singerTypes) {
-        this.singerTypes = singerTypes;
+    public void setSongs(ArrayList<Song> songs) {
+        this.songs = songs;
     }
 }

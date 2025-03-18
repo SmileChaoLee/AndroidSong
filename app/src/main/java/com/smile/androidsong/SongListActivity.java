@@ -27,7 +27,7 @@ import com.smile.androidsong.view_adapter.SongListAdapter;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class SongListActivity extends AppCompatActivity implements RestApi<SongList> {
+public class SongListActivity extends AppCompatActivity {
 
     private static final String TAG = "SongListActivity";
     private float textFontSize;
@@ -51,6 +51,8 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
     private String failedMessage;
     private String loadingString;
     private AlertDialogFragment loadingDialog = null;
+
+    private MyRestApi restApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +186,7 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
             }
         });
 
+        restApi = new MyRestApi();
         retrieveSongList();
     }
 
@@ -199,9 +202,9 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
             case Constants.SingerOrdered:
                 Log.d(TAG, "retrieveSongList.SingerOrdered");
                 if (filterString != null && !filterString.isEmpty()) {
-                    getSongsBySinger((Singer) objectPassed, pageSize, pageNo, filterString);
+                    restApi.getSongsBySinger((Singer) objectPassed, pageSize, pageNo, filterString);
                 } else {
-                    getSongsBySinger((Singer) objectPassed, pageSize, pageNo);
+                    restApi.getSongsBySinger((Singer) objectPassed, pageSize, pageNo);
                 }
                 break;
             case Constants.NewSongOrdered :
@@ -213,33 +216,33 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
             case Constants.NewSongLanguageOrdered:
                 Log.d(TAG, "retrieveSongList.NewSongLanguageOrdered");
                 if (filterString != null && !filterString.isEmpty()) {
-                    getNewSongsByLanguage((Language) objectPassed, pageSize, pageNo, filterString);
+                    restApi.getNewSongsByLanguage((Language) objectPassed, pageSize, pageNo, filterString);
                 } else {
-                    getNewSongsByLanguage((Language) objectPassed, pageSize, pageNo);
+                    restApi.getNewSongsByLanguage((Language) objectPassed, pageSize, pageNo);
                 }
                 break;
             case Constants.HotSongLanguageOrdered:
                 Log.d(TAG, "retrieveSongList.HotSongLanguageOrdered");
                 if (filterString != null && !filterString.isEmpty()) {
-                    getHotSongsByLanguage((Language) objectPassed, pageSize, pageNo, filterString);
+                    restApi.getHotSongsByLanguage((Language) objectPassed, pageSize, pageNo, filterString);
                 } else {
-                    getHotSongsByLanguage((Language) objectPassed, pageSize, pageNo);
+                    restApi.getHotSongsByLanguage((Language) objectPassed, pageSize, pageNo);
                 }
                 break;
             case Constants.LanguageOrdered:
                 Log.d(TAG, "retrieveSongList.LanguageOrdered");
                 if (filterString != null && !filterString.isEmpty()) {
-                    getSongsByLanguage((Language) objectPassed, pageSize, pageNo, filterString);
+                    restApi.getSongsByLanguage((Language) objectPassed, pageSize, pageNo, filterString);
                 } else {
-                    getSongsByLanguage((Language) objectPassed, pageSize, pageNo);
+                    restApi.getSongsByLanguage((Language) objectPassed, pageSize, pageNo);
                 }
                 break;
             case Constants.LanguageWordsOrdered:
                 Log.d(TAG, "retrieveSongList.LanguageWordsOrdered");
                 if (filterString != null && !filterString.isEmpty()) {
-                    getSongsByLanguageNumOfWords((Language) objectPassed, numOfWords, pageSize, pageNo, filterString);
+                    restApi.getSongsByLanguageNumOfWords((Language) objectPassed, numOfWords, pageSize, pageNo, filterString);
                 } else {
-                    getSongsByLanguageNumOfWords((Language) objectPassed, numOfWords, pageSize, pageNo);
+                    restApi.getSongsByLanguageNumOfWords((Language) objectPassed, numOfWords, pageSize, pageNo);
                 }
                 break;
         }
@@ -286,53 +289,55 @@ public class SongListActivity extends AppCompatActivity implements RestApi<SongL
         retrieveSongList();
     }
 
-    @Override
-    public void onResponse(Call<SongList> call, Response<SongList> response) {
-        Log.d(TAG, "onResponse");
-        if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
-        loadingDialog = null;
-        Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
-        songList = response.body();
-        if (!response.isSuccessful() || songList == null) {
+    private class MyRestApi extends RestApi<SongList> {
+        @Override
+        public void onResponse(Call<SongList> call, Response<SongList> response) {
+            Log.d(TAG, "onResponse");
+            if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
+            loadingDialog = null;
+            Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
+            songList = response.body();
+            if (!response.isSuccessful() || songList == null) {
+                songList = new SongList();
+                songsListEmptyTextView.setText(failedMessage);
+                songsListEmptyTextView.setVisibility(View.VISIBLE);
+            } else {
+                pageNo = songList.getPageNo();         // get the back value from called function
+                pageSize = songList.getPageSize();     // get the back value from called function
+                totalPages = songList.getTotalPages(); // get the back value from called function
+                Log.d(TAG, "onResponse.response.songList.getSongs().size() = " + songList.getSongs().size());
+                if (songList.getSongs().size() == 0) {
+                    songsListEmptyTextView.setText(noResultString);
+                    songsListEmptyTextView.setVisibility(View.VISIBLE);
+                } else {
+                    songsListEmptyTextView.setVisibility(View.GONE);
+                }
+            }
+            myViewAdapter = new SongListAdapter(SongListActivity.this,
+                    songList.getSongs(), textFontSize);
+            mRecyclerView.setAdapter(myViewAdapter);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+            Log.d(TAG, "onResponse.response.isSearchEditTextChanged = " + isSearchEditTextChanged);
+            if (isSearchEditTextChanged) {
+                // searchEditText.setFocusable(true);              // needed for requestFocus()
+                // searchEditText.setFocusableInTouchMode(true);   // needed for requestFocus()
+                // searchEditText.requestFocus();  // needed for the next two statements
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                // imm.showSoftInput(null, InputMethodManager.SHOW_IMPLICIT);
+                imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
+                isSearchEditTextChanged = false;
+            }
+        }
+
+        @Override
+        public void onFailure(Call<SongList> call, Throwable t) {
+            Log.d(TAG, "onFailure." + t.toString());
+            if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
+            loadingDialog = null;
             songList = new SongList();
             songsListEmptyTextView.setText(failedMessage);
             songsListEmptyTextView.setVisibility(View.VISIBLE);
-        } else {
-            pageNo = songList.getPageNo();         // get the back value from called function
-            pageSize = songList.getPageSize();     // get the back value from called function
-            totalPages = songList.getTotalPages(); // get the back value from called function
-            Log.d(TAG, "onResponse.response.songList.getSongs().size() = " + songList.getSongs().size());
-            if (songList.getSongs().size() == 0) {
-                songsListEmptyTextView.setText(noResultString);
-                songsListEmptyTextView.setVisibility(View.VISIBLE);
-            } else {
-                songsListEmptyTextView.setVisibility(View.GONE);
-            }
         }
-        myViewAdapter = new SongListAdapter(SongListActivity.this,
-                songList.getSongs(), textFontSize);
-        mRecyclerView.setAdapter(myViewAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        Log.d(TAG, "onResponse.response.isSearchEditTextChanged = " + isSearchEditTextChanged);
-        if (isSearchEditTextChanged) {
-            // searchEditText.setFocusable(true);              // needed for requestFocus()
-            // searchEditText.setFocusableInTouchMode(true);   // needed for requestFocus()
-            // searchEditText.requestFocus();  // needed for the next two statements
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            // imm.showSoftInput(null, InputMethodManager.SHOW_IMPLICIT);
-            imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
-            isSearchEditTextChanged = false;
-        }
-    }
-
-    @Override
-    public void onFailure(Call<SongList> call, Throwable t) {
-        Log.d(TAG, "onFailure." + t.toString());
-        if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
-        loadingDialog = null;
-        songList = new SongList();
-        songsListEmptyTextView.setText(failedMessage);
-        songsListEmptyTextView.setVisibility(View.VISIBLE);
     }
 }

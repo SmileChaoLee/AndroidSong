@@ -1,6 +1,7 @@
 package com.smile.androidsong.retrofit_package
 
 import android.util.Log
+import com.smile.androidsong.SongApplication
 import com.smile.androidsong.model.Language
 import com.smile.androidsong.model.LanguageList
 import com.smile.androidsong.model.Singer
@@ -9,22 +10,31 @@ import com.smile.androidsong.model.SingerType
 import com.smile.androidsong.model.SingerTypeList
 import com.smile.androidsong.model.SongList
 import retrofit2.Callback
+import retrofit2.Retrofit
+import javax.inject.Inject
 
-@JvmDefaultWithCompatibility
-interface RestApi<T> : Callback<T> {
+// @JvmDefaultWithCompatibility
+abstract class RestApi<T> : Callback<T> {
 
     companion object {
-        const val TAG = "RestApi"
+        private const val TAG = "RestApi"
     }
 
-    val callback : Callback<T>
+    private val callback : Callback<T>
         get() {
             return this
         }
+
+    @Inject
+    lateinit var retrofit : Retrofit
+
     // get Retrofit client and Retrofit Api
-    val apiInterface : ApiInterface
+    @Suppress("UNCHECKED_CAST")
+    private val apiInterface : ApiInterface
         get() {
-            return Client.getInstance().create(ApiInterface::class.java)
+            SongApplication.appComponent.inject(this as RestApi<Any>)
+            return retrofit.create(ApiInterface::class.java)
+            // return Client.getInstance().create(ApiInterface::class.java)
         }
 
     @Suppress("UNCHECKED_CAST")

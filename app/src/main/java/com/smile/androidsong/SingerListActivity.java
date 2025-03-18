@@ -28,9 +28,7 @@ import com.smile.androidsong.view_adapter.SingerListAdapter;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class SingerListActivity extends AppCompatActivity
-        implements RestApi<SingerList> {
-
+public class SingerListActivity extends AppCompatActivity {
     private static final String TAG = "SingerListActivity";
     private float textFontSize;
     private EditText searchEditText;
@@ -49,6 +47,8 @@ public class SingerListActivity extends AppCompatActivity
     private String failedMessage;
     private String loadingString;
     private AlertDialogFragment loadingDialog = null;
+
+    private MyRestApi restApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +162,7 @@ public class SingerListActivity extends AppCompatActivity
             }
         });
 
+        restApi = new MyRestApi();
         retrieveSingerList();
     }
 
@@ -174,9 +175,9 @@ public class SingerListActivity extends AppCompatActivity
             loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
         }
         if (filterString != null && !filterString.isEmpty()) {
-            getSingersBySingerType(singerType, pageSize, pageNo, filterString);
+            restApi.getSingersBySingerType(singerType, pageSize, pageNo, filterString);
         } else {
-            getSingersBySingerType(singerType, pageSize, pageNo);
+            restApi.getSingersBySingerType(singerType, pageSize, pageNo);
         }
     }
 
@@ -221,50 +222,52 @@ public class SingerListActivity extends AppCompatActivity
         retrieveSingerList();
     }
 
-    @Override
-    public void onResponse(Call<SingerList> call, Response<SingerList> response) {
-        if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
-        loadingDialog = null;
-        Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
-        singerList = response.body();
-        if (!response.isSuccessful() || singerList == null) {
+    private class MyRestApi extends RestApi<SingerList> {
+        @Override
+        public void onResponse(Call<SingerList> call, Response<SingerList> response) {
+            if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
+            loadingDialog = null;
+            Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
+            singerList = response.body();
+            if (!response.isSuccessful() || singerList == null) {
+                singerList = new SingerList();
+                singerListEmptyTextView.setText(failedMessage);
+                singerListEmptyTextView.setVisibility(View.VISIBLE);
+            } else {
+                pageNo = singerList.getPageNo();         // get the back value from called function
+                pageSize = singerList.getPageSize();     // get the back value from called function
+                totalPages = singerList.getTotalPages(); // get the back value from called function
+                if (singerList.getSingers().size() == 0) {
+                    singerListEmptyTextView.setText(noResultString);
+                    singerListEmptyTextView.setVisibility(View.VISIBLE);
+                } else {
+                    singerListEmptyTextView.setVisibility(View.GONE);
+                }
+            }
+            myViewAdapter = new SingerListAdapter(SingerListActivity.this, singerList.getSingers(), textFontSize);
+            mRecyclerView.setAdapter(myViewAdapter);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+            Log.d(TAG, "onResponse.response.isSearchEditTextChanged = " + isSearchEditTextChanged);
+            if (isSearchEditTextChanged) {
+                // searchEditText.setFocusable(true);              // needed for requestFocus()
+                // searchEditText.setFocusableInTouchMode(true);   // needed for requestFocus()
+                // searchEditText.requestFocus();  // needed for the next two statements
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                // imm.showSoftInput(null, InputMethodManager.SHOW_IMPLICIT);
+                imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
+                isSearchEditTextChanged = false;
+            }
+        }
+
+        @Override
+        public void onFailure(Call call, Throwable t) {
+            Log.d(TAG, "onFailure." + t.toString());
+            if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
+            loadingDialog = null;
             singerList = new SingerList();
             singerListEmptyTextView.setText(failedMessage);
             singerListEmptyTextView.setVisibility(View.VISIBLE);
-        } else {
-            pageNo = singerList.getPageNo();         // get the back value from called function
-            pageSize = singerList.getPageSize();     // get the back value from called function
-            totalPages = singerList.getTotalPages(); // get the back value from called function
-            if (singerList.getSingers().size() == 0) {
-                singerListEmptyTextView.setText(noResultString);
-                singerListEmptyTextView.setVisibility(View.VISIBLE);
-            } else {
-                singerListEmptyTextView.setVisibility(View.GONE);
-            }
         }
-        myViewAdapter = new SingerListAdapter(SingerListActivity.this, singerList.getSingers(), textFontSize);
-        mRecyclerView.setAdapter(myViewAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        Log.d(TAG, "onResponse.response.isSearchEditTextChanged = " + isSearchEditTextChanged);
-        if (isSearchEditTextChanged) {
-            // searchEditText.setFocusable(true);              // needed for requestFocus()
-            // searchEditText.setFocusableInTouchMode(true);   // needed for requestFocus()
-            // searchEditText.requestFocus();  // needed for the next two statements
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            // imm.showSoftInput(null, InputMethodManager.SHOW_IMPLICIT);
-            imm.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT);
-            isSearchEditTextChanged = false;
-        }
-    }
-
-    @Override
-    public void onFailure(Call call, Throwable t) {
-        Log.d(TAG, "onFailure." + t.toString());
-        if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
-        loadingDialog = null;
-        singerList = new SingerList();
-        singerListEmptyTextView.setText(failedMessage);
-        singerListEmptyTextView.setVisibility(View.VISIBLE);
     }
 }

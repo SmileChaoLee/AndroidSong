@@ -22,7 +22,7 @@ import com.smile.smilelibraries.utilities.ScreenUtil;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class SingerTypeListActivity extends AppCompatActivity implements RestApi<SingerTypeList> {
+public class SingerTypeListActivity extends AppCompatActivity {
 
     private static final String TAG = "SingerTypeListActivity";
     private float textFontSize;
@@ -72,7 +72,8 @@ public class SingerTypeListActivity extends AppCompatActivity implements RestApi
                 textFontSize, Color.RED, 0, 0, true);
 
         loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
-        getAllSingerTypes();
+
+        new MyRestApi().getAllSingerTypes();
     }
 
     @Override
@@ -85,35 +86,37 @@ public class SingerTypeListActivity extends AppCompatActivity implements RestApi
         finish();
     }
 
-    @Override
-    public void onResponse(Call<SingerTypeList> call, Response<SingerTypeList> response) {
-        Log.d(TAG, "onResponse");
-        loadingDialog.dismissAllowingStateLoss();
-        Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
-        if (response.isSuccessful()) {
-            singerTypeList = response.body();
-            if (singerTypeList.getSingerTypes().size() == 0) {
-                singerTypeListEmptyTextView.setText(noResultString);
-                singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
+    private class MyRestApi extends RestApi<SingerTypeList> {
+        @Override
+        public void onResponse(Call<SingerTypeList> call, Response<SingerTypeList> response) {
+            Log.d(TAG, "onResponse");
+            loadingDialog.dismissAllowingStateLoss();
+            Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
+            if (response.isSuccessful()) {
+                singerTypeList = response.body();
+                if (singerTypeList.getSingerTypes().size() == 0) {
+                    singerTypeListEmptyTextView.setText(noResultString);
+                    singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
+                } else {
+                    singerTypeListEmptyTextView.setVisibility(View.GONE);
+                }
             } else {
-                singerTypeListEmptyTextView.setVisibility(View.GONE);
+                singerTypeList = new SingerTypeList();
+                singerTypeListEmptyTextView.setText("response.isSuccessful() = false.");
+                singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
             }
-        } else {
+            myViewAdapter = new SingerTypeListAdapter(SingerTypeListActivity.this, singerTypeList.getSingerTypes(), textFontSize);
+            mRecyclerView.setAdapter(myViewAdapter);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        }
+
+        @Override
+        public void onFailure(Call<SingerTypeList> call, Throwable t) {
+            Log.d(TAG, "onFailure." + t.toString());
+            loadingDialog.dismissAllowingStateLoss();
             singerTypeList = new SingerTypeList();
-            singerTypeListEmptyTextView.setText("response.isSuccessful() = false.");
+            singerTypeListEmptyTextView.setText(failedMessage);
             singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
         }
-        myViewAdapter = new SingerTypeListAdapter(SingerTypeListActivity.this, singerTypeList.getSingerTypes(), textFontSize);
-        mRecyclerView.setAdapter(myViewAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-    }
-
-    @Override
-    public void onFailure(Call<SingerTypeList> call, Throwable t) {
-        Log.d(TAG, "onFailure." + t.toString());
-        loadingDialog.dismissAllowingStateLoss();
-        singerTypeList = new SingerTypeList();
-        singerTypeListEmptyTextView.setText(failedMessage);
-        singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
     }
 }

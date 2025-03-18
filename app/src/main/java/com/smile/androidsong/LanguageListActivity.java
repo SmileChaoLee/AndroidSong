@@ -20,8 +20,7 @@ import com.smile.androidsong.view_adapter.LanguageListAdapter;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class LanguageListActivity extends AppCompatActivity implements RestApi<LanguageList> {
-
+public class LanguageListActivity extends AppCompatActivity {
     private static final String TAG = "LanguageListActivity";
     private float textFontSize;
     private TextView languagesListEmptyTextView;
@@ -90,7 +89,8 @@ public class LanguageListActivity extends AppCompatActivity implements RestApi<L
                 textFontSize, Color.RED, 0, 0, true);
 
         loadingDialog.show(getSupportFragmentManager(), "LoadingDialogTag");
-        getAllLanguages();
+
+        new MyRestApi().getAllLanguages();
     }
 
     @Override
@@ -103,35 +103,38 @@ public class LanguageListActivity extends AppCompatActivity implements RestApi<L
         finish();
     }
 
-    @Override
-    public void onResponse(Call<LanguageList> call, Response<LanguageList> response) {
-        Log.d(TAG, "onResponse");
-        loadingDialog.dismissAllowingStateLoss();
-        Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
-        if (response.isSuccessful()) {
-            languageList = response.body();
-            if (languageList.getLanguages().size() == 0) {
-                languagesListEmptyTextView.setText(noResultString);
-                languagesListEmptyTextView.setVisibility(View.VISIBLE);
+    private class MyRestApi extends RestApi<LanguageList> {
+        @Override
+        public void onResponse(Call<LanguageList> call, Response<LanguageList> response) {
+            Log.d(TAG, "onResponse");
+            loadingDialog.dismissAllowingStateLoss();
+            Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
+            if (response.isSuccessful()) {
+                languageList = response.body();
+                if (languageList.getLanguages().size() == 0) {
+                    languagesListEmptyTextView.setText(noResultString);
+                    languagesListEmptyTextView.setVisibility(View.VISIBLE);
+                } else {
+                    languagesListEmptyTextView.setVisibility(View.GONE);
+                }
             } else {
-                languagesListEmptyTextView.setVisibility(View.GONE);
+                languageList = new LanguageList();
+                languagesListEmptyTextView.setText(failedMessage);
+                languagesListEmptyTextView.setVisibility(View.VISIBLE);
             }
-        } else {
+            myViewAdapter = new LanguageListAdapter(LanguageListActivity.this,
+                    languageList.getLanguages(), orderedFrom, textFontSize);
+            mRecyclerView.setAdapter(myViewAdapter);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        }
+
+        @Override
+        public void onFailure(Call<LanguageList> call, Throwable t) {
+            Log.d(TAG, "onFailure." + t.toString());
+            loadingDialog.dismissAllowingStateLoss();
             languageList = new LanguageList();
             languagesListEmptyTextView.setText(failedMessage);
             languagesListEmptyTextView.setVisibility(View.VISIBLE);
         }
-        myViewAdapter = new LanguageListAdapter(LanguageListActivity.this,
-                languageList.getLanguages(), orderedFrom, textFontSize);
-        mRecyclerView.setAdapter(myViewAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-    }
-    @Override
-    public void onFailure(Call<LanguageList> call, Throwable t) {
-        Log.d(TAG, "onFailure." + t.toString());
-        loadingDialog.dismissAllowingStateLoss();
-        languageList = new LanguageList();
-        languagesListEmptyTextView.setText(failedMessage);
-        languagesListEmptyTextView.setVisibility(View.VISIBLE);
     }
 }

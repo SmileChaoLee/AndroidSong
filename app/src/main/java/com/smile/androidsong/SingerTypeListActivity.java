@@ -1,5 +1,6 @@
 package com.smile.androidsong;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +20,11 @@ import com.smile.androidsong.view_adapter.SingerTypeListAdapter;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 public class SingerTypeListActivity extends AppCompatActivity {
 
@@ -28,7 +32,8 @@ public class SingerTypeListActivity extends AppCompatActivity {
     private float textFontSize;
     private TextView singerTypeListEmptyTextView;
     private RecyclerView mRecyclerView;
-    private SingerTypeListAdapter myViewAdapter;
+    @Inject
+    SingerTypeListAdapter myViewAdapter;
     private SingerTypeList singerTypeList;
     private String noResultString;
     private String failedMessage;
@@ -38,6 +43,9 @@ public class SingerTypeListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
+        Log.d(TAG, "onCreate.inject(this)");
+        SongApplication.Companion.getAppComponent().inject(this);
+
         noResultString = getString(R.string.noResultString);
         failedMessage = getString(R.string.failedMessage);
         loadingString = getString(R.string.loadingString);
@@ -87,6 +95,7 @@ public class SingerTypeListActivity extends AppCompatActivity {
     }
 
     private class MyRestApi extends RestApi<SingerTypeList> {
+        @SuppressLint("SetTextI18n")
         @Override
         public void onResponse(Call<SingerTypeList> call, Response<SingerTypeList> response) {
             Log.d(TAG, "onResponse");
@@ -94,7 +103,7 @@ public class SingerTypeListActivity extends AppCompatActivity {
             Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
             if (response.isSuccessful()) {
                 singerTypeList = response.body();
-                if (singerTypeList.getSingerTypes().size() == 0) {
+                if (singerTypeList.getSingerTypes().isEmpty()) {
                     singerTypeListEmptyTextView.setText(noResultString);
                     singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
                 } else {
@@ -105,7 +114,8 @@ public class SingerTypeListActivity extends AppCompatActivity {
                 singerTypeListEmptyTextView.setText("response.isSuccessful() = false.");
                 singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
             }
-            myViewAdapter = new SingerTypeListAdapter(SingerTypeListActivity.this, singerTypeList.getSingerTypes(), textFontSize);
+            myViewAdapter.setParameters(SingerTypeListActivity.this,
+                    singerTypeList.getSingerTypes(), textFontSize);
             mRecyclerView.setAdapter(myViewAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         }

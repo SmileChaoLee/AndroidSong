@@ -1,5 +1,6 @@
 package com.smile.androidsong;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 import com.smile.androidsong.view_adapter.SingerListAdapter;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -36,7 +39,8 @@ public class SingerListActivity extends AppCompatActivity {
     private String filterString;
     private TextView singerListEmptyTextView;
     private RecyclerView mRecyclerView;
-    private SingerListAdapter myViewAdapter;
+    @Inject
+    SingerListAdapter myViewAdapter;
     private SingerList singerList = null;
     private SingerType singerType;
 
@@ -50,9 +54,13 @@ public class SingerListActivity extends AppCompatActivity {
 
     private MyRestApi restApi;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
+        Log.d(TAG, "onCreate.inject(this)");
+        SongApplication.Companion.getAppComponent().inject(this);
+
         noResultString = getString(R.string.noResultString);
         failedMessage = getString(R.string.failedMessage);
         loadingString = getString(R.string.loadingString);
@@ -237,18 +245,20 @@ public class SingerListActivity extends AppCompatActivity {
                 pageNo = singerList.getPageNo();         // get the back value from called function
                 pageSize = singerList.getPageSize();     // get the back value from called function
                 totalPages = singerList.getTotalPages(); // get the back value from called function
-                if (singerList.getSingers().size() == 0) {
+                if (singerList.getSingers().isEmpty()) {
                     singerListEmptyTextView.setText(noResultString);
                     singerListEmptyTextView.setVisibility(View.VISIBLE);
                 } else {
                     singerListEmptyTextView.setVisibility(View.GONE);
                 }
             }
-            myViewAdapter = new SingerListAdapter(SingerListActivity.this, singerList.getSingers(), textFontSize);
+            myViewAdapter.setParameters(SingerListActivity.this,
+                    singerList.getSingers(), textFontSize);
             mRecyclerView.setAdapter(myViewAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-            Log.d(TAG, "onResponse.response.isSearchEditTextChanged = " + isSearchEditTextChanged);
+            Log.d(TAG, "onResponse.response.isSearchEditTextChanged = "
+                    + isSearchEditTextChanged);
             if (isSearchEditTextChanged) {
                 // searchEditText.setFocusable(true);              // needed for requestFocus()
                 // searchEditText.setFocusableInTouchMode(true);   // needed for requestFocus()

@@ -13,15 +13,19 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.smile.androidsong.R
 import com.smile.androidsong.SingerListActivity
 import com.smile.androidsong.model.Constants
+import com.smile.androidsong.model.Singer
 import com.smile.androidsong.model.SingerType
 import com.smile.smilelibraries.utilities.ScreenUtil
 import com.smile.androidsong.view_adapter.SingerTypeListAdapter.MyViewHolder
+import javax.inject.Inject
 
-class SingerTypeListAdapter(
-    private val mActivity: Activity,
-    private val mSingerTypes: ArrayList<SingerType>,
-    private val mTextFontSize: Float
-) : RecyclerView.Adapter<MyViewHolder>() {
+class SingerTypeListAdapter @Inject constructor()
+    : RecyclerView.Adapter<MyViewHolder>() {
+
+    private lateinit var mActivity: Activity
+    private lateinit var mSingerTypes: ArrayList<SingerType>
+    private var mTextFontSize: Float = 0.0f
+
     inner class MyViewHolder(itemView: View) : ViewHolder(itemView) {
         val positionNoTextView: TextView
         val singerAreaNaTextView: TextView
@@ -48,6 +52,13 @@ class SingerTypeListAdapter(
                 Constants.FontSize_Scale_Type
             )
         }
+    }
+
+    fun setParameters(activity: Activity, singerTypes: ArrayList<SingerType>,
+                      textFontSize: Float) {
+        mActivity = activity
+        mSingerTypes = singerTypes
+        mTextFontSize = textFontSize
     }
 
     // Usually involves inflating a layout from XML and returning the holder

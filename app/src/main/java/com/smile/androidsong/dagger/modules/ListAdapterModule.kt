@@ -11,7 +11,7 @@ import javax.inject.Named
 class ListAdapterModule {
     @Provides
     fun languageListAdapterProvider(@Named("Activity")activity : Activity?,
-                                    @Named("LanguageList")languages : ArrayList<Language>?,
+                                    @Named("LanguageArrayList")languages : ArrayList<Language>?,
                                     @Named("IntValue")orderedFrom : Int?,
                                     @Named("FloatValue")textFontSize : Float?
     ) : LanguageListAdapter {

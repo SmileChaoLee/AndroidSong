@@ -29,7 +29,8 @@ interface SongAppComponent {
         @BindsInstance
         fun activityModule(@Named("PrimitiveDataModule") activity: Activity?) : Builder
         @BindsInstance
-        fun arrayListModule(@Named("PrimitiveDataModule") list : ArrayList<Language>?) : Builder
+        fun arrayListModule(@Named("PrimitiveDataModule") list :
+                                    ArrayList<Language>?) : Builder
         @BindsInstance
         fun intModule(@Named("PrimitiveDataModule") intValue : Int?) : Builder
         @BindsInstance

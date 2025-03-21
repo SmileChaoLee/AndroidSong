@@ -15,8 +15,8 @@ class PrimitiveDataModule {
     }
 
     @Provides
-    @Named("LanguageList")
-    fun languageListProvider(@Named("PrimitiveDataModule")list : ArrayList<Language>?) :
+    @Named("LanguageArrayList")
+    fun arrayListProvider(@Named("PrimitiveDataModule")list : ArrayList<Language>?) :
             ArrayList<Language>? {
         return list
     }

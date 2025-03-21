@@ -18,7 +18,7 @@ import com.smile.androidsong.model.Language
 import com.smile.smilelibraries.utilities.ScreenUtil
 import com.smile.androidsong.view_adapter.LanguageListAdapter.MyViewHolder
 
-class LanguageListAdapter(
+class LanguageListAdapter (
     private val mActivity: Activity,
     private val mLanguages: ArrayList<Language>,
     private val orderedFrom: Int,

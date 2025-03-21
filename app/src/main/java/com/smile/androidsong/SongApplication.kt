@@ -2,13 +2,13 @@ package com.smile.androidsong
 
 import android.app.Application
 import android.util.Log
-import com.smile.androidsong.interfaces.DaggerSongAppComponent
-import com.smile.androidsong.interfaces.SongAppComponent
+import com.smile.androidsong.dagger.interfaces.DaggerSongAppComponent
 
 class SongApplication : Application() {
     companion object {
         private const val TAG = "SongApplication"
-        val appComponent : SongAppComponent = DaggerSongAppComponent.create()
+        val appCompBuilder = DaggerSongAppComponent.builder()!!
+        val appComponent = appCompBuilder.build()
     }
 
     override fun onCreate() {

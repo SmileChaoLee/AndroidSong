@@ -17,6 +17,8 @@ import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 import com.smile.androidsong.view_adapter.LanguageListAdapter;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -25,7 +27,8 @@ public class LanguageListActivity extends AppCompatActivity {
     private float textFontSize;
     private TextView languagesListEmptyTextView;
     private RecyclerView mRecyclerView;
-    private LanguageListAdapter myViewAdapter;
+    @Inject
+    LanguageListAdapter myViewAdapter;
     private LanguageList languageList = null;
     private String noResultString;
     private String failedMessage;
@@ -122,8 +125,14 @@ public class LanguageListActivity extends AppCompatActivity {
                 languagesListEmptyTextView.setText(failedMessage);
                 languagesListEmptyTextView.setVisibility(View.VISIBLE);
             }
-            myViewAdapter = new LanguageListAdapter(LanguageListActivity.this,
-                    languageList.getLanguages(), orderedFrom, textFontSize);
+            // myViewAdapter = new LanguageListAdapter(LanguageListActivity.this,
+            //         languageList.getLanguages(), orderedFrom, textFontSize);
+            SongApplication.Companion.getAppCompBuilder()
+                    .activityModule(LanguageListActivity.this)
+                    .arrayListModule(languageList.getLanguages())
+                    .intModule(orderedFrom)
+                    .floatModule(textFontSize).build()
+                    .inject(LanguageListActivity.this);
             mRecyclerView.setAdapter(myViewAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         }

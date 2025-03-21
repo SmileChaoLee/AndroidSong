@@ -1,7 +1,8 @@
-package com.smile.androidsong.view_adapter
+package com.smile.androidsong.dagger.modules
 
 import android.app.Activity
 import com.smile.androidsong.model.Language
+import com.smile.androidsong.view_adapter.LanguageListAdapter
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -9,12 +10,17 @@ import javax.inject.Named
 @Module
 class ListAdapterModule {
     @Provides
-    @Named("LanguageListAdapter")
-    fun LanguageListAdapterProvider(activity : Activity,
-                                    languages : ArrayList<Language>,
-                                    orderedFrom : Int,
-                                    textFontSize : Float
+    fun languageListAdapterProvider(@Named("Activity")activity : Activity?,
+                                    @Named("LanguageList")languages : ArrayList<Language>?,
+                                    @Named("IntValue")orderedFrom : Int?,
+                                    @Named("FloatValue")textFontSize : Float?
     ) : LanguageListAdapter {
-        return LanguageListAdapter(activity, languages, orderedFrom, textFontSize)
+        return LanguageListAdapter(activity!!, languages!!, orderedFrom!!, textFontSize!!)
     }
+    /*
+    fun languageListAdapterProvider() : LanguageListAdapter {
+        return LanguageListAdapter(Activity(), ArrayList<Language>(),
+            0, 100f)
+    }
+    */
 }

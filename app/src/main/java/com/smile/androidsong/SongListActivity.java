@@ -24,6 +24,8 @@ import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 import com.smile.androidsong.view_adapter.SongListAdapter;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -36,7 +38,8 @@ public class SongListActivity extends AppCompatActivity {
     private String filterString;
     private TextView songsListEmptyTextView;
     private RecyclerView mRecyclerView;
-    private SongListAdapter myViewAdapter;
+    @Inject
+    SongListAdapter myViewAdapter;
     private SongList songList = null;
     private Singer singer;
     private Language language;
@@ -306,15 +309,21 @@ public class SongListActivity extends AppCompatActivity {
                 pageSize = songList.getPageSize();     // get the back value from called function
                 totalPages = songList.getTotalPages(); // get the back value from called function
                 Log.d(TAG, "onResponse.response.songList.getSongs().size() = " + songList.getSongs().size());
-                if (songList.getSongs().size() == 0) {
+                if (songList.getSongs().isEmpty()) {
                     songsListEmptyTextView.setText(noResultString);
                     songsListEmptyTextView.setVisibility(View.VISIBLE);
                 } else {
                     songsListEmptyTextView.setVisibility(View.GONE);
                 }
             }
-            myViewAdapter = new SongListAdapter(SongListActivity.this,
-                    songList.getSongs(), textFontSize);
+            // myViewAdapter = new SongListAdapter(SongListActivity.this,
+            //         songList.getSongs(), textFontSize);
+            Log.d(TAG, "MyRestApi.onResponse.inject()");
+            SongApplication.Companion.getAppCompBuilder()
+                    .activityModule(SongListActivity.this)
+                    .songArrayListModule(songList.getSongs())
+                    .floatModule(textFontSize).build()
+                    .inject(SongListActivity.this);
             mRecyclerView.setAdapter(myViewAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 

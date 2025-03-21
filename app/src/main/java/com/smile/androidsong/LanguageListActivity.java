@@ -127,9 +127,10 @@ public class LanguageListActivity extends AppCompatActivity {
             }
             // myViewAdapter = new LanguageListAdapter(LanguageListActivity.this,
             //         languageList.getLanguages(), orderedFrom, textFontSize);
+            Log.d(TAG, "MyRestApi.onResponse.inject()");
             SongApplication.Companion.getAppCompBuilder()
                     .activityModule(LanguageListActivity.this)
-                    .arrayListModule(languageList.getLanguages())
+                    .languageArrayListModule(languageList.getLanguages())
                     .intModule(orderedFrom)
                     .floatModule(textFontSize).build()
                     .inject(LanguageListActivity.this);

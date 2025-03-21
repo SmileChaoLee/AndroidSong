@@ -18,13 +18,16 @@ import com.smile.androidsong.view_adapter.WordListAdapter;
 import android.util.Log;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 public class WordListActivity extends AppCompatActivity {
 
     private static final String TAG = "WordListActivity";
     private String languageTitle;
     private float textFontSize;
     private RecyclerView mRecyclerView;
-    private WordListAdapter myViewAdapter;
+    @Inject
+    WordListAdapter myViewAdapter;
     private ArrayList<Pair<Integer, String>> mWordList;
 
     private int orderedFrom = 0;
@@ -34,6 +37,9 @@ public class WordListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
+        Log.d(TAG, "onCreate.inject()");
+        SongApplication.Companion.getAppComponent().inject(this);
+
         float defaultTextFontSize = ScreenUtil.getDefaultTextSizeFromTheme(this, Constants.FontSize_Scale_Type, null);
         textFontSize = ScreenUtil.suitableFontSize(this, defaultTextFontSize, Constants.FontSize_Scale_Type, 0.0f);
 
@@ -78,7 +84,9 @@ public class WordListActivity extends AppCompatActivity {
             }
         });
 
-        myViewAdapter = new WordListAdapter(WordListActivity.this,
+        // myViewAdapter = new WordListAdapter(WordListActivity.this,
+        //         language, languageTitle, mWordList, textFontSize);
+        myViewAdapter.setParameters(WordListActivity.this,
                 language, languageTitle, mWordList, textFontSize);
         mRecyclerView.setAdapter(myViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

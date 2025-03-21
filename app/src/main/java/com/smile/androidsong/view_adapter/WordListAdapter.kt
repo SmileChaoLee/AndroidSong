@@ -17,20 +17,21 @@ import com.smile.androidsong.model.Constants
 import com.smile.androidsong.model.Language
 import com.smile.smilelibraries.utilities.ScreenUtil
 import com.smile.androidsong.view_adapter.WordListAdapter.MyViewHolder
+import javax.inject.Inject
 
-class WordListAdapter(
-    private val mActivity: Activity,
-    private val language: Language,
-    private val languageTitle: String,
-    private val mWordList: ArrayList<Pair<Integer, String>>,
-    private val mTextFontSize: Float
+class WordListAdapter @Inject constructor(
 ) : RecyclerView.Adapter<MyViewHolder>() {
+    private lateinit var mActivity: Activity
+    private lateinit var mLanguage: Language
+    private lateinit var mLanguageTitle: String
+    private lateinit var mWordList: ArrayList<Pair<Int, String>>
+    private var mTextFontSize: Float = 0f
+
     inner class MyViewHolder(itemView: View) : ViewHolder(itemView) {
-        val wordNoTextView : TextView
+        val wordNoTextView : TextView = itemView.findViewById(R.id.wordsOrderNoTextView)
         val wordNaTextView: TextView
 
         init {
-            wordNoTextView = itemView.findViewById(R.id.wordsOrderNoTextView)
             ScreenUtil.resizeTextSize(
                 wordNoTextView,
                 mTextFontSize,
@@ -43,6 +44,16 @@ class WordListAdapter(
                 Constants.FontSize_Scale_Type
             )
         }
+    }
+
+    fun setParameters(activity: Activity, language: Language,
+                      languageTitle: String, wordList: ArrayList<Pair<Int, String>>,
+                      textFontSize: Float) {
+        mActivity = activity
+        mLanguage = language
+        mLanguageTitle = languageTitle
+        mWordList = wordList
+        mTextFontSize = textFontSize
     }
 
     // Usually involves inflating a layout from XML and returning the holder
@@ -68,9 +79,9 @@ class WordListAdapter(
                 Intent(mActivity, SongListActivity::class.java).let {
                     it.putExtra(Constants.OrderedFrom, Constants.LanguageWordsOrdered)
                     it.putExtra(Constants.SongListActivityTitle,
-                        languageTitle + " " + word.second
+                        mLanguageTitle + " " + word.second
                     )
-                    it.putExtra(Constants.LanguageParcelable, language)
+                    it.putExtra(Constants.LanguageParcelable, mLanguage)
                     it.putExtra(Constants.NumOfWords, word.first)
                     mActivity.startActivity(it)
                 }

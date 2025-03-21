@@ -42,8 +42,6 @@ public class SingerTypeListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
-        Log.d(TAG, "onCreate.inject(this)");
-        SongApplication.Companion.getAppComponent().inject(this);
 
         noResultString = getString(R.string.noResultString);
         failedMessage = getString(R.string.failedMessage);
@@ -113,8 +111,12 @@ public class SingerTypeListActivity extends AppCompatActivity {
                 singerTypeListEmptyTextView.setText("response.isSuccessful() = false.");
                 singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
             }
-            myViewAdapter.setParameters(SingerTypeListActivity.this,
-                    singerTypeList.getSingerTypes(), textFontSize);
+            Log.d(TAG, "MyRestApi.onResponse.inject()");
+            SongApplication.Companion.getAppCompBuilder()
+                    .activityModule(SingerTypeListActivity.this)
+                    .singerTypeArrayListModule(singerTypeList.getSingerTypes())
+                    .floatModule(textFontSize).build()
+                    .inject(SingerTypeListActivity.this);
             mRecyclerView.setAdapter(myViewAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         }

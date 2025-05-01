@@ -62,16 +62,16 @@ public class WordListActivity extends AppCompatActivity {
         wordsListMenuTextView.setText(languageTitle + " " + wordsListTitle);
 
         mWordList = new ArrayList<Pair<Integer, String>>();
-        mWordList.add(new Pair(1, getString(R.string.oneWordOrderString)));
-        mWordList.add(new Pair(2, getString(R.string.twoWordsOrderString)));
-        mWordList.add(new Pair(3, getString(R.string.threeWordsOrderString)));
-        mWordList.add(new Pair(4, getString(R.string.fourWordsOrderString)));
-        mWordList.add(new Pair(5, getString(R.string.fiveWordsOrderString)));
-        mWordList.add(new Pair(6, getString(R.string.sixWordsOrderString)));
-        mWordList.add(new Pair(7, getString(R.string.sevenWordsOrderString)));
-        mWordList.add(new Pair(8, getString(R.string.eightWordsOrderString)));
-        mWordList.add(new Pair(9, getString(R.string.nineWordsOrderString)));
-        mWordList.add(new Pair(10, getString(R.string.tenWordsOrderString)));
+        mWordList.add(new Pair<>(1, getString(R.string.oneWordOrderString)));
+        mWordList.add(new Pair<>(2, getString(R.string.twoWordsOrderString)));
+        mWordList.add(new Pair<>(3, getString(R.string.threeWordsOrderString)));
+        mWordList.add(new Pair<>(4, getString(R.string.fourWordsOrderString)));
+        mWordList.add(new Pair<>(5, getString(R.string.fiveWordsOrderString)));
+        mWordList.add(new Pair<>(6, getString(R.string.sixWordsOrderString)));
+        mWordList.add(new Pair<>(7, getString(R.string.sevenWordsOrderString)));
+        mWordList.add(new Pair<>(8, getString(R.string.eightWordsOrderString)));
+        mWordList.add(new Pair<>(9, getString(R.string.nineWordsOrderString)));
+        mWordList.add(new Pair<>(10, getString(R.string.tenWordsOrderString)));
 
         mRecyclerView = findViewById(R.id.wordListRecyclerView);
 

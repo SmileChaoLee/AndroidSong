@@ -19,8 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.smile.androidsong.model.Constants;
-import com.smile.androidsong.model.SingerType;
 import com.smile.androidsong.model.SingerList;
+import com.smile.androidsong.model.SingerType;
 import com.smile.androidsong.retrofit_package.RestApi;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;

@@ -114,7 +114,7 @@ public class LanguageListActivity extends AppCompatActivity {
             Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
             if (response.isSuccessful()) {
                 languageList = response.body();
-                if (languageList.getLanguages().size() == 0) {
+                if (languageList.getLanguages().isEmpty()) {
                     languagesListEmptyTextView.setText(noResultString);
                     languagesListEmptyTextView.setVisibility(View.VISIBLE);
                 } else {

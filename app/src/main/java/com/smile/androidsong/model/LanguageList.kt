@@ -1,62 +1,18 @@
-package com.smile.androidsong.model;
+package com.smile.androidsong.model
 
-import com.google.gson.annotations.SerializedName;
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
-import java.util.ArrayList;
-
-public class LanguageList {
+@Parcelize
+data class LanguageList(
     @SerializedName("pageNo")
-    private int pageNo;
+    var pageNo: Int = 0,
     @SerializedName("pageSize")
-    private int pageSize;
+    var pageSize: Int = 0,
     @SerializedName("totalRecords")
-    private int totalRecords;
+    var totalRecords: Int = 0,
     @SerializedName("totalPages")
-    private int totalPages;
+    var totalPages: Int = 0,
     @SerializedName("languages")
-    private ArrayList<Language> languages;
-
-    public LanguageList() {
-        languages = new ArrayList<>();
-    }
-
-    public int getPageNo() {
-        return pageNo;
-    }
-
-    public void setPageNo(int pageNo) {
-        this.pageNo = pageNo;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getTotalRecords() {
-        return totalRecords;
-    }
-
-    public void setTotalRecords(int totalRecords) {
-        this.totalRecords = totalRecords;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
-
-    public ArrayList<Language> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(ArrayList<Language> languages) {
-        this.languages = languages;
-    }
-}
+    var languages: ArrayList<Language> = ArrayList()): Parcelable

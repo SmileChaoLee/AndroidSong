@@ -21,5 +21,10 @@ class Constants {
         const val LanguageTitle = "LanguageTitle"
         const val LanguageParcelable = "LanguageParcelable"
         const val NumOfWords = "NumOfWords"
+
+        const val SONG_NO = "songNo"
+        const val SONG_NAME = "songName"
+        const val SINGER_NAME = "singerName"
+        const val LANGUAGE_NAME = "languageName"
     }
 }

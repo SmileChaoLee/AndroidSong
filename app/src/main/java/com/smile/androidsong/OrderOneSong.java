@@ -8,12 +8,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.smile.androidsong.model.Computer;
+import com.smile.androidsong.model.Constants;
 
 public class OrderOneSong extends AppCompatActivity {
 
     private static final String TAG = "OrderOneSong";
-    private final Computer computerData = null;
+    private final Computer mComputer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +28,13 @@ public class OrderOneSong extends AppCompatActivity {
         if (extras == null) {
             return;
         } else {
-            song_no = extras.getString("song_no").trim();
-            song_na = extras.getString("song_na").trim();
-            sing_na  = extras.getString("sing_na").trim();
-            lang_na = extras.getString("lang_na").trim();
+            song_no = extras.getString(Constants.SONG_NO).trim();
+            song_na = extras.getString(Constants.SONG_NAME).trim();
+            sing_na  = extras.getString(Constants.SINGER_NAME).trim();
+            lang_na = extras.getString(Constants.LANGUAGE_NAME).trim();
         }
 
-        if (song_no.equals("")) {
+        if (song_no.isEmpty()) {
             return;
         }
 
@@ -49,14 +51,14 @@ public class OrderOneSong extends AppCompatActivity {
         SubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "SubmitButton.onClick() = " + computerData.getComputer_id());
+                Log.d(TAG, "SubmitButton.onClick() = " + mComputer.getComputerId());
                 final EditText editText = findViewById(R.id.inputComputerId);
                 String computerID = editText.getText().toString().trim();
                 if (computerID.length() >= 5) {
-                    Log.d(TAG, "computerData.getComputer_id() = " + computerData.getComputer_id());
-                    Log.d(TAG, "computerData.getBranch_id() = " + computerData.getBranch_id());
-                    Log.d(TAG, "computerData.getRoom_no() = " + computerData.getRoom_no());
-                    Log.d(TAG, "computerData.getSong_no() = " + computerData.getSong_no());
+                    Log.d(TAG, "onCreate.Computer id = " + mComputer.getComputerId());
+                    Log.d(TAG, "onCreate.Branch id = " + mComputer.getBranchId());
+                    Log.d(TAG, "onCreate.Room no = " + mComputer.getRoomNo());
+                    Log.d(TAG, "onCreate.Song no = " + mComputer.getSongNo());
                 }
                 finish();
             }
@@ -69,6 +71,5 @@ public class OrderOneSong extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 }

@@ -3,9 +3,9 @@ package com.smile.androidsong.dao;
 import android.util.Log;
 
 import com.smile.androidsong.model.Singer;
+import com.smile.androidsong.model.SingerList;
 import com.smile.androidsong.model.SingerType;
 import com.smile.androidsong.model.SingerTypeList;
-import com.smile.androidsong.model.SingerList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

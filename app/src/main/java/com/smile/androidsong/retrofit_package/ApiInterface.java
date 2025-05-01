@@ -18,7 +18,7 @@ public interface ApiInterface {
     @GET("api/Singareas/{id}/Singers/{sex}/{pageSize}/{pageNo}/{orderBy}/{filter}")
     Call<SingerList> getSingersBySingerTypeIdWithFilter(@Path("id") int id, @Path("sex") String sex, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy, @Path("filter") String filter);
 
-    // [HttpGet("{id}/[Action]/{pageSize}/{pageNo}/{orderBy}")]
+    // [HttpGet("{id}/[Action]/{pageSize}/{pageNo}/{orderBy}")] in SingersController.cs
     @GET("api/Singers/{id}/Songs/{pageSize}/{pageNo}/{orderBy}")
     Call<SongList> getSongsBySingerId(@Path("id") int id, @Path("pageSize") int pageSize, @Path("pageNo") int pageNo, @Path("orderBy") String orderBy);
 

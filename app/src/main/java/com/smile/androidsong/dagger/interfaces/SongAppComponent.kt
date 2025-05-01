@@ -7,7 +7,7 @@ import com.smile.androidsong.SingerTypeListActivity
 import com.smile.androidsong.SongListActivity
 import com.smile.androidsong.WordListActivity
 import com.smile.androidsong.dagger.modules.PrimitiveDataModule
-import com.smile.androidsong.retrofit_package.Client
+import com.smile.smilelibraries.retrofit.Client
 import com.smile.androidsong.retrofit_package.RestApi
 import com.smile.androidsong.dagger.modules.ListAdapterModule
 import com.smile.androidsong.model.Language

@@ -34,7 +34,7 @@ abstract class RestApi<T> : Callback<T> {
         get() {
             SongApplication.appComponent.inject(this as RestApi<Any>)
             return retrofit.create(ApiInterface::class.java)
-            // return Client.getInstance().create(ApiInterface::class.java)
+            // return Client.instance.create(ApiInterface::class.java)
         }
 
     @Suppress("UNCHECKED_CAST")

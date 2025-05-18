@@ -29,6 +29,7 @@ class LanguageListAdapter (
         val languageNaTextView: TextView
 
         init {
+            Log.d(TAG, "MyViewHolder created")
             positionNoTextView =
                 itemView.findViewById(R.id.languageItem_Layout_positionNoTextView)
             ScreenUtil.resizeTextSize(
@@ -47,20 +48,22 @@ class LanguageListAdapter (
 
     // Usually involves inflating a layout from XML and returning the holder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        Log.d(TAG, "onCreateViewHolder")
         val layoutInflater = LayoutInflater.from(parent.context)
-
         // inflate the singerType item view
-        return MyViewHolder(layoutInflater.inflate(R.layout.language_list_item, parent, false))
+        return MyViewHolder(layoutInflater.inflate(R.layout.language_list_item,
+            parent, false))
     }
 
     // Involves populating data into the item through holder
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        Log.d(TAG, "onBindViewHolder")
         val language = mLanguages[position]
         holder.apply {
             positionNoTextView.text = position.toString()
             languageNaTextView.text = language.langNa
             itemView.setOnClickListener {
-                Log.d(TAG, "itemView.setOnClickListener.${language.langNa}")
+                Log.d(TAG, "onBindViewHolder.itemView.setOnClickListener.${language.langNa}")
                 ScreenUtil.showToast(
                     mActivity, language.langNa,
                     mTextFontSize, Constants.FontSize_Scale_Type, Toast.LENGTH_SHORT
@@ -80,7 +83,7 @@ class LanguageListAdapter (
                         }
                     }
                     Constants.NewSongOrdered -> {
-                        Log.d(TAG, "itemView.setOnClickListener.NewSongOrdered")
+                        Log.d(TAG, "onBindViewHolder.itemView.setOnClickListener.NewSongOrdered")
                         Intent(mActivity, SongListActivity::class.java).let {
                             it.putExtra(Constants.OrderedFrom, Constants.NewSongLanguageOrdered)
                             it.putExtra(
@@ -92,7 +95,7 @@ class LanguageListAdapter (
                         }
                     }
                     Constants.HotSongOrdered -> {
-                        Log.d(TAG, "itemView.setOnClickListener.HotSongOrdered")
+                        Log.d(TAG, "onBindViewHolder.itemView.setOnClickListener.HotSongOrdered")
                         Intent(mActivity, SongListActivity::class.java).let {
                             it.putExtra(Constants.OrderedFrom, Constants.HotSongLanguageOrdered)
                             it.putExtra(
@@ -109,6 +112,7 @@ class LanguageListAdapter (
     }
 
     override fun getItemCount(): Int {
+        Log.d(TAG, "getItemCount")
         return mLanguages.size
     }
 

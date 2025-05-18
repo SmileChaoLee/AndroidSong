@@ -6,10 +6,10 @@ import com.smile.androidsong.SingerListActivity
 import com.smile.androidsong.SingerTypeListActivity
 import com.smile.androidsong.SongListActivity
 import com.smile.androidsong.WordListActivity
-import com.smile.androidsong.dagger.modules.PrimitiveDataModule
-import com.smile.smilelibraries.retrofit.Client
 import com.smile.androidsong.retrofit_package.RestApi
 import com.smile.androidsong.dagger.modules.ListAdapterModule
+import com.smile.androidsong.dagger.modules.PrimitiveModule
+import com.smile.androidsong.dagger.modules.RetrofitModule
 import com.smile.androidsong.model.Language
 import com.smile.androidsong.model.Singer
 import com.smile.androidsong.model.SingerType
@@ -20,8 +20,8 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [Client::class,
-    PrimitiveDataModule::class,
+@Component(modules = [PrimitiveModule::class,
+    RetrofitModule::class,
     ListAdapterModule::class])
 interface SongAppComponent {
     fun inject(client: RestApi<Any>)
@@ -34,22 +34,24 @@ interface SongAppComponent {
     interface  Builder {
         fun build() : SongAppComponent
         @BindsInstance
-        fun activityModule(@Named("PrimitiveDataModule") activity: Activity?) : Builder
+        fun activityModule(@Named("PrimitiveModule") activity: Activity?) : Builder
         @BindsInstance
-        fun languageArrayListModule(@Named("PrimitiveDataModule") list :
+        fun languageArrayListModule(@Named("PrimitiveModule") list :
                                     ArrayList<Language>?) : Builder
         @BindsInstance
-        fun songArrayListModule(@Named("PrimitiveDataModule") list :
+        fun songArrayListModule(@Named("PrimitiveModule") list :
                             ArrayList<Song>?) : Builder
         @BindsInstance
-        fun singerTypeArrayListModule(@Named("PrimitiveDataModule") list :
+        fun singerTypeArrayListModule(@Named("PrimitiveModule") list :
                                 ArrayList<SingerType>?) : Builder
         @BindsInstance
-        fun singerArrayListModule(@Named("PrimitiveDataModule") list :
+        fun singerArrayListModule(@Named("PrimitiveModule") list :
                                       ArrayList<Singer>?) : Builder
         @BindsInstance
-        fun intModule(@Named("PrimitiveDataModule") intValue : Int?) : Builder
+        fun intModule(@Named("PrimitiveModule") intValue : Int?) : Builder
         @BindsInstance
-        fun floatModule(@Named("PrimitiveDataModule") floatValue : Float?) : Builder
+        fun floatModule(@Named("PrimitiveModule") floatValue : Float?) : Builder
+        @BindsInstance
+        fun stringModule(@Named("PrimitiveModule") stringValue : String?) : Builder
     }
 }

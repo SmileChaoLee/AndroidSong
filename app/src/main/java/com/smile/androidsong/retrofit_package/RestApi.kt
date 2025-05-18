@@ -2,6 +2,7 @@ package com.smile.androidsong.retrofit_package
 
 import android.util.Log
 import com.smile.androidsong.SongApplication
+import com.smile.androidsong.model.Constants
 import com.smile.androidsong.model.Language
 import com.smile.androidsong.model.LanguageList
 import com.smile.androidsong.model.Singer
@@ -13,7 +14,6 @@ import retrofit2.Callback
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-// @JvmDefaultWithCompatibility
 abstract class RestApi<T> : Callback<T> {
 
     companion object {
@@ -32,9 +32,10 @@ abstract class RestApi<T> : Callback<T> {
     @Suppress("UNCHECKED_CAST")
     private val apiInterface : ApiInterface
         get() {
-            SongApplication.appComponent.inject(this as RestApi<Any>)
+            SongApplication.appCompBuilder.stringModule(Constants.CHAO_URL)
+            .build().inject(this as RestApi<Any>)
             return retrofit.create(ApiInterface::class.java)
-            // return Client.instance.create(ApiInterface::class.java)
+            // return Client.getInstance(Constants.CHAO_URL).create(ApiInterface::class.java)
         }
 
     @Suppress("UNCHECKED_CAST")

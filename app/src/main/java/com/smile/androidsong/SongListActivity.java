@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.smile.androidsong.model.*;
-import com.smile.androidsong.retrofit_package.RestApi;
+import com.smile.androidsong.retrofit.RestApiAsync;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 import com.smile.androidsong.view_adapter.SongListAdapter;
@@ -292,13 +292,14 @@ public class SongListActivity extends AppCompatActivity {
         retrieveSongList();
     }
 
-    private class MyRestApi extends RestApi<SongList> {
+    private class MyRestApi extends RestApiAsync<SongList> {
         @Override
         public void onResponse(Call<SongList> call, Response<SongList> response) {
-            Log.d(TAG, "onResponse");
+            Log.d(TAG, "MyRestApi.onResponse");
             if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
             loadingDialog = null;
-            Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
+            Log.d(TAG, "MyRestApi.onResponse.response.isSuccessful() = " +
+                    response.isSuccessful());
             songList = response.body();
             if (!response.isSuccessful() || songList == null) {
                 songList = new SongList();
@@ -308,7 +309,8 @@ public class SongListActivity extends AppCompatActivity {
                 pageNo = songList.getPageNo();         // get the back value from called function
                 pageSize = songList.getPageSize();     // get the back value from called function
                 totalPages = songList.getTotalPages(); // get the back value from called function
-                Log.d(TAG, "onResponse.response.songList.getSongs().size() = " + songList.getSongs().size());
+                Log.d(TAG, "MyRestApi.onResponse.response.songList.getSongs().size() = " +
+                        songList.getSongs().size());
                 if (songList.getSongs().isEmpty()) {
                     songsListEmptyTextView.setText(noResultString);
                     songsListEmptyTextView.setVisibility(View.VISIBLE);
@@ -327,7 +329,8 @@ public class SongListActivity extends AppCompatActivity {
             mRecyclerView.setAdapter(myViewAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-            Log.d(TAG, "onResponse.response.isSearchEditTextChanged = " + isSearchEditTextChanged);
+            Log.d(TAG, "MyRestApi.onResponse.response.isSearchEditTextChanged = " +
+                    isSearchEditTextChanged);
             if (isSearchEditTextChanged) {
                 // searchEditText.setFocusable(true);              // needed for requestFocus()
                 // searchEditText.setFocusableInTouchMode(true);   // needed for requestFocus()
@@ -341,7 +344,7 @@ public class SongListActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call<SongList> call, Throwable t) {
-            Log.d(TAG, "onFailure." + t.toString());
+            Log.d(TAG, "MyRestApi.onFailure." + t.toString());
             if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
             loadingDialog = null;
             songList = new SongList();

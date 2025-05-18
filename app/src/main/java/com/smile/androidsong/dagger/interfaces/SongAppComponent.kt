@@ -6,7 +6,7 @@ import com.smile.androidsong.SingerListActivity
 import com.smile.androidsong.SingerTypeListActivity
 import com.smile.androidsong.SongListActivity
 import com.smile.androidsong.WordListActivity
-import com.smile.androidsong.retrofit_package.RestApi
+import com.smile.androidsong.retrofit.RestApiAsync
 import com.smile.androidsong.dagger.modules.ListAdapterModule
 import com.smile.androidsong.dagger.modules.PrimitiveModule
 import com.smile.androidsong.dagger.modules.RetrofitModule
@@ -24,7 +24,7 @@ import javax.inject.Singleton
     RetrofitModule::class,
     ListAdapterModule::class])
 interface SongAppComponent {
-    fun inject(client: RestApi<Any>)
+    fun inject(client: RestApiAsync<Any>)
     fun inject(activity : SingerTypeListActivity)
     fun inject(activity : SingerListActivity)
     fun inject(activity : LanguageListActivity)

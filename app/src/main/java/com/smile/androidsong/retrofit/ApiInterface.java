@@ -1,4 +1,4 @@
-package com.smile.androidsong.retrofit_package;
+package com.smile.androidsong.retrofit;
 
 import com.smile.androidsong.model.*;
 

@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.smile.androidsong.model.Constants;
 import com.smile.androidsong.model.SingerList;
 import com.smile.androidsong.model.SingerType;
-import com.smile.androidsong.retrofit_package.RestApi;
+import com.smile.androidsong.retrofit.RestApiAsync;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 import com.smile.androidsong.view_adapter.SingerListAdapter;
@@ -228,12 +228,13 @@ public class SingerListActivity extends AppCompatActivity {
         retrieveSingerList();
     }
 
-    private class MyRestApi extends RestApi<SingerList> {
+    private class MyRestApi extends RestApiAsync<SingerList> {
         @Override
         public void onResponse(Call<SingerList> call, Response<SingerList> response) {
             if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
             loadingDialog = null;
-            Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
+            Log.d(TAG, "MyRestApi.onResponse.response.isSuccessful() = " +
+                    response.isSuccessful());
             singerList = response.body();
             if (!response.isSuccessful() || singerList == null) {
                 singerList = new SingerList();
@@ -261,7 +262,7 @@ public class SingerListActivity extends AppCompatActivity {
             mRecyclerView.setAdapter(myViewAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-            Log.d(TAG, "onResponse.response.isSearchEditTextChanged = "
+            Log.d(TAG, "MyRestApi.onResponse.response.isSearchEditTextChanged = "
                     + isSearchEditTextChanged);
             if (isSearchEditTextChanged) {
                 // searchEditText.setFocusable(true);              // needed for requestFocus()
@@ -276,7 +277,7 @@ public class SingerListActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call call, Throwable t) {
-            Log.d(TAG, "onFailure." + t.toString());
+            Log.d(TAG, "MyRestApi.onFailure." + t.toString());
             if (loadingDialog != null) loadingDialog.dismissAllowingStateLoss();
             loadingDialog = null;
             singerList = new SingerList();

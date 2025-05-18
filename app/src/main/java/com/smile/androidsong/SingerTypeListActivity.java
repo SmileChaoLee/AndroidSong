@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.smile.androidsong.model.Constants;
 import com.smile.androidsong.model.SingerTypeList;
-import com.smile.androidsong.retrofit_package.RestApi;
+import com.smile.androidsong.retrofit.RestApiAsync;
 import com.smile.androidsong.view_adapter.SingerTypeListAdapter;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
@@ -91,13 +91,13 @@ public class SingerTypeListActivity extends AppCompatActivity {
         finish();
     }
 
-    private class MyRestApi extends RestApi<SingerTypeList> {
+    private class MyRestApi extends RestApiAsync<SingerTypeList> {
         @SuppressLint("SetTextI18n")
         @Override
         public void onResponse(Call<SingerTypeList> call, Response<SingerTypeList> response) {
-            Log.d(TAG, "onResponse");
+            Log.d(TAG, "MyRestApi.onResponse");
             loadingDialog.dismissAllowingStateLoss();
-            Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
+            Log.d(TAG, "MyRestApi.onResponse.response.isSuccessful() = " + response.isSuccessful());
             if (response.isSuccessful()) {
                 singerTypeList = response.body();
                 if (singerTypeList.getSingerTypes().isEmpty()) {
@@ -108,7 +108,7 @@ public class SingerTypeListActivity extends AppCompatActivity {
                 }
             } else {
                 singerTypeList = new SingerTypeList();
-                singerTypeListEmptyTextView.setText("response.isSuccessful() = false.");
+                singerTypeListEmptyTextView.setText("MyRestApi.response.isSuccessful() = false.");
                 singerTypeListEmptyTextView.setVisibility(View.VISIBLE);
             }
             Log.d(TAG, "MyRestApi.onResponse.inject()");
@@ -123,7 +123,7 @@ public class SingerTypeListActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call<SingerTypeList> call, Throwable t) {
-            Log.d(TAG, "onFailure." + t.toString());
+            Log.d(TAG, "MyRestApi.onFailure." + t.toString());
             loadingDialog.dismissAllowingStateLoss();
             singerTypeList = new SingerTypeList();
             singerTypeListEmptyTextView.setText(failedMessage);

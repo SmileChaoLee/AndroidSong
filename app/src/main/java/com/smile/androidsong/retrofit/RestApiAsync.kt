@@ -1,4 +1,4 @@
-package com.smile.androidsong.retrofit_package
+package com.smile.androidsong.retrofit
 
 import android.util.Log
 import com.smile.androidsong.SongApplication
@@ -14,10 +14,10 @@ import retrofit2.Callback
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-abstract class RestApi<T> : Callback<T> {
+abstract class RestApiAsync<T> : Callback<T> {
 
     companion object {
-        private const val TAG = "RestApi"
+        private const val TAG = "RestApiAsync"
     }
 
     private val callback : Callback<T>
@@ -33,7 +33,7 @@ abstract class RestApi<T> : Callback<T> {
     private val apiInterface : ApiInterface
         get() {
             SongApplication.appCompBuilder.stringModule(Constants.CHAO_URL)
-            .build().inject(this as RestApi<Any>)
+            .build().inject(this as RestApiAsync<Any>)
             return retrofit.create(ApiInterface::class.java)
             // return Client.getInstance(Constants.CHAO_URL).create(ApiInterface::class.java)
         }

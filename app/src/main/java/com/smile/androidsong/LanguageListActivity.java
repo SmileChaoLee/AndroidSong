@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.smile.androidsong.model.*;
-import com.smile.androidsong.retrofit_package.RestApi;
+import com.smile.androidsong.retrofit.RestApiAsync;
 import com.smile.smilelibraries.alertdialogfragment.AlertDialogFragment;
 import com.smile.smilelibraries.utilities.ScreenUtil;
 import com.smile.androidsong.view_adapter.LanguageListAdapter;
@@ -106,12 +106,12 @@ public class LanguageListActivity extends AppCompatActivity {
         finish();
     }
 
-    private class MyRestApi extends RestApi<LanguageList> {
+    private class MyRestApi extends RestApiAsync<LanguageList> {
         @Override
         public void onResponse(Call<LanguageList> call, Response<LanguageList> response) {
-            Log.d(TAG, "onResponse");
+            Log.d(TAG, "MyRestApi.onResponse");
             loadingDialog.dismissAllowingStateLoss();
-            Log.d(TAG, "onResponse.response.isSuccessful() = " + response.isSuccessful());
+            Log.d(TAG, "MyRestApi.onResponse.response.isSuccessful() = " + response.isSuccessful());
             if (response.isSuccessful()) {
                 languageList = response.body();
                 if (languageList.getLanguages().isEmpty()) {
@@ -140,7 +140,7 @@ public class LanguageListActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(Call<LanguageList> call, Throwable t) {
-            Log.d(TAG, "onFailure." + t.toString());
+            Log.d(TAG, "MyRestApi.onFailure." + t.toString());
             loadingDialog.dismissAllowingStateLoss();
             languageList = new LanguageList();
             languagesListEmptyTextView.setText(failedMessage);
